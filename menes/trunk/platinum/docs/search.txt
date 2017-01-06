@@ -1,0 +1,8 @@
+ 505_8 : Subject Code
+ 585_5 : Course Number
+ 745_7 : Days
+ 825_2 : Hour
+ 828_2 : Minute
+1065_13: Instructor
+1145_3 : GE Code
+1305_1 : Open Classes Only

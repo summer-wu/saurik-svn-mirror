@@ -1,0 +1,97 @@
+Only in tidy+: bin
+Only in tidy+/build/gmake: obj
+Only in tidy+: lib
+diff -ru tidy/src/parser.c tidy+/src/parser.c
+--- tidy/src/parser.c	2004-03-15 02:00:28.000000000 -0600
++++ tidy+/src/parser.c	2004-07-21 18:40:23.000000000 -0500
+@@ -661,7 +661,7 @@
+ {
+     Node* text = element->content;
+ 
+-    if (nodeIsPRE(element) || IsPreDescendant(element))
++    if (nodeIsPRE(element) || FindParser(doc, element) == ParsePre || IsPreDescendant(element))
+         return;
+ 
+     if (nodeIsText(text))
+diff -ru tidy/src/pprint.c tidy+/src/pprint.c
+--- tidy/src/pprint.c	2004-03-14 02:00:17.000000000 -0600
++++ tidy+/src/pprint.c	2004-07-21 18:40:45.000000000 -0500
+@@ -945,15 +945,15 @@
+     uint start = node->start;
+     uint end = node->end;
+     uint ix, c = 0;
+-    int  ixNL = TextEndsWithNewline( doc->lexer, node, mode );
++    /*int  ixNL = TextEndsWithNewline( doc->lexer, node, mode );
+     int  ixWS = TextStartsWithWhitespace( doc->lexer, node, start, mode );
+     if ( ixNL > 0 )
+       end -= ixNL;
+-    start = IncrWS( start, end, indent, ixWS );
++    start = IncrWS( start, end, indent, ixWS );*/
+ 
+     for ( ix = start; ix < end; ++ix )
+     {
+-        CheckWrapIndent( doc, indent );
++        //CheckWrapIndent( doc, indent );
+         /*
+         if ( CheckWrapIndent(doc, indent) )
+         {
+@@ -967,16 +967,16 @@
+         if ( c > 0x7F )
+              ix += GetUTF8( doc->lexer->lexbuf + ix, &c );
+ 
+-        if ( c == '\n' )
++        /*if ( c == '\n' )
+         {
+             PFlushLine( doc, indent );
+             ixWS = TextStartsWithWhitespace( doc->lexer, node, ix+1, mode );
+             ix = IncrWS( ix, end, indent, ixWS );
+         }
+         else
+-        {
++        {*/
+             PPrintChar( doc, c, mode );
+-        }
++        //}
+     }
+ }
+ 
+@@ -2194,14 +2194,14 @@
+             cindent = indent + spaces;
+ 
+         PPrintTag( doc, mode, indent, node );
+-        if ( !mixed && node->content )
+-            PFlushLine( doc, cindent );
++        /*if ( !mixed && node->content )
++            PFlushLine( doc, cindent );*/
+  
+         for ( content = node->content; content; content = content->next )
+             PPrintXMLTree( doc, mode, cindent, content );
+ 
+-        if ( !mixed && node->content )
+-            PCondFlushLine( doc, indent );
++        /*if ( !mixed && node->content )
++            PCondFlushLine( doc, indent );*/
+ 
+         PPrintEndTag( doc, mode, indent, node );
+         /* PCondFlushLine( doc, indent ); */
+diff -ru tidy/src/tags.c tidy+/src/tags.c
+--- tidy/src/tags.c	2004-02-29 01:58:27.000000000 -0600
++++ tidy+/src/tags.c	2004-07-22 16:45:35.000000000 -0500
+@@ -131,7 +131,7 @@
+   { TidyTag_ADDRESS,    "address",    VERS_ELEM_ADDRESS,    &W3CAttrsFor_ADDRESS[0],    (CM_BLOCK),                                    ParseBlock,    NULL           },
+   { TidyTag_APPLET,     "applet",     VERS_ELEM_APPLET,     &W3CAttrsFor_APPLET[0],     (CM_OBJECT|CM_IMG|CM_INLINE|CM_PARAM),         ParseBlock,    NULL           },
+   { TidyTag_AREA,       "area",       VERS_ELEM_AREA,       &W3CAttrsFor_AREA[0],       (CM_BLOCK|CM_EMPTY),                           ParseEmpty,    CheckAREA      },
+-  { TidyTag_B,          "b",          VERS_ELEM_B,          &W3CAttrsFor_B[0],          (CM_INLINE),                                   ParseInline,   NULL           },
++  { TidyTag_B,          "b",          VERS_ELEM_B,          &W3CAttrsFor_B[0],          (CM_INLINE),                                   ParsePre,      NULL           },
+   { TidyTag_BASE,       "base",       VERS_ELEM_BASE,       &W3CAttrsFor_BASE[0],       (CM_HEAD|CM_EMPTY),                            ParseEmpty,    NULL           },
+   { TidyTag_BASEFONT,   "basefont",   VERS_ELEM_BASEFONT,   &W3CAttrsFor_BASEFONT[0],   (CM_INLINE|CM_EMPTY),                          ParseEmpty,    NULL           },
+   { TidyTag_BDO,        "bdo",        VERS_ELEM_BDO,        &W3CAttrsFor_BDO[0],        (CM_INLINE),                                   ParseInline,   NULL           },
+@@ -155,7 +155,7 @@
+   { TidyTag_DT,         "dt",         VERS_ELEM_DT,         &W3CAttrsFor_DT[0],         (CM_DEFLIST|CM_OPT|CM_NO_INDENT),              ParseInline,   NULL           },
+   { TidyTag_EM,         "em",         VERS_ELEM_EM,         &W3CAttrsFor_EM[0],         (CM_INLINE),                                   ParseInline,   NULL           },
+   { TidyTag_FIELDSET,   "fieldset",   VERS_ELEM_FIELDSET,   &W3CAttrsFor_FIELDSET[0],   (CM_BLOCK),                                    ParseBlock,    NULL           },
+-  { TidyTag_FONT,       "font",       VERS_ELEM_FONT,       &W3CAttrsFor_FONT[0],       (CM_INLINE),                                   ParseInline,   NULL           },
++  { TidyTag_FONT,       "font",       VERS_ELEM_FONT,       &W3CAttrsFor_FONT[0],       (CM_INLINE),                                   ParsePre,      NULL           },
+   { TidyTag_FORM,       "form",       VERS_ELEM_FORM,       &W3CAttrsFor_FORM[0],       (CM_BLOCK),                                    ParseBlock,    CheckFORM      },
+   { TidyTag_FRAME,      "frame",      VERS_ELEM_FRAME,      &W3CAttrsFor_FRAME[0],      (CM_FRAMES|CM_EMPTY),                          ParseEmpty,    NULL           },
+   { TidyTag_FRAMESET,   "frameset",   VERS_ELEM_FRAMESET,   &W3CAttrsFor_FRAMESET[0],   (CM_HTML|CM_FRAMES),                           ParseFrameSet, NULL           },

@@ -1,0 +1,16 @@
+diff -ru sqlite-3.5.9/Makefile.in sqlite-3.5.9+iPhone/Makefile.in
+--- sqlite-3.5.9/Makefile.in	2008-05-12 17:10:26.000000000 +0000
++++ sqlite-3.5.9+iPhone/Makefile.in	2008-08-01 08:21:45.000000000 +0000
+@@ -413,10 +413,12 @@
+ 
+ libsqlite3.la:	$(LIBOBJ)
+ 	$(LTLINK) -o $@ $(LIBOBJ) $(TLIBS) \
++		-framework CoreFoundation -framework Foundation \
+ 		${ALLOWRELEASE} -rpath "$(libdir)" -version-info "8:6:8"
+ 
+ libtclsqlite3.la:	tclsqlite.lo libsqlite3.la
+ 	$(LTLINK) -o $@ tclsqlite.lo \
++		-framework CoreFoundation -framework Foundation \
+ 		$(LIBOBJ) @TCL_STUB_LIB_SPEC@ $(TLIBS) \
+                 -rpath "$(libdir)/sqlite" \
+ 		-version-info "8:6:8"

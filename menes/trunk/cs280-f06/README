@@ -1,0 +1,13 @@
+To use type "make", and then run "main <probe file>".
+
+To switch between diffuse lighting, texture debugging, and multi-shadow mapping, you use '1'/'2'/'3'.
+
+You use my somewhat crazy mouse rotation scheme to rotate things, holding down the Right button.
+Initially, you rotate the camera (which is centered to the scene).
+You can switch rotation between the Camera, the Torus, the 2nd Torus, the Ground, and some of the lights with 'c'/'t'/'p'/'g'/'l'/'6'/'7'/'8'/'9'.
+To zoom in/out you hold both the Right and Middle mouse buttons and move Up/Down.
+
+To quit the program, you use 'q'.
+
+To see from the camera's perspective, press '['.
+To see from various light's perspective, press ']'.

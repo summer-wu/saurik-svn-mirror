@@ -1,0 +1,6 @@
+./mainmenu.sh C
+./help.sh 491
+./submit.sh F_1704_8=""
+
+./submit.sh F_1305_1="N"
+./help.sh 1774

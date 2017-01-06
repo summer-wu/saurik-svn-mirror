@@ -1,0 +1,12 @@
+Package: syslogd
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 1.1.1
+Description: a very useful failure debugging aid
+Name: syslogd to /var/log/syslog
+Pre-Depends: dpkg (>= 1.13.25-5)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/syslogd/
+Homepage: http://cydia.saurik.com/info/syslogd/

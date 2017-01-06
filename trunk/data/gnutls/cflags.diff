@@ -1,0 +1,25 @@
+diff -ru gnutls-2.4.1/lib/libgnutls-config.in gnutls-2.4.1+iPhone/lib/libgnutls-config.in
+--- gnutls-2.4.1/lib/libgnutls-config.in	2008-06-19 10:00:10.000000000 +0000
++++ gnutls-2.4.1+iPhone/lib/libgnutls-config.in	2008-08-18 17:48:32.000000000 +0000
+@@ -4,10 +4,6 @@
+ exec_prefix=@exec_prefix@
+ exec_prefix_set=no
+ 
+-gnutls_libs="@LIBGNUTLS_LIBS@"
+-gnutls_cflags="@LIBGNUTLS_CFLAGS@"
+-gnutls_la_file="@libdir@/libgnutls.la"
+-
+ usage()
+ {
+ 	cat <<EOF
+@@ -72,6 +68,10 @@
+   shift
+ done
+ 
++gnutls_libs="@LIBGNUTLS_LIBS@"
++gnutls_cflags="@LIBGNUTLS_CFLAGS@"
++gnutls_la_file="@libdir@/libgnutls.la"
++
+ if test "$echo_prefix" = "yes"; then
+     echo $prefix
+ fi

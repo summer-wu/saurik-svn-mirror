@@ -1,0 +1,14 @@
+lazy
+greedy
+possessive
+total
+
+short-circuit
+back-tracking
+path-branching
+negative-ahead
+prefix-data
+
+positive
+negative
+lookahead

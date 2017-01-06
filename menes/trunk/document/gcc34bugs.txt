@@ -1,0 +1,3 @@
+fpos<> cannot be compared with an fpos<> using the < operator
+direct base classes cannot override deep conflicting bases
+_finline _destroys_ all builds that do not optimize -O3

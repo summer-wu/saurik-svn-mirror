@@ -1,0 +1,6 @@
+#!/bin/sh
+su postgres << EOF
+#dropdb platinum
+#createdb platinum
+psql platinum < pgsql.sql
+EOF

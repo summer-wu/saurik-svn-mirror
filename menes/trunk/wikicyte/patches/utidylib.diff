@@ -1,0 +1,39 @@
+--- lib.py      2008-05-11 12:45:16.000000000 +0000
++++ lib.py      2009-04-23 20:32:36.000000000 +0000
+@@ -51,13 +51,12 @@
+ def _putByte(handle, c):
+     """Lookup sink by handle and call its putByte method"""
+     sinkfactory[handle].putByte(c)
+-    return 0
+
+-PUTBYTEFUNC=ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_int, ctypes.c_char)
++PUTBYTEFUNC=ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_char)
+ putByte=PUTBYTEFUNC(_putByte)
+
+ class _OutputSink(ctypes.Structure):
+-    _fields_=[("sinkData", ctypes.c_int),
++    _fields_=[("sinkData", ctypes.c_void_p),
+               ("putByte", PUTBYTEFUNC),
+               ]
+
+@@ -120,16 +119,18 @@
+     """Mapping for lookup of sinks by handle"""
+     def __init__(self):
+         FactoryDict.__init__(self)
+-        self.lastsink = 0
++        self.lastsink = 1
+     def create(self):
+         sink = _Sink()
+-        sink.struct.sinkData = self.lastsink
++        sink.struct.sinkData = ctypes.c_void_p(self.lastsink)
+         FactoryDict._setitem(self, self.lastsink, sink)
+         self.lastsink = self.lastsink+1
+         return sink
+
+ sinkfactory=SinkFactory()
+
++_tidy.Create.restype = ctypes.POINTER(ctypes.c_void_p)
++
+ class _Document(object):
+     def __init__(self):
+         self.cdoc = _tidy.Create()

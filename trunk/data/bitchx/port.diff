@@ -1,0 +1,72 @@
+diff -ru BitchX/doc/Makefile BitchX+iPhone/doc/Makefile
+--- BitchX/doc/Makefile	2004-03-26 06:20:36.000000000 +0000
++++ BitchX+iPhone/doc/Makefile	2008-03-05 23:22:46.000000000 +0000
+@@ -1,5 +1,5 @@
+ 
+-SHELL = /usr/local/bin/bash
++SHELL = /bin/sh
+ 
+ default:
+ 	$(SHELL) ./configure --with-plugins
+diff -ru BitchX/source/ctcp.c BitchX+iPhone/source/ctcp.c
+--- BitchX/source/ctcp.c	2003-05-27 07:00:22.000000000 +0000
++++ BitchX+iPhone/source/ctcp.c	2008-03-05 23:23:27.000000000 +0000
+@@ -176,7 +176,7 @@
+ 
+ /* CDE do ops and unban logging */
+ 
+-static char	*ctcp_type[] =
++char	*ctcp_type[] =
+ {
+ 	"PRIVMSG",
+ 	"NOTICE"
+diff -ru BitchX/source/misc.c BitchX+iPhone/source/misc.c
+--- BitchX/source/misc.c	2003-06-11 07:00:42.000000000 +0000
++++ BitchX+iPhone/source/misc.c	2008-03-05 23:26:27.000000000 +0000
+@@ -59,6 +59,14 @@
+ #endif
+ #include <unistd.h>
+ 
++#define BIND_8_COMPAT
++#include <arpa/nameser.h>
++#include <stdio.h>
++#include <netdb.h>
++#include <resolv.h>
++#include <errno.h>
++#include <arpa/inet.h>
++
+ #if defined(sparc) && defined(sun4c)
+ #include <sys/rusage.h>
+ #endif
+@@ -2601,7 +2609,7 @@
+ 	/*
+ 	 * Skip over the original question.
+ 	 */
+-#ifndef __QNX__
++#if 0//ndef __QNX__
+ 	/* QNX doesn't seem to have this function, not sure
+ 	 * what it does at the moment but I may change this
+ 	 * in the future. - Brian
+diff -ru BitchX/source/term.c BitchX+iPhone/source/term.c
+--- BitchX/source/term.c	2003-04-11 01:09:07.000000000 +0000
++++ BitchX+iPhone/source/term.c	2008-03-05 23:25:10.000000000 +0000
+@@ -92,7 +92,6 @@
+ #endif
+ 
+ extern  char    *getenv();
+-extern	char	*tparm();
+ 
+ /*
+  * The old code assumed termcap. termcap is almost always present, but on
+diff -ru BitchX/source/timer.c BitchX+iPhone/source/timer.c
+--- BitchX/source/timer.c	2003-04-11 01:09:07.000000000 +0000
++++ BitchX+iPhone/source/timer.c	2008-03-05 23:25:32.000000000 +0000
+@@ -148,7 +148,7 @@
+  * This is put here on purpose -- we dont want any of the above functions
+  * to have any knowledge of this struct.
+  */
+-static TimerList *PendingTimers;
++TimerList *PendingTimers;
+ static char *schedule_timer (TimerList *ntimer);
+ 
+ static char *current_exec_timer = empty_string;

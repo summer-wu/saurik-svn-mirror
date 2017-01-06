@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<bnf:grammar
+    xmlns:bnf="http://www.saurik.com/menes/bnf/0.9"
+    xmlns:java="http://www.saurik.com/menes/bnf/java-0.9"
+    name="Xml 1.1 Document"
+    goal="document"
+    bnf:seperator="InputSeperator"
+>
+
+<bnf:define name="document">
+    <bnf:not>
+        <bnf:repeated>
+            <bnf:call name="Char"/>
+        </bnf:repeated>
+
+        <bnf:call name="RestrictedChar"/>
+
+        <bnf:repeated>
+            <bnf:call name="Char"/>
+        </bnf:repeated>
+    </bnf:not>
+
+    <bnf:call name="prolog"/>
+    <bnf:call name="element/>
+
+    <bnf:repeated>
+        <bnf:call name="Misc"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="Char">
+    <bnf:or>
+        <bnf:range begin="&#x1;" end="&#xD7FF;"/>
+        <bnf:range begin="&#xE000;" end="&#xFFFD;"/>
+        <bnf:range begin="&#x10000;" end="&#x10FFFF;"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="RestrictedChar">
+    <bnf:or>
+        <bnf:range begin="&#x1;" end="&#x8;"/>
+        <bnf:range begin="&#xB;" end="&#xC;"/>
+        <bnf:range begin="&#xE;" end="&#x1F;"/>
+        <bnf:range begin="&#x7F;" end="&#x84;"/>
+        <bnf:range begin="&#x86;" end="&#x9F;"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="S">
+    <bnf:multiple>
+        <bnf:or>
+            <bnf:token value="&#x20;"/>
+            <bnf:token value="&#x9;"/>
+            <bnf:token value="&#xD;"/>
+            <bnf:token value="&#xA;"/>
+        </bnf:or>
+    </bnf:multiple>
+</bnf:define>
+
+<bnf:define name="NameStartChar">
+    <bnf:or>
+        <bnf:token value=":"/>
+        <bnf:range begin="A" end="Z"/>
+        <bnf:token value="_"/>
+        <bnf:range begin="a" end="z"/>
+        <bnf:range begin="&#xC0;" end="&#xD6;"/>
+        <bnf:range begin="&#xD8;" end="&#xF6;"/>
+        <bnf:range begin="&#xF8;" end="&#x2FF;"/>
+        <bnf:range begin="&#x370;" end="&#x37D;"/>
+        <bnf:range begin="&#x37F;" end="&#x1FFF;"/>
+        <bnf:range begin="&#x200C;" end="&#x200D;"/>
+        <bnf:range begin="&#x2070;" end="&#x218F;"/>
+        <bnf:range begin="&#x2C00;" end="&#x2FEF;"/>
+        <bnf:range begin="&#x3001;" end="&#xD7FF;"/>
+        <bnf:range begin="&#xF900;" end="&#xFDCF;"/>
+        <bnf:range begin="&#xFDF0;" end="&#xFFFD;"/>
+        <bnf:range begin="&#x10000;" end="&#xEFFFF;"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="NameChar">
+    <bnf:or>
+        <bnf:call name="NameStartChar"/>
+        <bnf:token value="-"/>
+        <bnf:token value="."/>
+        <bnf:range begin="0" end="9"/>
+        <bnf:token value="&#xB7;"/>
+        <bnf:range begin="&#x0300;" end="&#x036F;"/>
+        <bnf:range begin="&#x203F;" end="&#x2040;"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Name">
+    <bnf:call name="NameStartChar"/>
+
+    <bnf:repeated>
+        <bnf:call name="NameChar"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="Names">
+    <bnf:call name="Name"/>
+
+    <bnf:repeated>
+        <bnf:token value="&#x20;"/>
+        <bnf:call name="Name"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="Nmtoken">
+    <bnf:multiple>
+        <bnf:call name="NameChar"/>
+    </bnf:multiple>
+</bnf:define>
+
+<bnf:define name="Nmtokens">
+    <bnf:call name="Nmtoken"/>
+
+    <bnf:repeated>
+        <bnf:token value="&#x20"/>
+        <bnf:call name="Nmtoken"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="EntityValue">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="&quot;"/>
+
+            <bnf:repeated>
+                <bnf:or>
+                    <bnf:block>
+                        <bnf:not>
+                            <bnf:or>
+                                <bnf:token value="%"/>
+                                <bnf:token value="&amp;"/>
+                                <bnf:token value="&quot;"/>
+                            </bnf:or>
+                        </bnf:not>
+
+                        <bnf:special type="any"/>
+                    </bnf:block>
+
+                    <bnf:call name="PEReference"/>
+                    <bnf:call name="Reference"/>
+                </bnf:or>
+            </bnf:repeated>
+
+            <bnf:token value="&quot;"/>
+        </bnf:block>
+
+        <bnf:block>
+            <bnf:token value="&apos;"/>
+
+            <bnf:repeated>
+                <bnf:or>
+                    <bnf:block>
+                        <bnf:not>
+                            <bnf:or>
+                                <bnf:token value="%"/>
+                                <bnf:token value="&amp;"/>
+                                <bnf:token value="&apos;"/>
+                            </bnf:or>
+                        </bnf:not>
+
+                        <bnf:special type="any"/>
+                    </bnf:block>
+
+                    <bnf:call name="PEReference"/>
+                    <bnf:call name="Reference"/>
+                </bnf:or>
+            </bnf:repeated>
+
+            <bnf:token value="&apos;"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AttValue">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="&quot;"/>
+
+            <bnf:repeated>
+                <bnf:or>
+                    <bnf:block>
+                        <bnf:not>
+                            <bnf:or>
+                                <bnf:token value="%"/>
+                                <bnf:token value="&amp;"/>
+                                <bnf:token value="&quot;"/>
+                            </bnf:or>
+                        </bnf:not>
+
+                        <bnf:special type="any"/>
+                    </bnf:block>
+
+                    <bnf:call name="Reference"/>
+                </bnf:or>
+            </bnf:repeated>
+
+            <bnf:token value="&quot;"/>
+        </bnf:block>
+
+        <bnf:block>
+            <bnf:token value="&apos;"/>
+
+            <bnf:repeated>
+                <bnf:or>
+                    <bnf:block>
+                        <bnf:not>
+                            <bnf:or>
+                                <bnf:token value="%"/>
+                                <bnf:token value="&amp;"/>
+                                <bnf:token value="&apos;"/>
+                            </bnf:or>
+                        </bnf:not>
+
+                        <bnf:special type="any"/>
+                    </bnf:block>
+
+                    <bnf:call name="Reference"/>
+                </bnf:or>
+            </bnf:repeated>
+
+            <bnf:token value="&apos;"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SystemLiteral">
+    <bnf:or>
+        <bnf:block>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+</bnf:grammar>

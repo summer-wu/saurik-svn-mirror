@@ -1,0 +1,30 @@
+diff -ru xml2-0.2/2xml.c xml2-0.2+iPhone/2xml.c
+--- xml2-0.2/2xml.c	2000-03-20 01:01:16.000000000 +0000
++++ xml2-0.2+iPhone/2xml.c	2008-01-01 23:24:52.000000000 +0000
+@@ -116,7 +116,7 @@
+ 	}
+ }
+ 
+-static void characters(const char *stuff,const char *context)
++static void characters_(const char *stuff,const char *context)
+ {
+ 	switch (context[0]) {
+ 	case '!':
+@@ -178,7 +178,7 @@
+ 	}
+ 
+ 	if (NULL == name && NULL == *ptr && NULL != content)
+-		characters("\n",context);
++		characters_("\n",context);
+ 
+ 	release(ptr);
+ 
+@@ -199,7 +199,7 @@
+ 	}
+ 
+ 	*ptr = NULL;
+-	if (NULL != content) characters(content,context);
++	if (NULL != content) characters_(content,context);
+ }
+ 
+ int main(int argc,char *argv[])

@@ -1,0 +1,35 @@
+<body title="ARM Jazelle">
+
+"ARM Developer Suite Version 1.2: AXD and armsd Debuggers Guide"
+http://www.arm.com/pdfs/DUI0066D_ADS1_2_AXD_armsd.pdf
+
+Shows memory state, with a bunch of Java code at 0x8000. This is the default place where memory maps start out.
+
+"ARM Strengthens Java Compilers"
+http://www.arm.com/miscPDFs/10069.pdf
+
+"Jazelle for Execution Environments"
+http://www.arm.com/pdfs/JazelleRCTWhitePaper_final1-0_.pdf
+
+r8: handler parameter
+r9: local variables and stack spill
+r10: constant pool of current class
+r14: return address
+
+"Arm (Advance RISC Machine)"
+http://www.cpe.ku.ac.th/~pom/courses/204521/report/2001/Jazelle.ppt
+
+"CoreSight ETM11 Technical Reference Manual"
+http://www.arm.com/pdfs/DDI0318B_coresight_etm11_r0p1_trm.pdf
+
+"On the Design of the Local Variable Cache in a Hardware Translation-Based Java Virtual Machine"
+http://www.u-aizu.ac.jp/~hitoshi/RESEARCH/lctes05_acm.ps
+
+"Accelerating to meet the challenges of embedded Java"
+http://www.jp.arm.com/document/whitepater/pdf/Jazelle_White_Paper.pdf
+
+r0-3: java stack cache
+r4: local0
+
+
+</body>

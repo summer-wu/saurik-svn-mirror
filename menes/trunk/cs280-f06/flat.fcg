@@ -1,0 +1,23 @@
+struct Input_ {
+    float4 color_ : COLOR0;
+    float3 normal_ : TEXCOORD0;
+    float3 light_ : TEXCOORD1;
+    float3 camera_ : TEXCOORD2;
+};
+
+struct Output_ {
+    float4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input
+) {
+    Output_ output;
+    float diffuse = dot(-input.light_, input.normal_);
+    //float specular = dot(reflect(input.light_, input.normal_), input.camera_);
+    //specular = pow(max(0.0f, specular), 10);
+    diffuse = max(0.0f, diffuse) * 0.7;
+    output.color_ = (diffuse + 0.0f) * input.color_ /*+ specular*/;
+    output.color_ = float4(1, 1, 0, 1);
+    return output;
+}

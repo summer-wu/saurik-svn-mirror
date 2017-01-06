@@ -1,0 +1,17 @@
+diff -ru sudo-1.6.9p12/Makefile.in sudo-1.6.9p12+iPhone/Makefile.in
+--- sudo-1.6.9p12/Makefile.in	2008-01-14 12:22:57.000000000 +0000
++++ sudo-1.6.9p12+iPhone/Makefile.in	2008-04-05 05:54:13.000000000 +0000
+@@ -310,11 +310,11 @@
+ 	    $(DESTDIR)$(noexecdir)
+ 
+ install-binaries: $(PROGS)
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 4111 -s sudo $(DESTDIR)$(sudodir)/sudo
++	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 4111 sudo $(DESTDIR)$(sudodir)/sudo
+ 	rm -f $(DESTDIR)$(sudodir)/sudoedit
+ 	ln $(DESTDIR)$(sudodir)/sudo $(DESTDIR)$(sudodir)/sudoedit
+ 
+-	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0111 -s visudo $(DESTDIR)$(visudodir)/visudo
++	$(INSTALL) -O $(install_uid) -G $(install_gid) -M 0111 visudo $(DESTDIR)$(visudodir)/visudo
+ 
+ install-noexec: sudo_noexec.la
+ 	$(LIBTOOL) --mode=install $(INSTALL) sudo_noexec.la $(DESTDIR)$(noexecdir)

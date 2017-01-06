@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opcodes set="java" endian="big">
+
+	<!-- 0x00 - 0x0F -->
+
+	<op code="0" name="nop"/>
+	<op code="1" name="aconst_null"/>
+	<op code="2" name="iconst_m1"/>
+	<op code="3" name="iconst_0"/>
+	<op code="4" name="iconst_1"/>
+	<op code="5" name="iconst_2"/>
+	<op code="6" name="iconst_3"/>
+	<op code="7" name="iconst_4"/>
+	<op code="8" name="iconst_5"/>
+	<op code="9" name="lconst_0"/>
+	<op code="a" name="lconst_1"/>
+	<op code="b" name="fconst_0"/>
+	<op code="c" name="fconst_1"/>
+	<op code="d" name="fconst_2"/>
+	<op code="e" name="dconst_0"/>
+	<op code="f" name="dconst_1"/>
+
+	<!-- 0x10 - 0x1F -->
+
+	<op code="10" name="bipush">
+		<arg type="I1" name="value"/>
+	</op>
+
+	<op code="11" name="sipush">
+		<arg type="I2" name="value"/>
+	</op>
+
+	<op code="12" name="ldc">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="13" name="ldc_w">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="14" name="ldc2_w">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="15" name="iload">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="16" name="lload">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="17" name="fload">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="18" name="dload">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="19" name="aload">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="1a" name="iload_0"/>
+
+	<op code="1b" name="iload_1"/>
+
+	<op code="1c" name="iload_2"/>
+
+	<op code="1d" name="iload_3"/>
+
+	<op code="1e" name="lload_0"/>
+
+	<op code="1f" name="lload_1"/>
+
+	<!-- 0x20 - 0x2F -->
+
+	<op code="20" name="lload_2"/>
+
+	<op code="21" name="lload_3"/>
+
+	<op code="22" name="fload_0"/>
+
+	<op code="23" name="fload_1"/>
+
+	<op code="24" name="fload_2"/>
+
+	<op code="25" name="fload_3"/>
+
+	<op code="26" name="dload_0"/>
+
+	<op code="27" name="dload_1"/>
+
+	<op code="28" name="dload_2"/>
+
+	<op code="29" name="dload_3"/>
+
+	<op code="2a" name="aload_0"/>
+
+	<op code="2b" name="aload_1"/>
+
+	<op code="2c" name="aload_2"/>
+
+	<op code="2d" name="aload_3"/>
+
+	<op code="2e" name="iaload"/>
+
+	<op code="2f" name="laload"/>
+
+	<!-- 0x30 - 0x3F -->
+
+	<op code="30" name="faload"/>
+
+	<op code="31" name="daload"/>
+
+	<op code="32" name="aaload"/>
+
+	<op code="33" name="baload"/>
+
+	<op code="34" name="caload"/>
+
+	<op code="35" name="saload"/>
+
+	<op code="36" name="istore">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="37" name="lstore">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="38" name="fstore">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="39" name="dstore">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="3a" name="astore">
+		<arg type="U1" name="index"/>
+	</op>
+
+	<op code="3b" name="istore_0"/>
+
+	<op code="3c" name="istore_1"/>
+
+	<op code="3d" name="istore_2"/>
+
+	<op code="3e" name="istore_3"/>
+
+	<op code="3f" name="lstore_0"/>
+
+	<!-- 0x40 - 0x4F -->
+
+	<op code="40" name="lstore_1"/>
+
+	<op code="41" name="lstore_2"/>
+
+	<op code="42" name="lstore_3"/>
+
+	<op code="43" name="fstore_0"/>
+
+	<op code="44" name="fstore_1"/>
+
+	<op code="45" name="fstore_2"/>
+
+	<op code="46" name="fstore_3"/>
+
+	<op code="47" name="dstore_0"/>
+
+	<op code="48" name="dstore_1"/>
+
+	<op code="49" name="dstore_2"/>
+
+	<op code="4a" name="dstore_3"/>
+
+	<op code="4b" name="astore_0"/>
+
+	<op code="4c" name="astore_1"/>
+
+	<op code="4d" name="astore_2"/>
+
+	<op code="4e" name="astore_3"/>
+
+	<op code="4f" name="iastore"/>
+
+	<!-- 0x50 - 0x5F -->
+
+	<op code="50" name="lastore"/>
+
+	<op code="51" name="fastore"/>
+
+	<op code="52" name="dastore"/>
+
+	<op code="53" name="aastore"/>
+
+	<op code="54" name="bastore"/>
+
+	<op code="55" name="castore"/>
+
+	<op code="56" name="sastore"/>
+
+	<op code="57" name="pop"/>
+
+	<op code="58" name="pop2"/>
+
+	<op code="59" name="dup"/>
+
+	<op code="5a" name="dup_x1"/>
+
+	<op code="5b" name="dup_x2"/>
+
+	<op code="5c" name="dup2"/>
+
+	<op code="5d" name="dup2_x1"/>
+
+	<op code="5e" name="dup2_x2"/>
+
+	<op code="5f" name="swap"/>
+
+	<!-- 0x60 - 0x6F -->
+
+	<op code="60" name="iadd"/>
+
+	<op code="61" name="ladd"/>
+
+	<op code="62" name="fadd"/>
+
+	<op code="63" name="dadd"/>
+
+	<op code="64" name="isub"/>
+
+	<op code="65" name="lsub"/>
+
+	<op code="66" name="fsub"/>
+
+	<op code="67" name="dsub"/>
+
+	<op code="68" name="imul"/>
+
+	<op code="69" name="lmul"/>
+
+	<op code="6a" name="fmul"/>
+
+	<op code="6b" name="dmul"/>
+
+	<op code="6c" name="idiv"/>
+
+	<op code="6d" name="ldiv"/>
+
+	<op code="6e" name="fdiv"/>
+
+	<op code="6f" name="ddiv"/>
+
+	<!-- 0x70 - 0x7F -->
+
+	<op code="70" name="irem"/>
+
+	<op code="71" name="lrem"/>
+
+	<op code="72" name="frem"/>
+
+	<op code="73" name="drem"/>
+
+	<op code="74" name="ineg"/>
+
+	<op code="75" name="lneg"/>
+
+	<op code="76" name="fneg"/>
+
+	<op code="77" name="dnet"/>
+
+	<op code="78" name="ishl"/>
+
+	<op code="79" name="lshl"/>
+
+	<op code="7a" name="ishr"/>
+
+	<op code="7b" name="lshr"/>
+
+	<op code="7c" name="iushr"/>
+
+	<op code="7d" name="lushr"/>
+
+	<op code="7e" name="iand"/>
+
+	<op code="7f" name="land"/>
+
+	<!-- 0x80 - 0x8F -->
+
+	<op code="80" name="ior"/>
+
+	<op code="81" name="lor"/>
+
+	<op code="82" name="ixor"/>
+
+	<op code="83" name="lxor"/>
+
+	<op code="84" name="iinc">
+		<arg type="U1" name="index"/>
+		<arg type="I1" name="const"/>
+	</op>
+
+	<op code="85" name="i2l"/>
+
+	<op code="86" name="i2f"/>
+
+	<op code="87" name="i2d"/>
+
+	<op code="88" name="l2i"/>
+
+	<op code="89" name="l2f"/>
+
+	<op code="8a" name="l2d"/>
+
+	<op code="8b" name="f2i"/>
+
+	<op code="8c" name="f2l"/>
+
+	<op code="8d" name="f2d"/>
+
+	<op code="8e" name="d2i"/>
+
+	<op code="8f" name="d2l"/>
+
+	<!-- 0x90 - 0x9F -->
+
+	<op code="90" name="d2f"/>
+
+	<op code="91" name="i2b"/>
+
+	<op code="92" name="i2c"/>
+
+	<op code="93" name="i2s"/>
+
+	<op code="94" name="lcmp"/>
+
+	<op code="95" name="fcmpl"/>
+
+	<op code="96" name="fcmpg"/>
+
+	<op code="97" name="dcmpl"/>
+
+	<op code="98" name="dcmpg"/>
+
+	<op code="99" name="ifeq">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9a" name="ifne">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9b" name="iflt">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9c" name="ifge">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9d" name="ifgt">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9e" name="ifle">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="9f" name="if_icmpeq">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<!-- 0xA0 - 0xAF -->
+
+	<op code="a0" name="if_icmpne">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a1" name="if_icmplt">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a2" name="if_icmpge">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a3" name="if_icmpgt">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a4" name="if_icmple">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a5" name="if_acmpeq">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a6" name="if_acmpne">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a7" name="goto" stop="yes">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a8" name="jsr" stop="yes">
+		<arg type="I2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="a9" name="ret" stop="yes">
+		<arg type="I1" name="index" branch="xxx"/>
+	</op>
+
+	<op code="aa" name="tableswitch" stop="yes">
+		<padding multiple="4"/>
+		<arg type="I4" name="default" branch="pre"/>
+		<arg type="I4" name="low"/>
+		<arg type="I4" name="high"/>
+		<multi start="@low" end="@high" name="targets">
+			<arg type="I4" name="offset" branch="pre"/>
+		</multi>
+	</op>
+
+	<op code="ab" name="lookupswitch" stop="yes">
+		<padding multiple="4"/>
+		<arg type="I4" name="default" branch="pre"/>
+		<arg type="U4" name="npairs"/>
+		<multi start="1" end="npairs" name="targets">
+			<arg type="I4" name="match"/>
+			<arg type="I4" name="offset" branch="pre"/>
+		</multi>
+	</op>
+
+	<op code="ac" name="ireturn"/>
+
+	<op code="ad" name="lreturn"/>
+
+	<op code="ae" name="freturn"/>
+
+	<op code="af" name="dreturn"/>
+
+	<!-- 0xB0 - 0xBF -->
+
+	<op code="b0" name="areturn"/>
+
+	<op code="b1" name="return"/>
+
+	<op code="b2" name="getstatic">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b3" name="putstatic">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b4" name="getfield">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b5" name="putfield">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b6" name="invokevirtual">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b7" name="invokespecial">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b8" name="invokestatic">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="b9" name="invokeinterface">
+		<arg type="U2" name="index"/>
+		<arg type="U1" name="count"/>
+		<padding length="1"/>
+	</op>
+
+	<!-- op code="ba" name="" -->
+
+	<op code="bb" name="new">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="bc" name="newarray">
+		<arg type="U1" name="atype"/>
+	</op>
+
+	<op code="bd" name="anewarray">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="be" name="arraylength"/>
+
+	<op code="bf" name="athrow"/>
+
+	<!-- 0xC0 - 0xCF -->
+
+	<op code="c0" name="checkcast">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="c1" name="instanceof">
+		<arg type="U2" name="index"/>
+	</op>
+
+	<op code="c2" name="monitorenter"/>
+
+	<op code="c3" name="monitorexit"/>
+
+	<stata code="c4" name="wide">
+		<op code="15" name="iload">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="16" name="lload">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="17" name="fload">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="18" name="dload">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="19" name="aload">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="36" name="istore">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="37" name="lstore">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="38" name="fstore">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="39" name="dstore">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="3a" name="astore">
+			<arg type="U2" name="index"/>
+		</op>
+
+		<op code="84" name="iinc">
+			<arg type="U2" name="index"/>
+			<arg type="I2" name="const"/>
+		</op>
+
+		<op code="a9" name="ret" stop="yes">
+			<arg type="I2" name="index" branch="xxx"/>
+		</op>
+	</stata>
+
+	<op code="c5" name="multianewarray">
+		<arg type="U2" name="index"/>
+		<arg type="U1" name="dimensions"/>
+	</op>
+
+	<op code="c6" name="ifnull">
+		<arg type="U2" name="index" branch="pre"/>
+	</op>
+
+	<op code="c7" name="ifnonnull">
+		<arg type="U2" name="branch" branch="pre"/>
+	</op>
+
+	<op code="c8" name="goto_w" stop="yes">
+		<arg type="I4" name="branch" branch="pre"/>
+	</op>
+
+	<op code="c9" name="jsr_w" stop="yes">
+		<arg type="U4" name="branch" branch="pre"/>
+	</op>
+
+</opcodes>

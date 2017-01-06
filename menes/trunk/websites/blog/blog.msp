@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<waf:logic xmlns:waf="http://www.saurik.com/menes/waf/0.9">
+
+<waf:set-status code="200"/>
+<!--<waf:add-header name="Content-Type" value="application/xhtml+xml"/>-->
+<waf:add-header name="Content-Type" value="text/html"/>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>The Realm of The Avatar</title>
+    <link rel="stylesheet" type="text/css" href="/keystone.css"/>
+</head><body>
+    <table align="center" cellspacing="0" class="window" id="header-window">
+        <tr class="title-bar">
+            <td class="title-caption">The Realm of the Avatar</td>
+            <td class="menu-bar">[<a href="insert.msp">insert</a>|<a href="calendar.msp">calendar</a>]</td>
+        </tr>
+
+        <tr><td colspan="2" class="content">Welcome to The Inner Sanctum. </td></tr>
+    </table>
+
+    <waf:logic>
+        /*_R< dbi::Connection > connection(driver->Connect("", "saurik", "", "thoth"));
+        dbi::Transaction lock(*connection);
+        _R< dbi::ResultSet > entries(connection->Execute("SELECT * FROM document WHERE type = ''"));*/
+
+        unsigned comments(0);
+
+        <table align="center" cellspacing="0" class="window">
+            <tr class="title-bar">
+                <td class="title-caption">{"wibble"}</td>
+                <td class="time-stamp">[{"18 Jun 2003"}|<span style="font-weight: bold">{"07:53pm PST"}</span>]</td>
+            </tr>
+
+            <tr><td colspan="2" class="content">{"this is my text so that I can do stuff; see? it works"}</td></tr>
+            <tr><td colspan="2" class="status-bar" style="text-align: right"><a href="javascript:;">{comments} {comments == 1 ? "comment" : "comments"}</a> | <a href="javascript:;">post comment</a></td></tr>
+        </table>
+    </waf:logic>
+</body>
+</html>
+
+</waf:logic>

@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ $1 == install || $1 == upgrade ]]; then
+    if [[ ! -e /System/Library/PrivateFrameworks/MessageUI.framework ]]; then
+        ln -s /System/Library/{,Private}Frameworks/MessageUI.framework
+    fi
+fi

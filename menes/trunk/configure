@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+menes="$(dirname "$0")"
+source "$menes/utils/bashrc.sh"
+source "$menes/utils/assert.sh"
+
+source "$menes/config-sh.d/init.sh"
+
+for d in "$menes"/make.sh/*.d; do
+    for sh in "$d"/*.{cfg,sh}; do
+        source "$sh"
+    done
+done
+
+cfg:set '$' 'menes root' "$(realpath "$menes")"
+
+file="$menes/make.sh/build-$(cfg:get 'c++ class').cfg"
+if [ -r "$file" ]; then
+    echo
+    echo 'configuring make.sh/build:'
+    source "$file"
+fi
+
+for cfg in $(find "$menes/menes" -name build.cfg | sed -e 's/^\.\///; s/\/build.cfg$//' | sort); do
+    echo
+    echo "configuring $cfg:"
+    source "$cfg/build.cfg"
+done
+
+exit 0

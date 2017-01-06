@@ -1,0 +1,13 @@
+diff -ru ruby-1.9.2-rc2/configure.in ruby-1.9.2-rc2+iPhone/configure.in
+--- ruby-1.9.2-rc2/configure.in	2010-07-10 04:06:05.000000000 +0000
++++ ruby-1.9.2-rc2+iPhone/configure.in	2010-08-08 00:05:23.000000000 +0000
+@@ -185,6 +185,9 @@
+ 	    AC_MSG_CHECKING([for real target cpu])
+ 	    target=`echo $target | sed "s/^$target_cpu-/-/"`
+ 	    target_cpu=`$CC -E - 2>/dev/null <<EOF |
++#ifdef __arm__
++"processor-name=arm"
++#endif
+ #ifdef __x86_64__
+ "processor-name=x86_64"
+ #endif

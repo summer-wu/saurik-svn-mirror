@@ -1,0 +1,13 @@
+diff -ru nmap-4.76/nmap_dns.h nmap-4.76+iPhone/nmap_dns.h
+--- nmap-4.76/nmap_dns.h	2008-08-21 09:24:35.000000000 +0000
++++ nmap-4.76+iPhone/nmap_dns.h	2008-10-09 08:45:26.000000000 +0000
+@@ -95,6 +95,9 @@
+  *                                                                         *
+  ***************************************************************************/
+ 
++#include <list>
++#include <string>
++
+ class Target;
+ 
+ void nmap_mass_rdns(Target ** targets, int num_targets);

@@ -1,0 +1,70 @@
+.wikicyte {
+    position: relative;
+}
+
+ul.menucyte {
+    list-style-image: none !important;
+    list-style-type: none !important;
+    z-index: 1;
+}
+
+ul.menucyte li {
+    background: none !important;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+}
+
+ul.menucyte, ul.menucyte li span {
+    display: block;
+    margin: auto 0;
+}
+
+ul.menucyte a,
+ul.menucyte a * {
+    border: none !important;
+    text-decoration: none !important;
+}
+
+ul.menucyte img {
+    border: none !important;
+    height: 1.2em !important;
+    margin: 0 !important;
+    width: 1.2em !important;
+}
+
+ul.menucyte {
+    background-color: rgba(200, 200, 255, .2);
+    border: 1px solid rgba(180, 180, 255, .2);
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 9px;
+    display: block;
+    font-size: 10px !important;
+    height: 1.4em;
+    padding: 2px 2px 0 0 !important;
+    margin: 0 auto !important;
+    position: absolute;
+    top: 0px;
+    left: 2%;
+    width: 96%;
+}
+
+ul.menucyte li {
+    margin: 0 .2em !important;
+    padding: 0 !important;
+    float: right;
+}
+
+ul.menucyte a {
+    text-decoration: none;
+}
+
+a.menucyte {
+    font-size: 24px;
+    left: 15px;
+    position: absolute;
+    z-index: 1;
+}
+
+ul.menucyte {
+    display: block;
+}

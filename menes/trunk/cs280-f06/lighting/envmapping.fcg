@@ -1,0 +1,17 @@
+struct Input_ {
+    float3 normal_ : TEXCOORD0;
+    float4 camera_ : TEXCOORD1;
+};
+
+struct Output_ {
+    float4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform samplerCUBE environment
+) {
+    Output_ output;
+    output.color_ = texCUBE(environment, reflect(input.camera_, input.normal_));
+    return output;
+}

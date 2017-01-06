@@ -1,0 +1,9 @@
+every parser has a stack state associated with it
+each entry of the stack state is an iterator into a production
+it also has the current input frame pointer
+it also has the data associated with that parser (buffer/prefix)
+it also has a reference to a possible alternative backtrack
+
+ok, screw that, instead just store the current parser state in local variables
+this is the current input pointer and the current iterator stack
+each time you have one of multiple options you 

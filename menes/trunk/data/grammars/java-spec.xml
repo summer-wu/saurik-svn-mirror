@@ -1,0 +1,2436 @@
+<?xml version="1.0"?>
+<bnf:grammar
+    xmlns:bnf="http://www.saurik.com/menes/bnf/0.9"
+    name="Java"
+    bnf:seperator="InputSeperator"
+>
+
+<bnf:define name="InputSeperator">
+    <bnf:repeated>
+        <bnf:or>
+            <bnf:element name="WhiteSpace"/>
+            <bnf:element name="Comment"/>
+        </bnf:or>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="UnicodeInputCharacter">
+    <bnf:or>
+        <bnf:element name="UnicodeEscape"/>
+        <bnf:element name="RawInputCharacter"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="UnicodeEscape">
+    <bnf:block bnf:seperator="">
+        <bnf:token value="\\"/>
+        <bnf:element name="UnicodeMarker"/>
+        <bnf:element name="HexDigit"/>
+        <bnf:element name="HexDigit"/>
+        <bnf:element name="HexDigit"/>
+        <bnf:element name="HexDigit"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="UnicodeMarker">
+    <bnf:or>
+        <bnf:token value="u"/>
+        <bnf:block>
+            <bnf:element name="UnicodeMarker"/>
+            <bnf:token value="u"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="RawInputCharacter">
+    <bnf:special type="any"/>
+</bnf:define>
+
+<bnf:define name="LineTerminator">
+    <bnf:or>
+        <bnf:token value="\r"/>
+        <bnf:token value="\n"/>
+        <bnf:token value="\r\n"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InputCharacter">
+    <bnf:block>
+        <bnf:lookahead>
+            <bnf:not>
+                <bnf:or>
+                    <bnf:token value="\r"/>
+                    <bnf:token value="\n"/>
+                </bnf:or>
+            </bnf:not>
+        </bnf:lookahead>
+        <bnf:element name="UnicodeInputCharacter"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Input">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="InputElements"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Sub"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="InputElements">
+    <bnf:or>
+        <bnf:element name="InputElement"/>
+        <bnf:block>
+            <bnf:element name="InputElements"/>
+            <bnf:element name="InputElement"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InputElement">
+    <bnf:or>
+        <bnf:element name="WhiteSpace"/>
+        <bnf:element name="Comment"/>
+        <bnf:element name="Token"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Token">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:element name="Keyword"/>
+        <bnf:element name="Literal"/>
+        <bnf:element name="Seperator"/>
+        <bnf:element name="Operator"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Sub">
+    <bnf:token value="\x1a"/>
+</bnf:define>
+
+<bnf:define name="WhiteSpace">
+    <bnf:or>
+        <bnf:token value=" "/>
+        <bnf:token value="\t"/>
+        <bnf:token value="\f"/>
+        <bnf:element name="LineTerminator"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Comment">
+    <bnf:or>
+        <bnf:element name="TraditionalComment"/>
+        <bnf:element name="EndOfLineComment"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="TraditionalComment">
+    <bnf:block>
+        <bnf:token value="/*"/>
+        <bnf:token value="NotStar"/>
+        <bnf:token value="CommentTail"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="EndOfLineComment">
+    <bnf:block>
+        <bnf:token value="//"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="CharactersInLine"/>
+        </bnf:repeated>
+        <bnf:element name="LineTerminator"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="CommentTail">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="*"/>
+            <bnf:element name="CommentTailStar"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="NotStar"/>
+            <bnf:element name="CommentTail"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CommentTailStar">
+    <bnf:or>
+        <bnf:token value="/"/>
+        <bnf:block>
+            <bnf:token value="*"/>
+            <bnf:element name="CommentTailStar"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="NotStarNotSlash"/>
+            <bnf:element name="CommentTail"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="NotStar">
+    <bnf:or>
+        <bnf:block>
+            <bnf:lookahead>
+                <bnf:not>
+                    <bnf:token value="*"/>
+                </bnf:not>
+            </bnf:lookahead>
+            <bnf:element name="InputCharacter"/>
+        </bnf:block>
+        <bnf:element name="LineTerminator"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="NotStarNotSlash">
+    <bnf:or>
+        <bnf:block>
+            <bnf:lookahead>
+                <bnf:not>
+                    <bnf:or>
+                        <bnf:token value="*"/>
+                        <bnf:token value="/"/>
+                    </bnf:or>
+                </bnf:not>
+            </bnf:lookahead>
+            <bnf:element name="InputCharacter"/>
+        </bnf:block>
+        <bnf:element name="LineTerminator"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CharactersInLine">
+    <bnf:or>
+        <bnf:element name="InputCharacter"/>
+        <bnf:block>
+            <bnf:element name="CharactersInLine"/>
+            <bnf:element name="InputCharacter"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Identifier">
+    <bnf:block bnf:seperator="">
+        <bnf:lookahead>
+            <bnf:not>
+                <bnf:or>
+                    <bnf:element name="Keyword"/>
+                    <bnf:element name="BooleanLiteral"/>
+                    <bnf:element name="NullLiteral"/>
+                </bnf:or>
+            </bnf:not>
+        </bnf:lookahead>
+        <bnf:element name="IdentifierChars"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="IdentifierChars">
+    <bnf:or bnf:seperator="">
+        <bnf:element name="JavaLetter"/>
+        <bnf:block>
+            <bnf:element name="IdentifierChars"/>
+            <bnf:element name="JavaLetterOrDigit"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="JavaLetter">
+    <bnf:or>
+        <bnf:token value="$"/>
+        <bnf:token value="_"/>
+        <bnf:range begin="a" end="z"/>
+        <bnf:range begin="A" end="Z"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="JavaLetterOrDigit">
+    <bnf:or>
+        <bnf:element name="JavaLetter"/>
+        <bnf:element name="Digit"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Keyword">
+    <bnf:or>
+        <bnf:token value="abstract"/>
+        <bnf:token value="boolean"/>
+        <bnf:token value="break"/>
+        <bnf:token value="byte"/>
+        <bnf:token value="case"/>
+        <bnf:token value="catch"/>
+        <bnf:token value="char"/>
+        <bnf:token value="class"/>
+        <bnf:token value="const"/>
+        <bnf:token value="continue"/>
+        <bnf:token value="default"/>
+        <bnf:token value="do"/>
+        <bnf:token value="double"/>
+        <bnf:token value="else"/>
+        <bnf:token value="extends"/>
+        <bnf:token value="final"/>
+        <bnf:token value="finally"/>
+        <bnf:token value="float"/>
+        <bnf:token value="for"/>
+        <bnf:token value="goto"/>
+        <bnf:token value="if"/>
+        <bnf:token value="implements"/>
+        <bnf:token value="import"/>
+        <bnf:token value="instanceof"/>
+        <bnf:token value="int"/>
+        <bnf:token value="interface"/>
+        <bnf:token value="long"/>
+        <bnf:token value="native"/>
+        <bnf:token value="new"/>
+        <bnf:token value="package"/>
+        <bnf:token value="private"/>
+        <bnf:token value="protected"/>
+        <bnf:token value="public"/>
+        <bnf:token value="return"/>
+        <bnf:token value="short"/>
+        <bnf:token value="static"/>
+        <bnf:token value="strictfp"/>
+        <bnf:token value="super"/>
+        <bnf:token value="switch"/>
+        <bnf:token value="synchronized"/>
+        <bnf:token value="this"/>
+        <bnf:token value="throw"/>
+        <bnf:token value="throws"/>
+        <bnf:token value="transient"/>
+        <bnf:token value="try"/>
+        <bnf:token value="void"/>
+        <bnf:token value="volatile"/>
+        <bnf:token value="while"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Literal">
+    <bnf:or>
+        <bnf:element name="IntegerLiteral"/>
+        <bnf:element name="FloatingPointLiteral"/>
+        <bnf:element name="BooleanLiteral"/>
+        <bnf:element name="CharacterLiteral"/>
+        <bnf:element name="StringLiteral"/>
+        <bnf:element name="NullLiteral"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="IntegerLiteral">
+    <bnf:or>
+        <bnf:element name="DecimalIntegerLiteral"/>
+        <bnf:element name="HexIntegerLiteral"/>
+        <bnf:element name="OctalIntegerLiteral"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="DecimalIntegerLiteral">
+    <bnf:block>
+        <bnf:element name="DecimalNumeral"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="IntegerTypeSuffix"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="HexIntegerLiteral">
+    <bnf:block>
+        <bnf:element name="HexNumeral"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="IntegerTypeSuffix"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="OctalIntegerLiteral">
+    <bnf:block>
+        <bnf:element name="OctalNumeral"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="IntegerTypeSuffix"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="IntegerTypeSuffix">
+    <bnf:or>
+        <bnf:token value="l"/>
+        <bnf:token value="L"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="DecimalNumeral">
+    <bnf:or>
+        <bnf:token value="0"/>
+        <bnf:block>
+            <bnf:element name="NonZeroDigit"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Digits"/>
+            </bnf:repeated>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Digits">
+    <bnf:or>
+        <bnf:element name="Digit"/>
+        <bnf:block>
+            <bnf:element name="Digits"/>
+            <bnf:element name="Digit"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Digit">
+    <bnf:range begin="0" end="9"/>
+</bnf:define>
+
+<bnf:define name="NonZeroDigit">
+    <bnf:range begin="1" end="9"/>
+</bnf:define>
+
+<bnf:define name="HexNumeral">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="0x"/>
+            <bnf:element name="HexDigits"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="0X"/>
+            <bnf:element name="HexDigits"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="HexDigits">
+    <bnf:or>
+        <bnf:element name="HexDigit"/>
+        <bnf:block>
+            <bnf:element name="HexDigit"/>
+            <bnf:element name="HexDigits"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="HexDigit">
+    <bnf:or>
+        <bnf:range begin="0" end="9"/>
+        <bnf:range begin="a" end="f"/>
+        <bnf:range begin="A" end="F"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="OctalNumeral">
+    <bnf:block>
+        <bnf:token value="0"/>
+        <bnf:element name="OctalDigits"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="OctalDigits">
+    <bnf:or>
+        <bnf:element name="OctalDigit"/>
+        <bnf:block>
+            <bnf:element name="OctalDigit"/>
+            <bnf:element name="OctalDigits"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="OctalDigit">
+    <bnf:range begin="0" end="7"/>
+</bnf:define>
+
+<bnf:define name="FloatingPointLiteral">
+    <bnf:or>
+        <bnf:block>
+            <bnf:element name="Digits"/>
+            <bnf:token value="."/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Digits"/>
+            </bnf:repeated>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ExponentPart"/>
+            </bnf:repeated>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="FloatTypeSuffix"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="."/>
+            <bnf:element name="Digits"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ExponentPart"/>
+            </bnf:repeated>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="FloatTypeSuffix"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Digits"/>
+            <bnf:element name="ExponentPart"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="FloatTypeSuffix"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Digits"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ExponentPart"/>
+            </bnf:repeated>
+            <bnf:element name="FloatTypeSuffix"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ExponentPart">
+    <bnf:block>
+        <bnf:element name="ExponentIndicator"/>
+        <bnf:element name="SignedInteger"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ExponentIndicator">
+    <bnf:or>
+        <bnf:token value="e"/>
+        <bnf:token value="E"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SignedInteger">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Sign"/>
+        </bnf:repeated>
+        <bnf:element name="Digits"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Sign">
+    <bnf:or>
+        <bnf:token value="+"/>
+        <bnf:token value="-"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FloatTypeSuffix">
+    <bnf:or>
+        <bnf:token value="f"/>
+        <bnf:token value="F"/>
+        <bnf:token value="d"/>
+        <bnf:token value="D"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="BooleanLiteral">
+    <bnf:or>
+        <bnf:token value="true"/>
+        <bnf:token value="false"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CharacterLiteral">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="&apos;"/>
+            <bnf:element name="SingleCharacter"/>
+            <bnf:token value="&apos;"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="&apos;"/>
+            <bnf:element name="EscapeSequence"/>
+            <bnf:token value="&apos;"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SingleCharacter">
+    <bnf:block>
+        <bnf:lookahead>
+            <bnf:not>
+                <bnf:or>
+                    <bnf:token value="&apos;"/>
+                    <bnf:token value="\\"/>
+                </bnf:or>
+            </bnf:not>
+        </bnf:lookahead>
+        <bnf:element name="InputCharacter"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="StringLiteral">
+    <bnf:token value="&quot;"/>
+    <bnf:repeated least="0" most="1">
+        <bnf:element name="StringCharacters"/>
+    </bnf:repeated>
+    <bnf:token value="&quot;"/>
+</bnf:define>
+
+<bnf:define name="StringCharacters">
+    <bnf:or>
+        <bnf:element name="StringCharacter"/>
+        <bnf:block>
+            <bnf:element name="StringCharacters"/>
+            <bnf:element name="StringCharacter"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="StringCharacter">
+    <bnf:or>
+        <bnf:block>
+            <bnf:lookahead>
+                <bnf:not>
+                    <bnf:or>
+                        <bnf:token value="&quot;"/>
+                        <bnf:token value="\\"/>
+                    </bnf:or>
+                </bnf:not>
+            </bnf:lookahead>
+            <bnf:element name="InputCharacter"/>
+        </bnf:block>
+        <bnf:element name="EscapeSequence"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="EscapeSequence">
+    <bnf:or>
+        <bnf:token value="\\b"/>
+        <bnf:token value="\\t"/>
+        <bnf:token value="\\n"/>
+        <bnf:token value="\\f"/>
+        <bnf:token value="\\r"/>
+        <bnf:token value="\\&quot;"/>
+        <bnf:token value="\\&apos;"/>
+        <bnf:token value="\\\\"/>
+        <bnf:element name="OctalEscape"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="OctalEscape">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="\\"/>
+            <bnf:element name="OctalDigit"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="\\"/>
+            <bnf:element name="OctalDigit"/>
+            <bnf:element name="OctalDigit"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="\\"/>
+            <bnf:element name="ZeroToThree"/>
+            <bnf:element name="OctalDigit"/>
+            <bnf:element name="OctalDigit"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="OctalDigit">
+    <bnf:range begin="0" end="3"/>
+</bnf:define>
+
+<bnf:define name="ZeroToThree">
+    <bnf:range begin="0" end="7"/>
+</bnf:define>
+
+<bnf:define name="NullLiteral">
+    <bnf:token value="null"/>
+</bnf:define>
+
+<bnf:define name="Seperator">
+    <bnf:or>
+        <bnf:token value="("/>
+        <bnf:token value=")"/>
+        <bnf:token value="{"/>
+        <bnf:token value="}"/>
+        <bnf:token value="["/>
+        <bnf:token value="]"/>
+        <bnf:token value=";"/>
+        <bnf:token value=","/>
+        <bnf:token value="."/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Operator">
+    <bnf:or>
+        <bnf:token value="="/>
+        <bnf:token value="=="/>
+        <bnf:token value="+"/>
+        <bnf:token value="+="/>
+        <bnf:token value="&gt;"/>
+        <bnf:token value="&lt;="/>
+        <bnf:token value="-"/>
+        <bnf:token value="-="/>
+        <bnf:token value="&lt;"/>
+        <bnf:token value="&gt;="/>
+        <bnf:token value="*"/>
+        <bnf:token value="*="/>
+        <bnf:token value="!"/>
+        <bnf:token value="!="/>
+        <bnf:token value="/"/>
+        <bnf:token value="/="/>
+        <bnf:token value="~"/>
+        <bnf:token value="&amp;&amp;"/>
+        <bnf:token value="&amp;"/>
+        <bnf:token value="&amp;="/>
+        <bnf:token value="?"/>
+        <bnf:token value="||"/>
+        <bnf:token value="|"/>
+        <bnf:token value="|="/>
+        <bnf:token value=":"/>
+        <bnf:token value="++"/>
+        <bnf:token value="^"/>
+        <bnf:token value="^="/>
+        <bnf:token value="--"/>
+        <bnf:token value="%"/>
+        <bnf:token value="%="/>
+        <bnf:token value="&lt;&lt;"/>
+        <bnf:token value="&lt;&lt;="/>
+        <bnf:token value="&gt;&gt;"/>
+        <bnf:token value="&gt;&gt;="/>
+        <bnf:token value="&gt;&gt;&gt;"/>
+        <bnf:token value="&gt;&gt;&gt;="/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Type">
+    <bnf:or>
+        <bnf:element name="PrimitiveType"/>
+        <bnf:element name="ReferenceType"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PrimitiveType">
+    <bnf:or>
+        <bnf:element name="NumericType"/>
+        <bnf:token value="boolean"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="NumericType">
+    <bnf:or>
+        <bnf:element name="IntegralType"/>
+        <bnf:element name="FloatingPointType"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="IntegralType">
+    <bnf:or>
+        <bnf:token value="byte"/>
+        <bnf:token value="short"/>
+        <bnf:token value="int"/>
+        <bnf:token value="long"/>
+        <bnf:token value="char"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FloatingPointType">
+    <bnf:or>
+        <bnf:token value="float"/>
+        <bnf:token value="double"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ReferenceType">
+    <bnf:or>
+        <bnf:element name="ClassOrInterfaceType"/>
+        <bnf:element name="ArrayType"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassOrInterfaceType">
+    <bnf:or>
+        <bnf:element name="ClassType"/>
+        <bnf:element name="InterfaceType"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassType">
+    <bnf:element name="TypeName"/>
+</bnf:define>
+
+<bnf:define name="SimpleClassType">
+    <bnf:element name="Identifier"/>
+</bnf:define>
+
+<bnf:define name="InterfaceType">
+    <bnf:element name="TypeName"/>
+</bnf:define>
+
+<bnf:define name="ArrayType">
+    <bnf:block>
+        <bnf:element name="TypeName"/>
+        <bnf:token value="[]"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="PackageName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="PackageName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="TypeName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="PackageOrTypeName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ExpressionName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="AmbiguousName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="AmbiguousName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PackageOrTypeName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="PackageOrTypeName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AmbiguousName">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="AmbiguousName"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CompilationUnit">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="PackageDeclaration"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ImportDeclarations"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="TypeDeclarations"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ImportDeclarations">
+    <bnf:or>
+        <bnf:element name="ImportDeclaration"/>
+        <bnf:block>
+            <bnf:element name="ImportDeclarations"/>
+            <bnf:element name="ImportDeclaration"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="TypeDeclarations">
+    <bnf:or>
+        <bnf:element name="TypeDeclaration"/>
+        <bnf:block>
+            <bnf:element name="TypeDeclarations"/>
+            <bnf:element name="TypeDeclaration"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PackageDeclaration">
+    <bnf:block>
+        <bnf:token value="package"/>
+        <bnf:element name="PackageName"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ImportDeclaration">
+    <bnf:or>
+        <bnf:element name="SingleTypeImportDeclaration"/>
+        <bnf:element name="TypeImportOnDemandDeclaration"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SingleTypeImportDeclaration">
+    <bnf:block>
+        <bnf:token value="import"/>
+        <bnf:element name="TypeName"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="TypeImportOnDemandDeclaration">
+    <bnf:block>
+        <bnf:token value="import"/>
+        <bnf:element name="PackageOrTypeName"/>
+        <bnf:token value=".*;"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="TypeDeclaration">
+    <bnf:or>
+        <bnf:element name="ClassDeclaration"/>
+        <bnf:element name="InterfaceDeclaration"/>
+        <bnf:token value=";"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ClassModifiers"/>
+        </bnf:repeated>
+        <bnf:token value="class"/>
+        <bnf:element name="Identifier"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Super"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Interfaces"/>
+        </bnf:repeated>
+        <bnf:element name="ClassBody"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ClassModifiers">
+    <bnf:or>
+        <bnf:element name="ClassModifier"/>
+        <bnf:block>
+            <bnf:element name="ClassModifiers"/>
+            <bnf:element name="ClassModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="protected"/>
+        <bnf:token value="private"/>
+        <bnf:token value="abstract"/>
+        <bnf:token value="static"/>
+        <bnf:token value="final"/>
+        <bnf:token value="strictfp"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Super">
+    <bnf:block>
+        <bnf:token value="extends"/>
+        <bnf:element name="ClassType"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ClassType">
+    <bnf:element name="TypeName"/>
+</bnf:define>
+
+<bnf:define name="Interfaces">
+    <bnf:block>
+        <bnf:token value="implements"/>
+        <bnf:element name="InterfaceTypeList"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="InterfaceTypeList">
+    <bnf:or>
+        <bnf:element name="InterfaceType"/>
+        <bnf:block>
+            <bnf:element name="InterfaceTypeList"/>
+            <bnf:token value=","/>
+            <bnf:element name="InterfaceType"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InterfaceType">
+    <bnf:element name="TypeName"/>
+</bnf:define>
+
+<bnf:define name="ClassBody">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ClassBodyDeclarations"/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ClassBodyDeclarations">
+    <bnf:or>
+        <bnf:element name="ClassBodyDeclaration"/>
+        <bnf:block>
+            <bnf:element name="ClassBodyDeclarations"/>
+            <bnf:element name="ClassBodyDeclaration"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassBodyDeclaration">
+    <bnf:or>
+        <bnf:element name="ClassMemberDeclaration"/>
+        <bnf:element name="InstanceInitializer"/>
+        <bnf:element name="StaticInitializer"/>
+        <bnf:element name="ConstructorDeclaration"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassMemberDeclaration">
+    <bnf:or>
+        <bnf:element name="FieldDeclaration"/>
+        <bnf:element name="MethodDeclaration"/>
+        <bnf:element name="ClassDeclaration"/>
+        <bnf:element name="InterfaceDeclaration"/>
+        <bnf:token value=";"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FieldDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="FieldModifiers"/>
+        </bnf:repeated>
+        <bnf:element name="Type"/>
+        <bnf:element name="VariableDeclarators"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="VariableDeclarators">
+    <bnf:or>
+        <bnf:element name="VariableDeclarator"/>
+        <bnf:block>
+            <bnf:element name="VariableDeclarators"/>
+            <bnf:token value=","/>
+            <bnf:element name="VariableDeclarator"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="VariableDeclarator">
+    <bnf:or>
+        <bnf:element name="VariableDeclaratorId"/>
+        <bnf:block>
+            <bnf:element name="VariableDeclaratorId"/>
+            <bnf:token value="="/>
+            <bnf:element name="VariableInitializer"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="VariableDeclaratorId">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="VariableDeclaratorId"/>
+            <bnf:token value="[]"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="VariableInitializer">
+    <bnf:or>
+        <bnf:element name="Expression"/>
+        <bnf:element name="ArrayInitializer"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FieldModifiers">
+    <bnf:or>
+        <bnf:element name="FieldModifier"/>
+        <bnf:block>
+            <bnf:element name="FieldModifiers"/>
+            <bnf:element name="FieldModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FieldModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="protected"/>
+        <bnf:token value="private"/>
+        <bnf:token value="static"/>
+        <bnf:token value="final"/>
+        <bnf:token value="transient"/>
+        <bnf:token value="volatile"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodDeclaration">
+    <bnf:block>
+        <bnf:element name="MethodHeader"/>
+        <bnf:element name="MethodBody"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="MethodHeader">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="MethodModifiers"/>
+        </bnf:repeated>
+        <bnf:element name="ResultType"/>
+        <bnf:element name="MethodDeclarator"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Throws"/>
+        </bnf:repeated>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ResultType">
+    <bnf:or>
+        <bnf:element name="Type"/>
+        <bnf:token value="void"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodDeclarator">
+    <bnf:block>
+        <bnf:element name="Identifier"/>
+        <bnf:token value="("/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="FormalParameterList"/>
+        </bnf:repeated>
+        <bnf:token value=")"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="MethodDeclarator">
+    <bnf:block>
+        <bnf:element name="MethodDeclarator"/>
+        <bnf:token value="[]"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="FormalParameterList">
+    <bnf:or>
+        <bnf:element name="FormalParameterList"/>
+        <bnf:block>
+            <bnf:element name="FormalParameterList"/>
+            <bnf:token value=","/>
+            <bnf:element name="FormalParameter"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FormalParameter">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:token value="final"/>
+        </bnf:repeated>
+        <bnf:element name="Type"/>
+        <bnf:element name="VariableDeclaratorId"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="VariableDeclaratorId">
+    <bnf:or>
+        <bnf:element name="Identifier"/>
+        <bnf:block>
+            <bnf:element name="VariableDeclaratorId"/>
+            <bnf:token value="[]"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodModifiers">
+    <bnf:or>
+        <bnf:element name="MethodModifier"/>
+        <bnf:block>
+            <bnf:element name="MethodModifiers"/>
+            <bnf:element name="MethodModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="protected"/>
+        <bnf:token value="private"/>
+        <bnf:token value="abstract"/>
+        <bnf:token value="static"/>
+        <bnf:token value="final"/>
+        <bnf:token value="synchronized"/>
+        <bnf:token value="native"/>
+        <bnf:token value="strictfp"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Throws">
+    <bnf:block>
+        <bnf:token value="throws"/>
+        <bnf:element name="ClassTypeList"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ClassTypeList">
+    <bnf:or>
+        <bnf:element name="ClassType"/>
+        <bnf:block>
+            <bnf:element name="ClassTypeList"/>
+            <bnf:token value=","/>
+            <bnf:element name="ClassType"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodBody">
+    <bnf:or>
+        <bnf:element name="Block"/>
+        <bnf:token value=";"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InstanceInitializer">
+    <bnf:element name="Block"/>
+</bnf:define>
+
+<bnf:define name="StaticInitializer">
+    <bnf:block>
+        <bnf:token value="static"/>
+        <bnf:element name="Block"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ConstructorDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ConstructorModifiers"/>
+        </bnf:repeated>
+        <bnf:element name="ConstructorDeclarator"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Throws"/>
+        </bnf:repeated>
+        <bnf:element name="ConstructorBody"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ConstructorDeclarator">
+    <bnf:block>
+        <bnf:element name="SimpleClassType"/>
+        <bnf:token value="("/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="FormalParameterList"/>
+        </bnf:repeated>
+        <bnf:token value=")"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ConstructorModifiers">
+    <bnf:or>
+        <bnf:element name="ConstructorModifier"/>
+        <bnf:block>
+            <bnf:element name="ConstructorModifiers"/>
+            <bnf:element name="ConstructorModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConstructorModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="private"/>
+        <bnf:token value="protected"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConstructorBody">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ExplicitConstructorInvocation"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="BlockStatements"/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ExplicitConstructorInvocation">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="this"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:token value=";"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="super"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:token value=";"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Primary"/>
+            <bnf:token value=".super"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:token value=";"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InterfaceDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="InterfaceModifiers"/>
+        </bnf:repeated>
+        <bnf:token value="interface"/>
+        <bnf:element name="Identifier"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ExtendsInterfaces"/>
+        </bnf:repeated>
+        <bnf:element name="InterfaceBody"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="InterfaceModifiers">
+    <bnf:or>
+        <bnf:element name="InterfaceModifier"/>
+        <bnf:block>
+            <bnf:element name="InterfaceModifiers"/>
+            <bnf:element name="InterfaceModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InterfaceModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="protected"/>
+        <bnf:token value="private"/>
+        <bnf:token value="abstract"/>
+        <bnf:token value="static"/>
+        <bnf:token value="strictfp"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ExtendsInterfaces">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="extends"/>
+            <bnf:token value="InterfaceType"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="ExtendsInterfaces"/>
+            <bnf:token value=","/>
+            <bnf:element name="InterfaceType"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InterfaceType">
+    <bnf:element name="TypeName"/>
+</bnf:define>
+
+<bnf:define name="InterfaceBody">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="InterfaceMemberDeclarations"/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="InterfaceMemberDeclarations">
+    <bnf:or>
+        <bnf:element name="InterfaceMemberDeclaration"/>
+        <bnf:block>
+            <bnf:element name="InterfaceMemberDeclarations"/>
+            <bnf:element name="InterfaceMemberDeclaration"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InterfaceMemberDeclaration">
+    <bnf:or>
+        <bnf:element name="ConstantDeclaration"/>
+        <bnf:element name="AbstractMethodDeclaration"/>
+        <bnf:element name="ClassDeclaration"/>
+        <bnf:element name="InterfaceDeclaration"/>
+        <bnf:token value=";"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConstantDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ConstantModifiers"/>
+        </bnf:repeated>
+        <bnf:element name="Type"/>
+        <bnf:element name="VariableDeclarators"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ConstantModifiers">
+    <bnf:or>
+        <bnf:element name="ConstantModifier"/>
+        <bnf:block>
+            <bnf:element name="ConstantModifiers"/>
+            <bnf:element name="ConstantModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConstantModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="static"/>
+        <bnf:token value="final"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AbstractMethodDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="AbstractMethodModifiers"/>
+        </bnf:repeated>
+        <bnf:element name="ResultType"/>
+        <bnf:element name="MethodDeclarator"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Throws"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="AbstractMethodModifiers">
+    <bnf:or>
+        <bnf:element name="AbstractMethodModifier"/>
+        <bnf:block>
+            <bnf:element name="AbstractMethodModifiers"/>
+            <bnf:element name="AbstractMethodModifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AbstractMethodModifier">
+    <bnf:or>
+        <bnf:token value="public"/>
+        <bnf:token value="abstract"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ArrayInitializer">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="VariableInitializers"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:token value=","/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="VariableInitializers">
+    <bnf:or>
+        <bnf:element name="VariableInitializer"/>
+        <bnf:block>
+            <bnf:element name="VariableInitializers"/>
+            <bnf:token value=","/>
+            <bnf:element name="VariableInitializer"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Block">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="BlockStatements"/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="BlockStatements">
+    <bnf:or>
+        <bnf:element name="BlockStatement"/>
+        <bnf:block>
+            <bnf:element name="BlockStatements"/>
+            <bnf:element name="BlockStatement"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="BlockStatement">
+    <bnf:or>
+        <bnf:element name="LocalVariableDeclarationStatement"/>
+        <bnf:element name="ClassDeclaration"/>
+        <bnf:element name="Statement"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="LocalVariableDeclarationStatement">
+    <bnf:block>
+        <bnf:element name="LocalVariableDeclaration"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="LocalVariableDeclaration">
+    <bnf:block>
+        <bnf:repeated least="0" most="1">
+            <bnf:token value="final"/>
+        </bnf:repeated>
+        <bnf:element name="Type"/>
+        <bnf:element name="VariableDeclarators"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Statement">
+    <bnf:or>
+        <bnf:element name="StatementWithoutTrailingSubstatement"/>
+        <bnf:element name="LabeledStatement"/>
+        <bnf:element name="IfThenStatement"/>
+        <bnf:element name="IfThenElseStatement"/>
+        <bnf:element name="WhileStatement"/>
+        <bnf:element name="ForStatement"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="StatementWithoutTrailingSubstatement">
+    <bnf:or>
+        <bnf:element name="Block"/>
+        <bnf:element name="EmptyStatement"/>
+        <bnf:element name="ExpressionStatement"/>
+        <bnf:element name="SwitchStatement"/>
+        <bnf:element name="DoStatement"/>
+        <bnf:element name="BreakStatement"/>
+        <bnf:element name="ContinueStatement"/>
+        <bnf:element name="ReturnStatement"/>
+        <bnf:element name="SynchronizedStatement"/>
+        <bnf:element name="ThrowStatement"/>
+        <bnf:element name="TryStatement"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="StatementNoShortIf">
+    <bnf:or>
+        <bnf:element name="StatementWithoutTrailingSubstatement"/>
+        <bnf:element name="LabeledStatementNoShortIf"/>
+        <bnf:element name="IfThenElseStatementNoShortIf"/>
+        <bnf:element name="WhileStatementNoShortIf"/>
+        <bnf:element name="ForStatementNoShortIf"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="EmptyStatement">
+    <bnf:token value=";"/>
+</bnf:define>
+
+<bnf:define name="LabeledStatement">
+    <bnf:block>
+        <bnf:element name="Identifier"/>
+        <bnf:token value=":"/>
+        <bnf:element name="Statement"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="LabeledStatementNoShortIf">
+    <bnf:block>
+        <bnf:element name="Identifier"/>
+        <bnf:token value=":"/>
+        <bnf:element name="StatementNoShortIf"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ExpressionStatement">
+    <bnf:element name="StatementExpression"/>
+</bnf:define>
+
+<bnf:define name="StatementExpression">
+    <bnf:or>
+        <bnf:element name="Assignment"/>
+        <bnf:element name="PreIncrementExpression"/>
+        <bnf:element name="PreDecrementExpression"/>
+        <bnf:element name="PostIncrementExpression"/>
+        <bnf:element name="PostDecrementExpression"/>
+        <bnf:element name="MethodInvocation"/>
+        <bnf:element name="ClassInstanceCreationExpression"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="IfThenStatement">
+    <bnf:block>
+        <bnf:token value="if"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="Statement"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="IfThenElseStatement">
+    <bnf:block>
+        <bnf:token value="if"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="StatementNoShortIf"/>
+        <bnf:token value="else"/>
+        <bnf:element name="Statement"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="IfThenElseStatementNoShortIf">
+    <bnf:block>
+        <bnf:token value="if"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="StatementNoShortIf"/>
+        <bnf:token value="else"/>
+        <bnf:element name="StatementNoShortIf"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="SwitchStatement">
+    <bnf:block>
+        <bnf:token value="switch"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="SwitchBlock"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="SwitchBlock">
+    <bnf:block>
+        <bnf:token value="{"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="SwitchBlockStatementGroups"/>
+        </bnf:repeated>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="SwitchLabels"/>
+        </bnf:repeated>
+        <bnf:token value="}"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="SwitchBlockStatementGroups">
+    <bnf:or>
+        <bnf:element name="SwitchBlockStatementGroup"/>
+        <bnf:block>
+            <bnf:element name="SwitchBlockStatementGroups"/>
+            <bnf:element name="SwitchBlockStatementGroup"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SwitchBlockStatementGroup">
+    <bnf:block>
+        <bnf:element name="SwitchLabels"/>
+        <bnf:element name="BlockStatements"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="SwitchLabels">
+    <bnf:or>
+        <bnf:element name="SwitchLabel"/>
+        <bnf:block>
+            <bnf:element name="SwitchLabels"/>
+            <bnf:element name="SwitchLabel"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="SwitchLabel">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="case"/>
+            <bnf:element name="ConstantExpression"/>
+            <bnf:token value=":"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="default"/>
+            <bnf:token value=":"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="WhileStatement">
+    <bnf:block>
+        <bnf:token value="while"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="Statement"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="WhileStatementNoShortIf">
+    <bnf:block>
+        <bnf:token value="while"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="StatementNoShortIf"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="DoStatement">
+    <bnf:block>
+        <bnf:token value="do"/>
+        <bnf:element name="Statement"/>
+        <bnf:token value="while"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ForStatement">
+    <bnf:block>
+        <bnf:token value="for"/>
+        <bnf:token value="("/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ForInit"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Expression"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ForUpdate"/>
+        </bnf:repeated>
+        <bnf:token value=")"/>
+        <bnf:element name="Statement"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ForStatementNoShortIf">
+    <bnf:block>
+        <bnf:token value="for"/>
+        <bnf:token value="("/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ForInit"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Expression"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="ForUpdate"/>
+        </bnf:repeated>
+        <bnf:token value=")"/>
+        <bnf:element name="StatementNoShortIf"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ForInit">
+    <bnf:or>
+        <bnf:element name="StatementExpressionList"/>
+        <bnf:element name="LocalVariableDeclaration"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ForUpdate">
+    <bnf:or>
+        <bnf:element name="StatementExpressionList"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="StatementExpressionList">
+    <bnf:or>
+        <bnf:element name="StatementExpression"/>
+        <bnf:block>
+            <bnf:element name="StatementExpressionList"/>
+            <bnf:token value=","/>
+            <bnf:element name="StatementExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="BreakStatement">
+    <bnf:block>
+        <bnf:token value="break"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Identifier"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ContinueStatement">
+    <bnf:block>
+        <bnf:token value="continue"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Identifier"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ReturnStatement">
+    <bnf:block>
+        <bnf:token value="return"/>
+        <bnf:repeated least="0" most="1">
+            <bnf:element name="Expression"/>
+        </bnf:repeated>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="ThrowStatement">
+    <bnf:block>
+        <bnf:token value="throw"/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=";"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="SynchronizedStatement">
+    <bnf:block>
+        <bnf:token value="synchronized"/>
+        <bnf:token value="("/>
+        <bnf:element name="Expression"/>
+        <bnf:token value=")"/>
+        <bnf:element name="Block"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="TryStatement">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="try"/>
+            <bnf:element name="Block"/>
+            <bnf:element name="Catches"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="try"/>
+            <bnf:element name="Block"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Catches"/>
+            </bnf:repeated>
+            <bnf:element name="Finally"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Catches">
+    <bnf:or>
+        <bnf:element name="CatchClause"/>
+        <bnf:block>
+            <bnf:element name="Catches"/>
+            <bnf:element name="CatchClause"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CatchClause">
+    <bnf:block>
+        <bnf:token value="catch"/>
+        <bnf:token value="("/>
+        <bnf:element name="FormalParameter"/>
+        <bnf:token value=")"/>
+        <bnf:element name="Block"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Finally">
+    <bnf:block>
+        <bnf:token value="finally"/>
+        <bnf:element name="Block"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Primary">
+    <bnf:or>
+        <bnf:element name="PrimaryNoNewArray"/>
+        <bnf:element name="ArrayCreationExpression"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PrimaryNoNewArray">
+    <bnf:or>
+        <bnf:element name="Literal"/>
+        <bnf:block>
+            <bnf:element name="Type"/>
+            <bnf:token value="."/>
+            <bnf:token value="class"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="void"/>
+            <bnf:token value="."/>
+            <bnf:token value="class"/>
+        </bnf:block>
+        <bnf:token value="this"/>
+        <bnf:block>
+            <bnf:element name="ClassType"/>
+            <bnf:token value="."/>
+            <bnf:token value="this"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="("/>
+            <bnf:element name="Expression"/>
+            <bnf:token value=")"/>
+        </bnf:block>
+        <bnf:element name="ClassInstanceCreationExpression"/>
+        <bnf:element name="FieldAccess"/>
+        <bnf:element name="MethodInvocation"/>
+        <bnf:element name="ArrayAccess"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ClassInstanceCreationExpression">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="new"/>
+            <bnf:element name="ClassOrInterfaceType"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ClassBody"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Primary"/>
+            <bnf:token value="."/>
+            <bnf:token value="new"/>
+            <bnf:element name="Identifier"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ClassBody"/>
+            </bnf:repeated>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ArgumentList">
+    <bnf:or>
+        <bnf:element name="Expression"/>
+        <bnf:block>
+            <bnf:element name="ArgumentList"/>
+            <bnf:token value=","/>
+            <bnf:element name="Expression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ArrayCreationExpression">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="new"/>
+            <bnf:element name="PrimitiveType"/>
+            <bnf:element name="DimExprs"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Dims"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="new"/>
+            <bnf:element name="TypeName"/>
+            <bnf:element name="DimExprs"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Dims"/>
+            </bnf:repeated>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="new"/>
+            <bnf:element name="PrimitiveType"/>
+            <bnf:element name="Dims"/>
+            <bnf:element name="ArrayInitializer"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="new"/>
+            <bnf:element name="TypeName"/>
+            <bnf:element name="Dims"/>
+            <bnf:element name="ArrayInitializer"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="DimExprs">
+    <bnf:or>
+        <bnf:element name="DimExpr"/>
+        <bnf:block>
+            <bnf:element name="DimExprs"/>
+            <bnf:element name="DimExpr"/>            
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="DimExpr">
+    <bnf:block>
+        <bnf:token value="["/>
+        <bnf:element name="Expression"/>
+        <bnf:token value="]"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="Dims">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="["/>
+            <bnf:token value="]"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Dims"/>
+            <bnf:token value="["/>
+            <bnf:token value="]"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="FieldAccess">
+    <bnf:or>
+        <bnf:block>
+            <bnf:element name="Primary"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="super"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="ClassType"/>
+            <bnf:token value="."/>
+            <bnf:token value="super"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MethodInvocation">
+    <bnf:or>
+        <bnf:block>
+            <bnf:element name="MethodName"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="Primary"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="super"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="ClassType"/>
+            <bnf:token value="."/>
+            <bnf:token value="super"/>
+            <bnf:token value="."/>
+            <bnf:element name="Identifier"/>
+            <bnf:token value="("/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="ArgumentList"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ArgumentList">
+    <bnf:or>
+        <bnf:element name="Expression"/>
+        <bnf:block>
+            <bnf:element name="ArgumentList"/>
+            <bnf:token value=","/>
+            <bnf:element name="Expression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ArrayAccess">
+    <bnf:or>
+        <bnf:block>
+            <bnf:element name="ExpressionName"/>
+            <bnf:token value="["/>
+            <bnf:element name="Expression"/>
+            <bnf:token value="]"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="PrimaryNoNewArray"/>
+            <bnf:token value="["/>
+            <bnf:element name="Expression"/>
+            <bnf:token value="]"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PostfixExpression">
+    <bnf:or>
+        <bnf:element name="Primary"/>
+        <bnf:element name="ExpressionName"/>
+        <bnf:element name="PostIncrementExpression"/>
+        <bnf:element name="PostDecrementExpression"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PostIncrementExpression">
+    <bnf:block>
+        <bnf:element name="PostfixExpression"/>
+        <bnf:token value="++"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="PostDecrementExpression">
+    <bnf:block>
+        <bnf:element name="PostfixExpression"/>
+        <bnf:token value="--"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="UnaryExpression">
+    <bnf:or>
+        <bnf:element name="PreIncrementExpression"/>
+        <bnf:element name="PreDecrementExpression"/>
+        <bnf:block>
+            <bnf:token value="+"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="-"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:element name="UnaryExpressionNotPlusMinus"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="PreIncrementExpression">
+    <bnf:block>
+        <bnf:token value="++"/>
+        <bnf:element name="UnaryExpression"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="PreDecrementExpression">
+    <bnf:block>
+        <bnf:token value="--"/>
+        <bnf:element name="UnaryExpression"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="UnaryExpressionNotPlusMinus">
+    <bnf:or>
+        <bnf:element name="PostfixExpression"/>
+        <bnf:block>
+            <bnf:token value="~"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="!"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:element name="CastExpression"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="CastExpression">
+    <bnf:or>
+        <bnf:block>
+            <bnf:token value="("/>
+            <bnf:element name="PrimitiveType"/>
+            <bnf:repeated least="0" most="1">
+                <bnf:element name="Dims"/>
+            </bnf:repeated>
+            <bnf:token value=")"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:token value="("/>
+            <bnf:element name="ReferenceType"/>
+            <bnf:token value=")"/>
+            <bnf:element name="UnaryExpressionNotPlusMinus"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="MultiplicativeExpression">
+    <bnf:or>
+        <bnf:element name="UnaryExpression"/>
+        <bnf:block>
+            <bnf:element name="MultiplicativeExpression"/>
+            <bnf:token value="*"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="MultiplicativeExpression"/>
+            <bnf:token value="/"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="MultiplicativeExpression"/>
+            <bnf:token value="%"/>
+            <bnf:element name="UnaryExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AdditiveExpression">
+    <bnf:or>
+        <bnf:element name="MultiplicativeExpression"/>
+        <bnf:block>
+            <bnf:element name="AdditiveExpression"/>
+            <bnf:token value="+"/>
+            <bnf:element name="MultiplicativeExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="AdditiveExpression"/>
+            <bnf:token value="-"/>
+            <bnf:element name="MultiplicativeExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ShiftExpression">
+    <bnf:or>
+        <bnf:element name="AdditiveExpression"/>
+        <bnf:block>
+            <bnf:element name="ShiftExpression"/>
+            <bnf:token value="&lt;&lt;"/>
+            <bnf:element name="AdditiveExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="ShiftExpression"/>
+            <bnf:token value="&gt;&gt;"/>
+            <bnf:element name="AdditiveExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="ShiftExpression"/>
+            <bnf:token value="&gt;&gt;&gt;"/>
+            <bnf:element name="AdditiveExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="RelationalExpression">
+    <bnf:or>
+        <bnf:element name="ShiftExpression"/>
+        <bnf:block>
+            <bnf:element name="RelationalExpression"/>
+            <bnf:token value="&lt;"/>
+            <bnf:element name="ShiftExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="RelationalExpression"/>
+            <bnf:token value="&gt;"/>
+            <bnf:element name="ShiftExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="RelationalExpression"/>
+            <bnf:token value="&lt;="/>
+            <bnf:element name="ShiftExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="RelationalExpression"/>
+            <bnf:token value="&gt;="/>
+            <bnf:element name="ShiftExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="RelationalExpression"/>
+            <bnf:token value="instanceof"/>
+            <bnf:element name="ShiftExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="EqualityExpression">
+    <bnf:or>
+        <bnf:element name="RelationalExpression"/>
+        <bnf:block>
+            <bnf:element name="EqualityExpression"/>
+            <bnf:token value="=="/>
+            <bnf:element name="RelationalExpression"/>
+        </bnf:block>
+        <bnf:block>
+            <bnf:element name="EqualityExpression"/>
+            <bnf:token value="!="/>
+            <bnf:element name="RelationalExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AndExpression">
+    <bnf:or>
+        <bnf:element name="EqualityExpression"/>
+        <bnf:block>
+            <bnf:element name="AndExpression"/>
+            <bnf:token value="&amp;"/>
+            <bnf:element name="EqualityExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ExclusiveOrExpression">
+    <bnf:or>
+        <bnf:element name="AndExpression"/>
+        <bnf:block>
+            <bnf:element name="ExclusiveOrExpression"/>
+            <bnf:token value="^"/>
+            <bnf:element name="AndExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InclusiveOrExpression">
+    <bnf:or>
+        <bnf:element name="ExclusiveOrExpression"/>
+        <bnf:block>
+            <bnf:element name="InclusiveOrExpression"/>
+            <bnf:token value="|"/>
+            <bnf:element name="ExclusiveOrExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConditionalAndExpression">
+    <bnf:or>
+        <bnf:element name="InclusiveOrExpression"/>
+        <bnf:block>
+            <bnf:element name="ConditionalAndExpression"/>
+            <bnf:token value="&amp;&amp;"/>
+            <bnf:element name="InclusiveOrExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConditionalOrExpression">
+    <bnf:or>
+        <bnf:element name="ConditionalAndExpression"/>
+        <bnf:block>
+            <bnf:element name="ConditionalOrExpression"/>
+            <bnf:token value="||"/>
+            <bnf:element name="ConditionalAndExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="ConditionalExpression">
+    <bnf:or>
+        <bnf:element name="ConditionalOrExpression"/>
+        <bnf:block>
+            <bnf:element name="ConditionalOrExpression"/>
+            <bnf:token value="?"/>
+            <bnf:element name="Expression"/>
+            <bnf:token value=":"/>
+            <bnf:element name="ConditionalExpression"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AssignmentExpression">
+    <bnf:or>
+        <bnf:element name="ConditionalExpression"/>
+        <bnf:element name="Assignment"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Assignment">
+    <bnf:block>
+        <bnf:element name="LeftHandSide"/>
+        <bnf:element name="AssignmentOperator"/>
+        <bnf:element name="AssignmentExpression"/>
+    </bnf:block>
+</bnf:define>
+
+<bnf:define name="LeftHandSide">
+    <bnf:or>
+        <bnf:element name="ExpressionName"/>
+        <bnf:element name="FieldAccess"/>
+        <bnf:element name="ArrayAccess"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="AssignmentOperator">
+    <bnf:or>
+        <bnf:token value="="/>
+        <bnf:token value="*="/>
+        <bnf:token value="/="/>
+        <bnf:token value="%="/>
+        <bnf:token value="+="/>
+        <bnf:token value="-="/>
+        <bnf:token value="&lt;&lt;="/>
+        <bnf:token value="&gt;&gt;="/>
+        <bnf:token value="&gt;&gt;&gt;="/>
+        <bnf:token value="&amp;="/>
+        <bnf:token value="^="/>
+        <bnf:token value="|="/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Expression">
+    <bnf:element name="AssignmentExpression"/>
+</bnf:define>
+
+<bnf:define name="ConstantExpression">
+    <bnf:element name="Expression"/>
+</bnf:define>
+
+</bnf:grammar>

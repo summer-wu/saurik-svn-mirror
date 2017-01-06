@@ -1,0 +1,40 @@
+<body title="JocStrap: Java/Objective-C Bootstrap">
+<p>So, I'm curious as to the extent to which the current syntax is "locked in": are such drastic changes as what Josh is talking about possible at this stage? If it's still open for debate, what would it really take to change it?</p>
+
+<p>Example: if someone else were to come up with a proposal and a grammar that solved all the ambiguous corner cases, would that be enough for it to be considered? Would such a proposal be looked at in a more serious light if a prototype implementation were provided to go along with it?</p>
+
+<p>Would a prototype really be <em>required</em>, as otherwise people would feel put-upon to come up with an implementation of someone else's specification? Put another way: should I rapidly be working on a prototype of what I want in order to greatly increase the chance of it happening?</p>
+
+<p>The reason I ask about this, is that <a href="http://www.oreillynet.com/onjava/blog/2006/08/will_we_have_closures_in_java.html">when I first heard about closures in Java</a>, and this was a while ago, it involved a syntax that was in complete harmony with Java's existing type declaration syntax. A fanciful syntax, for sure, as I know it had some ambiguous cases, but still, everything looked like what I'd expect it to look like in Java. That syntax really got me excited about the potential of adding this feature to Java in a way that didn't feel like some horrendous tack-on.</p>
+
+<p>At some point, though, it all got changed to feel like someone was trying to take Haskell and weld it somewhere in the middle of Java in the hope that they'd get closures out of it. :( Is it really un-rescuable? Are we certain that it isn't just a matter of adding something like a # in the right place, or allowing parentheticals for disambiguation, that would allow us to go back to that other syntax?</p>
+
+<p>What I've been seeing now is completely jarring and even feels "off-balance" (and yes, I actually have some concrete complaints behind that fuzzy looking word ;P)... the new syntax has lost both its parity with both declaring regular methods and the existing solutions involving anonymous inner classes.</p>
+
+<p>On a related point, <syntax language="java">{=> int}.class</syntax> doesn't work. I can do <syntax language="java">.class</syntax> on any other type in the language, but I can't do it to function types. This feels like it should work, and I don't actually see any reason why it couldn't. I _do_ see why it's complicated to make it work given this syntax, but I didn't like that part anyway ;P.</p>
+
+<p>The following code causes an internal error:</p>
+
+<blockquote><syntax language="java">
+public class A {
+    public static void main(String[] args) {
+        System.out.println({=> throw new Exception(); }.invoke());
+    }
+}
+</syntax></blockquote>
+
+<p>http://www.oreillynet.com/onjava/blog/2006/08/will_we_have_closures_in_java.html</p>
+<p>http://blogs.sun.com/roller/resources/ahe/closures.pdf</p>
+
+<blockquote><syntax language="java">
+public static void main(String[] args) {
+    int plus2(int x) { return x+2; }
+    int(int) plus2b = plus2;
+    System.out.println(plus2b(2));
+}
+
+int(int) plus2b = (int x) {return x+2; };
+</syntax></blockquote>
+
+https://www.blogger.com/comment.do
+</body>

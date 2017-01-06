@@ -1,0 +1,101 @@
+11
+Stress-to-Weight
+Weight-to-Stress
+*Stress/high
+*Stress/mid
+*Stress/low
+*Unstr/high
+*Unstr/mid
+*Unstr/low
+*HH
+*LL
+*Lapse
+22
+kala
+2
+500/500 1 1 0 0 0 0 0 1 0 1 1 k\a'.lo.jen
+000/500 1 2 0 0 0 0 0 1 1 0 1 k\a'.loi.den
+lasi
+2
+500/500 1 1 0 0 0 1 0 0 0 1 1 l\a'.si.en
+000/500 1 2 0 0 0 1 0 0 1 0 1 (l\a'.sei.den)
+kamera
+2
+720/724 1 1 0 0 1 0 0 0 1 1 0 k\a'.me.r\o`i.den
+004/724 1 1 0 0 0 0 0 1 0 2 2 k\a'.me.ro.jen
+hetero
+2
+389/391 1 1 0 1 0 0 0 0 1 1 0 h\e'.te.r\o`i.den
+002/391 1 1 0 0 0 0 1 0 0 2 2 h\e'.te.ro.jen
+naapuri
+2
+368/583 0 1 0 0 0 1 0 0 0 1 2 n\a'a.pu.ri.en
+215/583 0 1 1 0 0 0 0 0 1 0 0 n\a'a.pu.r\e`i.den
+maailma
+2
+045/091 0 2 0 0 0 0 0 1 1 0 2 m\a'a.il.mo.jen
+046/091 0 2 0 0 1 0 0 0 3 0 0 m\a'a.il.m\o`i.den
+korjaamo
+2
+350/426 0 2 0 0 0 0 1 0 1 0 2 k\o'r.jaa.mo.jen
+076/426 0 2 0 1 0 0 0 0 3 0 0 k\o'r.jaa.m\o`i.den
+poliisi
+2
+806/813 1 2 0 0 0 1 0 0 0 0 2 p\o'.lii.si.en
+013/819 1 2 1 0 0 0 0 0 2 0 0 p\o'.lii.s\e`i.den
+taiteilija
+2
+276/276 0 2 0 0 1 0 0 0 2 0 1 t\a'i.tei.li.j\o`i.den
+000/276 0 2 0 0 0 0 0 1 1 1 3 t\a'i.tei.li.jo.jen
+luettelo
+2
+025/025 1 2 0 1 0 0 0 0 1 0 1 l\u'.et.te.l\o`i.den
+000/025 1 2 0 0 0 0 1 0 0 1 3 l\u'.et.te.lo.jen
+ministeri
+2
+234/273 1 2 0 0 0 1 0 0 0 1 3 m\i'.nis.te.ri.en
+039/273 1 2 1 0 0 0 0 0 1 0 1 m\i'.nis.te.r\e`i.den
+luonnehdinta
+2
+001/001 0 2 0 0 0 0 0 1 2 0 1 l\u'on.neh.d\i`n.to.jen
+000/001 0 3 0 0 0 0 0 1 4 0 1 l\u'on.neh.d\i`n.toi.den
+edustusto
+2
+084/084 1 2 0 0 0 0 1 0 1 0 1 \e'.dus.t\u`s.to.jen
+000/084 1 3 0 0 0 0 1 0 3 0 1 \e'.dus.t\u`s.toi.den
+margariini
+2
+736/736 0 1 0 0 0 1 0 0 0 0 1 m\a'r.ga.r\i`i.ni.en
+000/736 0 2 0 0 0 1 0 0 2 0 1 m\a'r.ga.r\i`i.nei.den
+ajattelija
+2
+101/101 1 2 0 0 1 0 0 0 1 1 2 \a'.jat.te.li.j\o`i.den
+000/101 1 2 0 0 0 0 0 1 0 2 4 \a'.jat.te.li.jo.jen
+televisio
+2
+041/041 1 1 0 1 0 0 0 0 1 3 2 t\e'.le.vi.si.\o`i.den
+000/041 1 1 0 0 0 0 1 0 0 4 4 t\e'.le.vi.si.o.jen
+Aleksanteri
+2
+015/017 1 2 0 0 0 1 0 0 1 1 2 \A'.lek.s\a`n.te.ri.en
+002/017 1 2 1 0 0 0 0 0 2 0 0 \A'.lek.s\a`n.te.r\e`i.den
+evankelista
+2
+002/002 1 2 0 0 0 0 0 1 0 0 2 \e'.van.ke.l\i`s.to.jen
+000/002 1 3 0 0 0 0 0 1 2 0 2 \e'.van.ke.l\i`s.toi.den
+italiaano
+2
+001/001 1 1 0 0 0 0 1 0 0 2 2 \i'.ta.li.\a`a.no.jen
+000/001 1 2 0 0 0 0 1 0 2 2 2 \i'.ta.li.\a`a.noi.den
+sosialisti
+2
+099/099 1 1 0 0 0 1 0 0 0 2 2 s\o'.si.a.l\i`s.ti.en
+000/099 1 2 0 0 0 1 0 0 2 2 2 s\o'.si.a.l\i`s.tei.den
+koordinaatisto
+2
+008/010 0 2 0 0 0 0 1 0 1 0 2 k\o'or.di.n\a`a.tis.to.jen
+002/010 0 2 0 1 0 0 0 0 3 0 0 k\o'or.di.n\a`a.tis.t\o`i.den
+avantgardisti
+2
+002/002 1 3 0 0 0 1 0 0 2 0 2 \a'.vant.g\a`r.dis.ti.en
+000/002 1 3 1 0 0 0 0 0 4 0 0 \a'.vant.g\a`r.dis.t\e`i.den

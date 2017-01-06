@@ -1,0 +1,133 @@
+File type = "ooTextFile"
+"Collection" 3
+
+"OTGrammar" "Faetar_reynolds"
+
+! Constraint set copied from William Reynolds's 1994 dissertation.
+! This grammar generates no [kam], and too many [ka.mi.en]
+
+11 constraints
+"LX=PR"         100  0
+"Fill"          100  0
+"*CxOns"        100  0
+"Align PrWd"    100  0
+"*Coda"         100  0
+"Parse"         100  0
+"Onset"         100  0
+"*Schwa"        100  0
+"Hnuc"          100  0
+"*Ambi"         100  0
+"*CxCoda"       100  0
+
+0 fixed rankings
+
+3 inputs !     "LXPR" "Fil" "CxO" "APr" "Cod" "Par" "Ons" "Swa" "Hnu" "Amb" "CC]"
+
+"bro.k\sw.l\sw" 10
+"brok"            0     0     1     0     1     3     0     0     0     0     0
+"bro.k\sw"        0     0     1     1     0     2     0     1     0     0     0
+"bro.kl\|v"       0     0     1     1     0     2     0     0     1     0     0
+"bro.k\sw.l\sw"   0     0     1     2     0     0     0     2     0     0     0
+"bro"             1     0     1     0     0     4     0     0     0     0     0
+"bro:"            0     1     1     0     0     4     0     0     0     0     0
+"bro.k\swl"       0     0     1     1     1     1     0     1     0     0     0
+"brok.\swl"       0     0     1     1     2     1     1     1     0     0     0
+"bro.kl\sw"       0     0     2     1     0     1     0     1     0     0     0
+"brok.l\sw"       0     0     1     1     1     1     0     1     0     0     0
+
+"ka.mi.\swn"     11
+"kam"             0     0     0     0     1     3     0     0     0     0     0
+"ka.mi"           0     0     0     1     0     2     0     0     0     0     0
+"ka.mi.\sw"       0     0     0     2     0     1     1     1     0     0     0
+"ka.mi.n\|v"      0     0     0     2     0     1     1     0     1     0     0
+"ka"              1     0     0     0     0     4     0     0     0     0     0
+"ka:"             0     1     0     0     0     4     0     0     0     0     0
+"ka.mj\sw"        0     0     1     1     0     1     0     1     0     0     0
+"kam.j\sw"        0     0     0     1     1     1     0     1     0     0     0
+"ka.mi.\swn"      0     0     0     2     1     0     1     1     0     0     0
+"ka.mj\swn"       0     0     1     1     1     0     0     1     0     0     0
+"kam.jn\|v"       0     0     0     1     1     1     0     0     1     0     0
+
+"ta.ts\sw" 6
+"ta.ts\sw"        0     0     1     1     0     0     0     1     0     0     0
+"tats"            0     0     0     0     2     1     0     0     0     0     1
+"tats.\sw"        0     0     0     1     2     0     1     1     0     0     1
+"tat.s\sw"        0     0     0     1     1     0     0     1     0     1     0
+"ta"              1     0     0     0     0     3     0     0     0     0     0
+"ta:"             0     1     0     0     0     3     0     0     0     0     0
+
+"OTGrammar" "Faetar_BH"
+
+! Constraint set adapted by Boersma and Hayes to make it learnable by the GLA.
+
+13 constraints
+"LX=PR"         100  0
+"F\s{ILL}"      100  0
+"*CxOns"        100  0
+"Align
+(PrWd)"         100  0
+"*C\s{ODA}"     100  0
+"Hnuc"          100  0
+"*Ambi"         100  0
+"*CxCoda"       100  0
+! The following division was suggested by Boersma, perhaps superfluously
+"P\s{ARSE}
+(C)"            100  0
+"P\s{ARSE}
+(V)"            100  0
+"P\s{ARSE}
+(\sw)"          100  0
+! The following two constraints were added by Hayes, 1999/09/15
+"W\s{EIGHT}-\s{TO}
+S\s{TRESS}"     100  0
+"*+plos][-plos" 100  0      ! Syllable contact law.
+
+0 fixed rankings
+
+3 inputs !     "LXPR" "Fil" "CxO" "APr" "Cod" "Hnu" "Amb" "CC]" "PaC" "PaV" "Pa@" "WTS" "scl"
+
+"bro.k\sw.l\sw" 10
+"brok"            0     0     1     0     1     0     0     0     1     0     2     0     0
+"bro.k\sw"        0     0     1     1     0     0     0     0     1     0     1     0     0
+"bro.kl\|v"       0     0     1     1     0     1     0     0     0     0     2     0     0
+"bro.k\sw.l\sw"   0     0     1     2     0     0     0     0     0     0     0     0     0
+"bro"             1     0     1     0     0     0     0     0     2     0     2     0     0
+"bro:"            0     1     1     0     0     0     0     0     2     0     2     0     0
+"bro.k\swl"       0     0     1     1     1     0     0     0     0     0     1     1     0
+"brok.\swl"       0     0     1     1     2     0     0     0     0     0     1     1     1
+"bro.kl\sw"       0     0     2     1     0     0     0     0     0     0     1     0     0
+"brok.l\sw"       0     0     1     1     1     0     0     0     0     0     1     0     1
+
+"ka.mi.\swn"     11
+"kam"             0     0     0     0     1     0     0     0     1     1     1     0     0
+"ka.mi"           0     0     0     1     0     0     0     0     1     0     1     0     0
+"ka.mi.\sw"       0     0     0     2     0     0     0     0     1     0     0     0     0
+"ka.mi.n\|v"      0     0     0     2     0     1     0     0     0     0     1     0     0
+"ka"              1     0     0     0     0     0     0     0     2     1     1     0     0
+"ka:"             0     1     0     0     0     0     0     0     2     1     1     0     0
+"ka.mj\sw"        0     0     1     1     0     0     0     0     1     0     0     0     0
+"kam.j\sw"        0     0     0     1     1     0     0     0     1     0     0     0     1
+"ka.mi.\swn"      0     0     0     2     1     0     0     0     0     0     0     1     0
+"ka.mj\swn"       0     0     1     1     1     0     0     0     0     0     0     1     0
+"kam.jn\|v"       0     0     0     1     1     1     0     0     0     0     1     0     1
+
+"ta.ts\sw" 6
+"ta.ts\sw"        0     0     1     1     0     0     0     0     0     0     0     0     0
+"tats"            0     0     0     0     2     0     0     1     0     0     1     0     0
+"tats.\sw"        0     0     0     1     2     0     0     1     0     0     0     0     1
+"tat.s\sw"        0     0     0     1     1     0     1     0     0     0     0     0     1
+"ta"              1     0     0     0     0     0     0     0     2     0     1     0     0
+"ta:"             0     1     0     0     0     0     0     0     2     0     1     0     0
+
+"PairDistribution" "Faetar"
+10
+"bro.k\sw.l\sw" "brok"           6
+"bro.k\sw.l\sw" "bro.k\sw"      10
+"bro.k\sw.l\sw" "bro.kl\|v"      6
+"bro.k\sw.l\sw" "bro.k\sw.l\sw" 77
+"ka.mi.\swn" "kam"         7
+"ka.mi.\swn" "ka.mi"       7
+"ka.mi.\swn" "ka.mi.\sw"  53
+"ka.mi.\swn" "ka.mi.n\|v" 33
+"ta.ts\sw" "ta.ts\sw"  4
+"ta.ts\sw" "tats"     96

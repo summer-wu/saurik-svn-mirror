@@ -1,0 +1,4 @@
+#!/bin/sh
+if [[ $1 == configure ]]; then
+    /usr/bin/apt-key add /usr/share/keyrings/namedfork.net-keyring.gpg
+fi

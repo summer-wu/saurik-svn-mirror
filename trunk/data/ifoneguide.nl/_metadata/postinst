@@ -1,0 +1,5 @@
+#!/bin/sh
+if [[ $1 == configure ]]; then
+    /usr/bin/apt-key del A99404CB
+    /usr/bin/apt-key add /usr/share/keyrings/ifoneguide.nl-keyring.gpg
+fi

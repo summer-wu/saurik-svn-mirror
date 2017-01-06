@@ -1,0 +1,158 @@
+<body title="Tail Call: The New Twitter @Reply" sidead="true" digg="http://digg.com/design/Social_Flexibility_Tail_Call_The_New_Twitter_Reply">
+
+<inset>
+    <p><highlight>Summary:</highlight> The new "small settings update" is bypassable by mentioning people rather than replying. Personally, I think putting the @username at the end is cleaner than prefixing with "re", ">", or even munging the sentence. I call this "tail calling".</p>
+    <p>Surprisingly, this actually buys us some sender-oriented control the old system lacked. However, what we really need are much more flexible settings that let us specify what we see from other users on a <highlight>per-followee</highlight> basis.</p>
+</inset>
+
+<p>I will admit: Twitter made me cringe when I first heard about it. It never <em>really</em> caught on in my friends group, and the people who were using it seemed a little, well, weird. I didn't "get it". In some ways, I still don't. However, I now have almost 10,000 followers and I use it every day. Go figure.</p>
+
+<p>The reason this happened is that I started using my Twitter account to provide technical support for <a href="http://cydia.saurik.com/">Cydia</a>, the popular installation platform for jailbroken iPhones. While I'm not interesting, Cydia is (at least when it doesn't work, which is irritatingly often when you have millions of users).</p>
+
+<section title="Providing Support via Twitter">
+    <p>So, every day, a ton of people send me "@replies": public messages that just so happen to be directed at me, and I choose a couple "important issues" to reply to. Everyone else following me, while they may not have had that exact same question, then benefits from seeing the interaction and the solution.</p>
+
+    <p>To make this work, I try to carefully orient my response to include enough surrounding information to make it useful for people other than the original recipient. Arguably, this isn't a "reply" at all: it is more of a moderated panel discussion.</p>
+
+    <p>I'm not the only person who uses Twitter this way: other accounts that I know work using this model are <a href="http://twitter.com/MuscleNerd">MuscleNerd</a> (iPhone jailbreak support) and <a href="http://twitter.com/Delicious">Delicious</a> (which supports the website, well, <a href="http://delicious.com/">Delicious</a>).</p>
+</section>
+
+<section title="BigTwitter's Policy Change">
+    <p>Today, however, Twitter made a <a href="http://blog.twitter.com/2009/05/small-settings-update.html">"small settings update"</a> to what you see from the people you are following; one that drastically affects the way we support-providers have been using their tool:</p>
+
+    <blockquote>
+        <p>We've updated the Notices section of Settings to better reflect how folks are using Twitter regarding replies. Based on usage patterns and feedback, we've learned most people want to see when someone they follow replies to another person they follow—it's a good way to stay in the loop. However, receiving one-sided fragments via replies sent to folks you don't follow in your timeline is undesirable. Today's update removes this undesirable and confusing option.</p>
+    </blockquote>
+
+    <p>This has led to the standard outcry from users, in the form of the <a href="http://twitter.com/#search?q=%23fixreplies">#fixreplies</a> hashtag, opposing the new implementation. The main reason is the loss of serendipitous follows: you no longer have an opportunity to find out about friends of friends based on seeing interesting conversations.</p>
+</section>
+
+<section title="The Other Side">
+    <p>However, I will admit to saying that it often <em>is</em> quite irritating to follow someone, only to have your timeline swamped by hundreds of things that person is saying, to people you don't even know, about context you don't have.</p>
+
+    <p>This problem is bad enough that, when I started becoming a support forum for Cydia users, some of my friends stopped following me. I, too, have either stopped following or decided not to follow a number of users because their "random @reply" quotient was simply too high for me to handle.</p>
+
+    <p>So, while I don't think this is a perfect solution, I think a lot of users will find this a refreshing change that will clean up their timelines quite a bit, letting them following people whom they otherwise would not.</p>
+</section>
+
+<section title="Tail Call Optimization">
+    <p>That doesn't help me, though, at least not anymore: my entire feed is now based around the idea of talking to people whom other people would never know. Luckily, there's a simple solution: a simple hack involving "mentions".</p>
+
+    <p>This works because Twitter made a separate-yet-related change to how @username affects your feed. Previously, a message only showed up under "Replies" if it was prefixed with your @username. Now, you see these messages if your @username is <em>anywhere in the message</em>.</p>
+
+    <p>So, rather than replying to people who have support issues, I'm going to just "mention" them in the reply. to see how this works, let's take a look at a stereotypical support message (obviously real support messages will actually be helpful in a way this one is, well, not).</p>
+    
+    <blockquote>
+        <p><highlight>@iphonebob</highlight> When Cydia says "failure", it typically has failed.</p>
+    </blockquote>
+
+    <p>Now, there are a few different ways we could convert this into a mention. One way I've seen a couple people doing today is to prefix it with "re", "Well," or "So,". Personally, I find this causes a rather irritating amount of sentence restructuring, when often the person you are trying to support isn't really an actor in the sentence.</p>
+
+    <p>My proposed solution is the "tail call" (yes, I'm a Computer Science geek, and I couldn't resist the pun): instead of calling people out before the message, we stick the @username at the end. This means that our previous message gets refactored into the following message, which has the intended effect with the new "updated" settings.</p>
+
+    <blockquote>
+        <p>When Cydia says "failure", it typically has failed. <highlight>@iphonebob</highlight></p>
+    </blockquote>
+
+    <p>This message is now seen by anyone following my account, doesn't involve weird restructuring of my messages, requires no extra characters over the previous message, and also shows up on the Replies feed of the user in question. In my opinion, this problem is therefore entirely solved.</p>
+
+    <inset>
+        <!--p><highlight>Update:</highlight> I previously had a block here describing some issues this causes with "in reply to", but I have been told by <a href="http://twitter.com/ironiridis">ironiridis</a> that Twitter actually fixed that. Specifically, "in reply to" is a field set by the UI you are using, and it does not matter where in the message the @username is.</p-->
+
+        <p>As MuscleNerd just pointed out to me on IRC, this <em>does</em> have the side effect of breaking the "in reply to" feature that the website normally has: it doesn't believe these are replies. However, I'd argue that's a feature.</p>
+
+        <p>In order to make the whole "out of context" thing work, I already am providing a bunch of context on my messages in order to make them useful to other people. I seriously doubt anyone is actually clicking through to find the original messages: they are just seeing the simplified solutions.</p>
+
+        <p>Also, before, I had to choose a specific user to reply to: sometimes the problem would occur to a couple users at once. Now that problem is gone: I was never really replying to any individual user, I just wanted them to see the response on their "Replies" page so they didn't miss the solution.</p>
+
+        <!--p>Besides, I will make a final point that "in reply to" didn't <em>really</em> work anyway: I'm not certain how it was implemented (maybe just "most recent tweet from that user before the reply"?), but it didn't always seem to bring you to relevant discussion. Maybe users were just misusing it, though (replying to the wrong message and not caring).</p-->
+    </inset>
+</section>
+
+<section title="Social Flexibility">
+    <p>In fact, I will take it one step further: I think I like this even better than how it used to work. The new system is simply <em>more flexible</em>.</p>
+
+    <p>I now have the ability to choose: do I @reply someone, helping them out with a more obscure issue that other people won't care as much about, or do I "tail call" them, causing the message to appear on everyone's feeds?</p>
+
+    <inset>
+        <p>I think the power of this is being lost on some people: with the old system, I was pretty much forced to turn on @replies. While there was a setting, it was a pointless one (at least for me and many others): at least a couple of the people I follow have valuable commentary to people I don't know, so I had to turn the setting on for everyone.</p>
+
+        <p>Only, once I did that, I now had to simply de-follow people who spent their entire day talking to people I didn't know and didn't actually want to know: these are people whom it would be valuable to follow if-and-only-if following them didn't destroy my timeline by filling it with pages of idle chatter.</p>
+
+        <p>Enter the "small settings update": given that @replies were pretty much a must before (something doubly evident by the number of people up in arms over the setting being locked to "off"), we should strive to replicate that behavior: everyone should now start tail calling. In the worst case, this degrades to the previous system: tail calls replicate the old behavior.</p>
+
+        <p>However, we now have the flexibility to choose <em>not</em> to tail call on occasion: to make a particular side digression sufficiently unimportant that our followers won't see it unless they decide to stare directly at us. Personally, I think that is seriously powerful, and opens a lot of new doors.</p>
+
+        <p>Finally, if you were among the population of users who turned @replies off (as you felt the cost of not seeing valuable side conversations was lower than the cost of de-following some users entirely), this new world now offers self-policing: people should pay attention to why people would want to follow them, and choose the right balance of tail calls to normal replies. Before, our only option was "don't reply to people".</p>
+
+        <p>The result of all of this is that I am now able to use my Twitter account to have conversations with users before coming up with support solutions: conversations that, while nice to make public, aren't shoved in the faces of almost 10,000 people. When the sideline is over, I can tail call the final results. That's flexibility in action.</p>
+    </inset>
+
+    <p>This kind of flexibility is something that we need to see <em>more of</em>, not less of, in modern social networking sites. The only unfortunate thing here is that I can't imagine that anyone at Twitter thought through this particular angle to <em>cause</em> this effect.</p>
+
+    <p>What I'd really want to see is a similar interface on the receiver's end, letting them specify the context in which they are following the person: some users have interesting side conversations, and some users, well, don't.</p>
+    
+    <p>I need the ability to specify this feed setting <em>per followee</em>. With that feature we regain the ability to have true discussions that can be overheard by people who like that, while still being able to follow people whose friends we are less interested in and not be spammed into timeline death.</p>
+
+    <!--inset>
+        <p>Note that this per-followee feature I'm advocating is strictly more powerful than the old global setting. In the end, I want something more similar to, but much more flexible than, the previous behavior. Barring this, I believe we have some interesting flexibility now that we didn't before by just sidestepping the problem and using tail calls.</p>
+    </inset-->
+</section>
+
+<section title="Simplification of UI">
+    <p>Instead, in the attempt to construct simpler and simpler interfaces, websites keep throwing out flexibility: fewer settings, both when sending messages and when receiving them. As a case in point, I will call out Facebook: we need the ability to say "I always want to see Frank's photos, but I don't ever want to see Steve's".</p>
+
+    <p>Why? Because Frank is an epic photographer and that's what we connect on: photography. I want every single photograph he posts to end up on my feed. Meanwhile, Steve isn't: Steve likes to take pictures, but I'm sick of seeing them and I wish they'd go away. (No, neither Frank nor Steve exist.)</p>
+
+    <p>Unfortunately, the only options I have regarding people are "show more of Frank" and "show less of Steve". I <em>like</em> Steve, I just don't want to see his photographs. Meanwhile, I can simply <em>turn off</em> Photos, but that isn't what I want: I just want to not see photos <em>from Steve</em>.</p>
+
+    <p>In fact, checking into it, I have to take that back: when Facebook recently redesigned their interface, they even removed what little user-related settings they had left. Before you could have "more of" and "less of" lists, each of which could have 10 (20?) users. Now, you can hide users, but that's about it. It got even "simpler".</p>
+</section>
+
+<section title="Spam Policies">
+    <p>This general problem was made even worse when Facebook announced their applications system: now there were many more content-free reasons to send people notifications and invitations. Users have the ability to invite their friends to play "vampires vs. ghosts" and to "compare people" on axes like "more likely to die in an alien attack".</p>
+
+    <p>Of course, we saw the standard user outcry: they felt they were being "spammed" by applications, and lashed aback at the concept. Since then, Facebook has kept getting more and more draconian in their policies and limits on how many messages an <em>application</em> can generate per day.</p>
+
+    <p>The problem, and what these websites don't seem to get, is that <em>applications don't spam people, people spam people</em>. If the only reason I bother to use Facebook at all is to play some game with my friends, why shouldn't I be allowed to have large quantities of feed items resulting from that?</p>
+
+    <p>So, if people out there actually <em>like</em> "vampires vs. vampire dwarves" (or whatever the current rage is), shouldn't they be allowed to indulge that pleasure? Like with Twitter, what we need is more flexibility: Facebook needs the ability to re-weight (or at least hide) user/application pairs, not just users and applications separately.</p>
+</section>
+
+<!--section title="Looking to E-mail">
+    <p>It's not like people can't handle flexibility: check out e-mail. E-mail lives in a world with no global rate filters: you can send the same person hundreds of messages per day or the same message to thousands of people.</p>
+
+    <p>These aren't even "weird" or "rare": people converse via e-mail while working on a project and voluntarily join mailing lists to discuss things. Some mailing lists are evil, but many aren't: I'm on a ton.</p>
+
+    <p>To handle this, we have interesting client-side help: spam protection that truly attempts to fit our particular usage styles. These solutions are as myriad as the people who feel the need to solve the problem, from white-listing and black-listing to baysian filtering and expert systems.</p>
+
+    <p>This openness, this willingness to understand "e-mail isn't the problem, irritating users are", has resulted in all kinds of interesting usages that would never happen on a modern social network: you'd get rate limited.</p>
+</section-->
+
+<section title="Custom Clients">
+    <p>Luckily, Twitter (unlike Facebook) still exists in a land where this isn't a <em>fundamental</em> problem: as many people are seeing, using custom clients lets you bypass the website's decisions on how to present the information, letting you have the ultimate control.</p>
+
+    <inset>
+        <p>Apparently, clients aren't doing this (I had thought they had from some comments on #fixreplies that I apparently misinterpreted). At least TweetDeck, accourding to <a href="http://twitter.com/karinagw">karinagw</a>, does not. In fact, it seems like most don't (maybe Tweetie does?).</p>
+
+        <p>Regardless, the point here is more that this <em>could</em> be fixed with a custom client, not that it already is: imagine a client that simply got the complete lists of each of your followee's recent feeds and consolidated them (something I'm certain at least one client somewhere already does).</p>
+
+        <p>In the case of Facebook, this isn't actually possible: they prohibit custom clients from connecting to their website except through a rather narrow API they expose. While some people have reverse engineered the backend used by things like the Facebook iPhone client, they aren't well received by Facebook for having done so.</p>
+
+        <p>In the meantime, though, I think this strengthens the overall argument that "we need more flexibility in our interfaces", as apparently we currently have less flexibility than I had thought reasonable. Instead of removing settings, Twitter needs to <em>add more</em>.</p>
+    </inset>
+
+    <p>Unfortunately, Twitter's extreme openness to custom clients means that they can't really enforce any type of ad revenue. This, combined with their lack of any other monetization plan, means the entire website is pretty much a massive fire into which money is sacrificed to appease the Web 2.0 gods.</p>
+
+    <p>It will be interesting to see how much longer this ecosystem manages to survive, and how much flexibility Twitter will whittle away from its userbase going forward.</p>
+</section>
+
+<inset>
+    <p>The key insight is that our real world social interactions are complicated. They are not representable by "you, your friends, your network, the world", as Facebook would have us believe, and it doesn't get correctly modelled by "you, your followers, your followees" either.</p>
+        
+    <p>We need the ability to subset and manage groups of users (something Facebook has started moving towards, and which LiveJournal always got right), we need the ability to change the visibility of every individual piece of content (something we are now simulating on Twitter with @replies vs. "tail calls", and which LiveJournal always got right), and we need to be able to define how and when we see content from other users, per user, per goal (something <em>even LiveJournal failed at</em>, which tells you something).</p>
+</inset>
+
+<!-- Twitter's new reply hiding is really irritating for people, like me, who mostly disseminate information by helping other people. #fixreplies -->
+
+</body>

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<project name="Platinum" default="compile" basedir=".">
+  <target name="compile">
+    <javac srcdir="src" destdir="."/>
+  </target>
+</project>

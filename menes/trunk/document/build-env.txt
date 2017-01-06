@@ -1,0 +1,26 @@
+right now my build environment is mainly a kludge to add the specific features that were required to get menes compiling on the three platforms that are currently supported as primary build targets: linux, freebsd (doug), and mac osx (chris)
+windows is supported, but via visual c++ 2005 express project/solution files
+
+the goal of the current build environment are the following;
+1) determine what functionality is available on the system
+2) use said functionality to decide which files from menes should be compiled
+3) provide some of said reconnaisance to the code
+4) translate build commands into the language spoken by the compiler
+5) manage dependency analysis and tracking for determining the order of the build
+
+end users currently communicate the following information to the environment:
+1) a list of files that they consider part of their project
+2) a subset of said files that determine executables that should be produced
+3) the directory in which binaries should be placed
+4) lists of random information (libraries, defines, etc.) to be given to the compiler
+
+what can currently be considered weaknesses in this model:
+1) if there are multiple paths to a build on a specific machine, one will be chosen
+2) some of the autodetection is impossible if using a cross-compiler
+3) multiple binaries of the same project are subject to the same link requirements
+4) extending to support new compilers and new system features is usually a research effort
+5) asking for features from menes is rigid and poorly defined
+
+(add to end users:)
+5) a list of "features" of menes that an application is requesting
+

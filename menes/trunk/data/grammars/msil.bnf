@@ -1,0 +1,2192 @@
+<?xml version="1.1"?>
+<bnf:grammar
+    xmlns:bnf="http://www.saurik.com/menes/bnf/0.9"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    name="Microsoft Intermediate Language"
+    goal="File"
+    bnf:tokenizer="InputSeparators"
+>
+
+<bnf:define name="LineSeparator" bnf:skip-debug="true">
+    <bnf:string value="&#xa;" bnf:ignore="true"/>
+</bnf:define>
+
+<bnf:define name="WhiteSpace" bnf:skip-debug="true">
+    <bnf:or>
+        <bnf:string value=" "/>
+        <bnf:string value="&#x9;"/>
+        <bnf:call name="LineSeparator"/>
+    </bnf:or>
+</bnf:define>
+
+<!--bnf:define name="Comment"-->
+    <!-- XXX: implement -->
+<!--/bnf:define-->
+
+<bnf:define name="InputSeparator" bnf:skip-debug="true">
+    <bnf:or>
+        <!--bnf:call name="Comment"/-->
+        <bnf:call name="WhiteSpace" bnf:ignore="true"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InputSeparators" bnf:tokenizer="" bnf:skip-debug="true">
+    <bnf:repeated mode="possessive">
+        <bnf:call name="InputSeparator"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="comma-tokenizer" bnf:tokenizer="" bnf:skip-debug="true">
+    <bnf:call name="InputSeparators"/>
+    <bnf:string value="," bnf:ignore="true"/>
+    <bnf:call name="InputSeparators"/>
+</bnf:define>
+
+<bnf:define name="period-tokenizer" bnf:tokenizer="" bnf:skip-debug="true">
+    <bnf:call name="InputSeparators"/>
+    <bnf:string value="."/>
+    <bnf:call name="InputSeparators"/>
+</bnf:define>
+
+<bnf:define name="slash-tokenizer" bnf:tokenizer="" bnf:skip-debug="true">
+    <bnf:call name="InputSeparators"/>
+    <bnf:string value="/"/>
+    <bnf:call name="InputSeparators"/>
+</bnf:define>
+
+<bnf:define name="symbol" bnf:tokenizer="">
+    <bnf:or>
+        <bnf:string value="_"/>
+        <bnf:range begin="a" end="z"/>
+        <bnf:range begin="A" end="Z"/>
+    </bnf:or>
+
+    <bnf:repeated mode="possessive">
+        <bnf:or>
+            <bnf:string value="_"/>
+            <bnf:range begin="a" end="z"/>
+            <bnf:range begin="A" end="Z"/>
+            <bnf:range begin="0" end="9"/>
+        </bnf:or>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="dotted-identifier">
+    <bnf:repeated least="1" bnf:tokenizer="period-tokenizer">
+        <bnf:call name="identifier"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="slashed-dotted-identifier">
+    <bnf:repeated least="1" bnf:tokenizer="slash-tokenizer">
+        <bnf:call name="dotted-identifier"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="identifier" bnf:tokenizer="">
+    <bnf:or mode="short-circuit">
+        <bnf:block>
+            <bnf:string value="'" bnf:ignore="true"/>
+
+            <bnf:repeated mode="possessive">
+                <bnf:not>
+                    <bnf:string value="'"/>
+                </bnf:not>
+
+                <bnf:special type="any"/>
+            </bnf:repeated>
+
+            <bnf:string value="'" bnf:ignore="true"/>
+        </bnf:block>
+
+        <bnf:call name="symbol"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="decimal-number" bnf:tokenizer="">
+    <bnf:call name="decimal-integer"/>
+
+    <bnf:optional>
+        <bnf:string value="."/>
+
+        <bnf:repeated mode="possessive">
+            <bnf:range begin="0" end="9"/>
+        </bnf:repeated>
+    </bnf:optional>
+</bnf:define>
+
+<bnf:define name="integer">
+    <bnf:or>
+        <bnf:call name="decimal-integer"/>
+        <bnf:call name="hexadecimal-integer"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="decimal-integer" bnf:tokenizer="">
+    <bnf:or mode="short-circuit">
+        <bnf:string value="0"/>
+
+        <bnf:block>
+            <bnf:range begin="1" end="9"/>
+
+            <bnf:repeated mode="possessive">
+                <bnf:range begin="0" end="9"/>
+            </bnf:repeated>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="hexadecimal-integer" bnf:tokenizer="">
+    <bnf:string value="0x"/>
+
+    <bnf:repeated least="1" mode="possessive">
+        <bnf:or mode="short-circuit">
+            <bnf:range begin="0" end="9"/>
+            <bnf:range begin="a" end="f"/>
+            <bnf:range begin="A" end="F"/>
+        </bnf:or>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="class-name" bnf:tokenizer="">
+    <bnf:optional>
+        <bnf:string value="["/>
+
+        <module>
+            <bnf:call name="identifier"/>
+        </module>
+
+        <bnf:string value="]"/>
+    </bnf:optional>
+
+    <name>
+        <bnf:call name="slashed-dotted-identifier"/>
+    </name>
+</bnf:define>
+
+<bnf:define name="short-type">
+    <bnf:or mode="short-circuit">
+        <bnf:call name="long-type"/>
+        <bnf:call name="class-name"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="long-type">
+    <bnf:or mode="short-circuit">
+        <bnf:block>
+            <decorator>
+                <bnf:string value="class"/>
+            </decorator>
+
+            <bnf:call name="class-name"/>
+        </bnf:block>
+
+        <bnf:block>
+            <bnf:string value="value"/>
+            <bnf:string value="class"/>
+            <bnf:call name="class-name"/>
+        </bnf:block>
+
+        <bnf:block>
+            <decorator>
+                <bnf:string value="valuetype"/>
+            </decorator>
+
+            <bnf:call name="class-name"/>
+        </bnf:block>
+
+        <intrinsic>
+            <bnf:or>
+                <bnf:string value="float32"/>
+                <bnf:string value="float64"/>
+
+                <bnf:string value="void"/>
+                <bnf:string value="bool"/>
+                <bnf:string value="char"/>
+
+                <bnf:string value="object"/>
+                <bnf:string value="string"/>
+            </bnf:or>
+        </intrinsic>
+
+        <bnf:block>
+            <bnf:optional>
+                <bnf:string value="unsigned"/>
+            </bnf:optional>
+
+            <intrinsic>
+                <bnf:or>
+                    <bnf:string value="int8"/>
+                    <bnf:string value="int16"/>
+                    <bnf:string value="int32"/>
+                    <bnf:string value="int64"/>
+                </bnf:or>
+            </intrinsic>
+        </bnf:block>
+
+        <bnf:block>
+            <bnf:optional>
+                <decorator>
+                    <bnf:string value="native"/>
+                </decorator>
+            </bnf:optional>
+
+            <intrinsic>
+                <bnf:or>
+                    <bnf:block>
+                        <bnf:string value="unsigned"/>
+                        <bnf:string value="int"/>
+                    </bnf:block>
+
+                    <bnf:string value="int"/>
+                    <bnf:string value="float"/>
+                </bnf:or>
+            </intrinsic>
+        </bnf:block>
+
+        <bnf:block>
+            <array>
+                <bnf:call name="long-type"/>
+            </array>
+
+            <bnf:string value="["/>
+            <bnf:string value="]"/>
+        </bnf:block>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="Assembly">
+    <bnf:repeated>
+        <bnf:or mode="short-circuit">
+            <assembly>
+                <bnf:string value=".assembly" bnf:ignore="true"/>
+
+                <bnf:repeated>
+                    <bnf:or mode="short-circuit">
+                        <extern>
+                            <bnf:string value="extern"/>
+                        </extern>
+                    </bnf:or>
+                </bnf:repeated>
+
+                <name>
+                    <bnf:call name="identifier"/>
+                </name>
+
+                <bnf:string value="{" bnf:ignore="true"/>
+
+                <bnf:repeated>
+                    <bnf:or>
+                        <bnf:block>
+                            <bnf:string value=".hash algorithm" bnf:ignore="true"/>
+
+                            <hash-algorithm>
+                                <bnf:call name="hexadecimal-integer"/>
+                            </hash-algorithm>
+                        </bnf:block>
+
+                        <bnf:block>
+                            <bnf:string value=".ver" bnf:ignore="true"/>
+
+                            <version bnf:tokenizer="">
+                                <bnf:call name="decimal-integer"/>
+                                <bnf:string value=":"/>
+                                <bnf:call name="decimal-integer"/>
+                                <bnf:string value=":"/>
+                                <bnf:call name="decimal-integer"/>
+                                <bnf:string value=":"/>
+                                <bnf:call name="decimal-integer"/>
+                            </version>
+                        </bnf:block>
+                    </bnf:or>
+                </bnf:repeated>
+
+                <bnf:string value="}" bnf:ignore="true"/>
+            </assembly>
+
+            <data>
+                <bnf:string value=".data" bnf:ignore="true"/>
+
+                <name>
+                    <bnf:call name="symbol"/>
+                </name>
+
+                <bnf:string value="="/>
+
+                <bnf:string value="bytearray"/>
+                <bnf:string value="("/>
+
+                <bnf:repeated>
+                    <bnf:block bnf:tokenizer="">
+                        <bnf:repeated least="2" most="2">
+                            <bnf:or>
+                                <bnf:range begin="0" end="9"/>
+                                <bnf:range begin="A" end="F"/>
+                            </bnf:or>
+                        </bnf:repeated>
+                    </bnf:block>
+                </bnf:repeated>
+
+                <bnf:string value=")"/>
+            </data>
+
+            <module>
+                <bnf:string value=".module" bnf:ignore="true"/>
+
+                <name>
+                    <bnf:call name="identifier"/>
+                </name>
+            </module>
+
+            <bnf:call name="class"/>
+            <bnf:call name="namespace"/>
+        </bnf:or>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="calling-convention">
+    <bnf:repeated>
+        <this-pointer>
+            <bnf:or>
+                <bnf:string value="explicit"/>
+                <bnf:string value="instance"/>
+            </bnf:or>
+        </this-pointer>
+    </bnf:repeated>
+    
+    <bnf:optional>
+        <argument-order>
+            <bnf:or>
+                <bnf:string value="default"/>
+
+                <bnf:block>
+                    <bnf:string value="unmanaged"/>
+
+                    <bnf:or>
+                        <bnf:string value="cdecl"/>
+                        <bnf:string value="fastcall"/>
+                        <bnf:string value="stdcall"/>
+                        <bnf:string value="thiscall"/>
+                    </bnf:or>
+                </bnf:block>
+
+                <bnf:string value="vararg"/>
+            </bnf:or>
+        </argument-order>
+    </bnf:optional>
+</bnf:define>
+
+<bnf:define name="class">
+    <class>
+        <bnf:string value=".class" bnf:ignore="true"/>
+        
+        <bnf:repeated>
+            <attribute>
+                <bnf:or mode="short-circuit">
+                    <bnf:string value="abstract"/>
+                    <bnf:string value="ansi"/>
+                    <bnf:string value="auto"/>
+                    <bnf:string value="autochar"/>
+                    <bnf:string value="beforefieldinit"/>
+                    <bnf:string value="enum"/>
+                    <bnf:string value="explicit"/>
+                    <bnf:string value="import"/>
+                    <bnf:string value="interface"/>
+
+                    <bnf:block>
+                        <bnf:string value="nested"/>
+
+                        <bnf:or mode="short-circuit">
+                            <bnf:string value="assembly"/>
+                            <bnf:string value="famandassem"/>
+                            <bnf:string value="family"/>
+                            <bnf:string value="famorassem"/>
+                            <bnf:string value="private"/>
+                            <bnf:string value="public"/>
+                        </bnf:or>
+                    </bnf:block>
+
+                    <bnf:string value="private"/>
+                    <bnf:string value="public"/>
+                    <bnf:string value="rtspecialname"/>
+                    <bnf:string value="sealed"/>
+                    <bnf:string value="sequential"/>
+                    <bnf:string value="serializable"/>
+                    <bnf:string value="specialname"/>
+                    <bnf:string value="unicode"/>
+                    <bnf:string value="value"/>
+                </bnf:or>
+            </attribute>
+        </bnf:repeated>
+
+        <name>
+            <bnf:call name="identifier"/>
+        </name>
+
+        <bnf:optional>
+            <extends>
+                <bnf:string value="extends"/>
+                <bnf:call name="class-name"/>
+            </extends>
+        </bnf:optional>
+
+        <bnf:optional>
+            <bnf:string value="implements"/>
+
+            <bnf:repeated least="1" bnf:tokenizer="comma-tokenizer">
+                <implements>
+                    <bnf:call name="class-name"/>
+                </implements>
+            </bnf:repeated>
+        </bnf:optional>
+
+        <bnf:string value="{" bnf:ignore="true"/>
+
+        <bnf:repeated>
+            <bnf:or>
+                <bnf:block>
+                    <bnf:string value=".pack" bnf:ignore="true"/>
+
+                    <pack>
+                        <bnf:call name="decimal-integer"/>
+                    </pack>
+                </bnf:block>
+
+                <bnf:block>
+                    <bnf:string value=".size" bnf:ignore="true"/>
+
+                    <size>
+                        <bnf:call name="decimal-integer"/>
+                    </size>
+                </bnf:block>
+
+                <bnf:call name="class"/>
+                <bnf:call name="field"/>
+                <bnf:call name="method"/>
+            </bnf:or>
+        </bnf:repeated>
+
+        <bnf:string value="}" bnf:ignore="true"/>
+    </class>
+</bnf:define>
+
+<bnf:define name="field">
+    <field>
+        <bnf:string value=".field" bnf:ignore="true"/>
+
+        <bnf:repeated>
+            <attribute>
+                <bnf:or mode="short-circuit">
+                    <bnf:string value="assembly"/>
+                    <bnf:string value="famandassem"/>
+                    <bnf:string value="family"/>
+                    <bnf:string value="famorassem"/>
+                    <bnf:string value="initonly"/>
+                    <bnf:string value="literal"/>
+
+                    <bnf:block>
+                        <bnf:string value="marshal"/>
+                        <!-- XXX: implement -->
+                    </bnf:block>
+
+                    <bnf:string value="notserialized"/>
+
+                    <bnf:block>
+                        <bnf:string value="pinvokeimpl"/>
+
+                        <bnf:or>
+                            <!-- XXX: implement -->
+                        </bnf:or>
+                    </bnf:block>
+
+                    <bnf:string value="private"/>
+                    <bnf:string value="privatescope"/>
+                    <bnf:string value="public"/>
+                    <bnf:string value="rtspecialname"/>
+                    <bnf:string value="specialname"/>
+                    <bnf:string value="static"/>
+                </bnf:or>
+            </attribute>
+        </bnf:repeated>
+
+        <type>
+            <bnf:call name="long-type"/>
+        </type>
+
+        <name>
+            <bnf:call name="identifier"/>
+        </name>
+
+        <bnf:optional>
+            <bnf:string value="at" bnf:ignore="true"/>
+
+            <at>
+                <bnf:call name="symbol"/>
+            </at>
+        </bnf:optional>
+
+        <bnf:optional>
+            <initializer>
+                <bnf:string value="="/>
+
+                <bnf:or>
+                    <bnf:block>
+                        <type>
+                            <bnf:or>
+                                <bnf:string value="float32"/>
+                                <bnf:string value="float64"/>
+                            </bnf:or>
+                        </type>
+
+                        <bnf:string value="(" bnf:ignore="true"/>
+
+                        <value>
+                            <bnf:call name="decimal-number"/>
+                        </value>
+
+                        <bnf:string value=")" bnf:ignore="true"/>
+                    </bnf:block>
+
+                    <bnf:block>
+                        <type>
+                            <bnf:or>
+                                <bnf:string value="bool"/>
+                                <bnf:string value="char"/>
+
+                                <bnf:string value="int8"/>
+                                <bnf:string value="int16"/>
+                                <bnf:string value="int32"/>
+                                <bnf:string value="int64"/>
+                            </bnf:or>
+                        </type>
+
+                        <bnf:string value="(" bnf:ignore="true"/>
+
+                        <value>
+                            <bnf:call name="decimal-integer"/>
+                        </value>
+
+                        <bnf:string value=")" bnf:ignore="true"/>
+                    </bnf:block>
+
+                    <bnf:string value="nullref"/>
+
+                    <!-- XXX: finish this -->>
+                </bnf:or>
+            </initializer>
+        </bnf:optional>
+    </field>
+</bnf:define>
+
+<bnf:define name="method">
+    <method>
+        <bnf:string value=".method" bnf:ignore="true"/>
+
+        <bnf:repeated mode="possessive">
+            <attribute>
+                <bnf:or>
+                    <bnf:string value="abstract"/>
+                    <bnf:string value="assembly"/>
+                    <bnf:string value="famandassem"/>
+                    <bnf:string value="family"/>
+                    <bnf:string value="famorassem"/>
+                    <bnf:string value="final"/>
+                    <bnf:string value="hidebysig"/>
+                    <bnf:string value="newslot"/>
+
+                    <bnf:block>
+                        <bnf:string value="pinvokeimpl"/>
+
+                        <bnf:or>
+                            <!-- XXX: implement -->
+                        </bnf:or>
+                    </bnf:block>
+
+                    <bnf:string value="private"/>
+                    <bnf:string value="privatescope"/>
+                    <bnf:string value="public"/>
+                    <bnf:string value="reqsecobj"/>
+                    <bnf:string value="rtspecialname"/>
+                    <bnf:string value="specialname"/>
+                    <bnf:string value="static"/>
+                    <bnf:string value="unmanagedexp"/>
+                    <bnf:string value="virtual"/>
+                </bnf:or>
+            </attribute>
+        </bnf:repeated>
+    
+        <bnf:optional>
+            <convention>
+                <bnf:call name="calling-convention"/>
+            </convention>
+        </bnf:optional>
+
+        <type>
+            <bnf:call name="long-type"/>
+        </type>
+
+        <name>
+            <bnf:call name="method-name"/>
+        </name>
+
+        <bnf:string value="(" bnf:ignore="true"/>
+
+        <arguments>
+            <bnf:call name="arguments"/>
+        </arguments>
+
+        <bnf:string value=")" bnf:ignore="true"/>
+
+        <bnf:repeated>
+            <implementation>
+                <bnf:or mode="short-circuit">
+                    <bnf:string value="cil"/>
+                    <bnf:string value="forwardref"/>
+                    <bnf:string value="internalcall"/>
+                    <bnf:string value="managed"/>
+                    <bnf:string value="native"/>
+                    <bnf:string value="noinlining"/>
+                    <bnf:string value="preservesig"/>
+                    <bnf:string value="optil"/>
+                    <bnf:string value="runtime"/>
+                    <bnf:string value="synchronized"/>
+                    <bnf:string value="unmanaged"/>
+                </bnf:or>
+            </implementation>
+        </bnf:repeated>
+
+        <bnf:string value="{" bnf:ignore="true"/>
+
+        <bnf:repeated>
+            <bnf:or>
+                <entry-point>
+                    <bnf:string value=".entrypoint" bnf:ignore="true"/>
+                </entry-point>
+
+                <bnf:block>
+                    <bnf:string value=".maxstack" bnf:ignore="true"/>
+
+                    <max-stack>
+                        <bnf:call name="decimal-integer"/>
+                    </max-stack>
+                </bnf:block>
+
+                <locals>
+                    <bnf:string value=".locals" bnf:ignore="true"/>
+
+                    <bnf:optional>
+                        <init>
+                            <bnf:string value="init" bnf:ignore="true"/>
+                        </init>
+                    </bnf:optional>
+
+                    <bnf:string value="(" bnf:ignore="true"/>
+                    <bnf:call name="arguments"/>
+                    <bnf:string value=")" bnf:ignore="true"/>
+                </locals>
+
+                <bnf:block>
+                    <bnf:string value=".param" bnf:ignore="true"/>
+                    <bnf:string value="[" bnf:ignore="true"/>
+
+                    <param>
+                        <bnf:call name="decimal-integer"/>
+                    </param>
+
+                    <bnf:string value="]" bnf:ignore="true"/>
+                </bnf:block>
+            </bnf:or>
+        </bnf:repeated>
+
+        <bnf:call name="instructions"/>
+
+        <bnf:string value="}" bnf:ignore="true"/>
+    </method>
+</bnf:define>
+
+<bnf:define name="namespace">
+    <namespace>
+        <bnf:string value=".namespace" bnf:ignore="true"/>
+
+        <name>
+            <bnf:call name="identifier"/>
+        </name>
+
+        <bnf:string value="{" bnf:ignore="true"/>
+
+        <bnf:repeated>
+            <bnf:or>
+                <bnf:call name="class"/>
+                <bnf:call name="namespace"/>
+            </bnf:or>
+        </bnf:repeated>
+
+        <bnf:string value="}" bnf:ignore="true"/>
+    </namespace>
+</bnf:define>
+
+<bnf:define name="instructions">
+    <bnf:repeated>
+        <instruction>
+            <bnf:optional>
+                <label>
+                    <bnf:call name="symbol"/>
+                </label>
+
+                <bnf:string value=":" bnf:ignore="true"/>
+            </bnf:optional>
+
+            <bnf:or>
+                <name>
+                    <bnf:string value="nop"/>
+                </name>
+
+                <name>
+                    <bnf:string value="break"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldarg.0"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldarg.1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldarg.2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldarg.3"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldloc.0"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldloc.1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldloc.2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldloc.3"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stloc.0"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stloc.1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stloc.2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stloc.3"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldarg.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldarga.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="starg.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldloc.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldloca.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="stloc.s"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ldnull"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.m1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.0"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.3"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.5"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.6"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.7"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldc.i4.8"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldc.i4.s"/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="integer"/>
+                    </value>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldc.i4"/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="integer"/>
+                    </value>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="idc.i8"/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="integer"/>
+                    </value>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldc.r4"/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="decimal-number"/>
+                    </value>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldc.r8"/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="decimal-number"/>
+                    </value>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="dup"/>
+                </name>
+
+                <name>
+                    <bnf:string value="pop"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="jmp"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="call"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="calli"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ret"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="br.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="brfalse.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="brtrue.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="beq.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bge.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bgt.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ble.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="blt.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bne.un.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bge.un.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bgt.un.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ble.un.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="blt.un.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="br"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="brfalse"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="brtrue"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="beq"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bge"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bgt"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ble"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="blt"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bne.un"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bge.un"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="bgt.un"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ble.un"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="blt.un"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="switch"/>
+                    </name>
+
+                    <bnf:string value="(" bnf:ignore="true"/>
+
+                    <bnf:repeated bnf:tokenizer="comma-tokenizer">
+                        <target>
+                            <bnf:call name="symbol"/>
+                        </target>
+                    </bnf:repeated>
+
+                    <bnf:string value=")" bnf:ignore="true"/>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ldind.i1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.u1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.u2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.u4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.r4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.r8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldind.ref"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.ref"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.il"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.r4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stind.r8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="add"/>
+                </name>
+
+                <name>
+                    <bnf:string value="sub"/>
+                </name>
+
+                <name>
+                    <bnf:string value="mul"/>
+                </name>
+
+                <name>
+                    <bnf:string value="div"/>
+                </name>
+
+                <name>
+                    <bnf:string value="div.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="rem"/>
+                </name>
+
+                <name>
+                    <bnf:string value="rem.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="and"/>
+                </name>
+
+                <name>
+                    <bnf:string value="or"/>
+                </name>
+
+                <name>
+                    <bnf:string value="xor"/>
+                </name>
+
+                <name>
+                    <bnf:string value="shl"/>
+                </name>
+
+                <name>
+                    <bnf:string value="shr"/>
+                </name>
+
+                <name>
+                    <bnf:string value="shr.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="neg"/>
+                </name>
+
+                <name>
+                    <bnf:string value="not"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.il"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.r4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.r8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.u4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.u8"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="callvirt"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="cpobj"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldobj"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldstr"/>
+                    </name>
+
+                    <bnf:block bnf:tokenizer="">
+                        <string>
+                            <bnf:call name="string"/>
+                        </string>
+                    </bnf:block>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="newobj"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="castclass"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="isinst"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="conv.r.un"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="unbox"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="throw"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldfld"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldflda"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="stfld"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldsfld"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldsflda"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="stsfld"/>
+                    </name>
+
+                    <field-token>
+                        <bnf:call name="field-token"/>
+                    </field-token>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="stobj"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="conv.ovf.i1.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i2.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i4.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i8.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u1.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u2.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u4.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u8.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u.un"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="box"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="newarr"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ldlen"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldelema"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ldelem.i1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.u1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.u2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.u4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.r4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.r8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.ref"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.i1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.r4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.r8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.ref"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ldelem.any"/>
+                </name>
+
+                <name>
+                    <bnf:string value="stelem.any"/>
+                </name>
+
+                <name>
+                    <bnf:string value="unbox.any"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u4"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i8"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u8"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="refanyval"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="ckfinite"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="mkrefany"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldtoken"/>
+                    </name>
+
+                    <bnf:or>
+                        <type>
+                            <bnf:call name="short-type"/>
+                        </type>
+
+                        <bnf:block>
+                            <bnf:string value="method" bnf:ignore="true"/>
+                            <bnf:call name="method-token"/>
+                        </bnf:block>
+
+                        <field-token>
+                            <bnf:string value="field" bnf:ignore="true"/>
+                            <bnf:call name="field-token"/>
+                        </field-token>
+                    </bnf:or>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="conv.u2"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.u1"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.ovf.u"/>
+                </name>
+
+                <name>
+                    <bnf:string value="add.ovf"/>
+                </name>
+
+                <name>
+                    <bnf:string value="add.ovf.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="mul.ovf"/>
+                </name>
+
+                <name>
+                    <bnf:string value="mul.ovf.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="sub.ovf"/>
+                </name>
+
+                <name>
+                    <bnf:string value="sub.ovf.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="endfinally"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="leave"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="leave.s"/>
+                    </name>
+
+                    <target>
+                        <bnf:call name="symbol"/>
+                    </target>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="stind.i"/>
+                </name>
+
+                <name>
+                    <bnf:string value="conv.u"/>
+                </name>
+
+                <name>
+                    <bnf:string value="arglist"/>
+                </name>
+
+                <name>
+                    <bnf:string value="ceq"/>
+                </name>
+
+                <name>
+                    <bnf:string value="cgt"/>
+                </name>
+
+                <name>
+                    <bnf:string value="cgt.un"/>
+                </name>
+
+                <name>
+                    <bnf:string value="clt"/>
+                </name>
+
+                <name>
+                    <bnf:string value="clt.un"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldftn"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldvirtftn"/>
+                    </name>
+
+                    <bnf:call name="method-token"/>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldarg"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldarga"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="starg"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldloc"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="ldloca"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="stloc"/>
+                    </name>
+
+                    <index>
+                        <bnf:call name="decimal-integer"/>
+                    </index>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="localloc"/>
+                </name>
+
+                <name>
+                    <bnf:string value="endfilter"/>
+                </name>
+
+                <name>
+                    <bnf:string value="unaligned."/>
+                </name>
+
+                <name>
+                    <bnf:string value="volatile."/>
+                </name>
+
+                <name>
+                    <bnf:string value="tail."/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="initobj"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="constrained."/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="cpblk"/>
+                </name>
+
+                <name>
+                    <bnf:string value="initblk"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="no."/>
+                    </name>
+
+                    <value>
+                        <bnf:call name="decimal-integer"/>
+                    </value>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="rethrow"/>
+                </name>
+
+                <bnf:block>
+                    <name>
+                        <bnf:string value="sizeof"/>
+                    </name>
+
+                    <type>
+                        <bnf:call name="class-name"/>
+                    </type>
+                </bnf:block>
+
+                <name>
+                    <bnf:string value="refanytype"/>
+                </name>
+            </bnf:or>
+        </instruction>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="argument">
+    <type>
+        <bnf:call name="long-type"/>
+    </type>
+
+    <bnf:optional>
+        <name>
+            <bnf:call name="identifier"/>
+        </name>
+    </bnf:optional>
+</bnf:define>
+
+<bnf:define name="arguments">
+    <bnf:repeated bnf:tokenizer="comma-tokenizer" mode="possessive">
+        <element>
+            <bnf:call name="argument"/>
+        </element>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="signature">
+    <convention>
+        <bnf:call name="calling-convention"/>
+    </convention>
+
+    <type>
+        <bnf:call name="long-type"/>
+    </type>
+
+    <bnf:string value="(" bnf:ignore="true"/>
+
+    <arguments>
+        <bnf:call name="arguments"/>
+    </arguments>
+
+    <bnf:string value=")" bnf:ignore="true"/>
+</bnf:define>
+
+<bnf:define name="field-token">
+    <type>
+        <bnf:call name="long-type"/>
+    </type>
+
+    <encloser>
+        <bnf:call name="class-name"/>
+    </encloser>
+
+    <bnf:string value="::" bnf:ignore="true"/>
+
+    <name>
+        <bnf:call name="identifier"/>
+    </name>
+</bnf:define>
+
+<bnf:define name="method-token">
+    <method-token>
+        <convention>
+            <bnf:call name="calling-convention"/>
+        </convention>
+
+        <type>
+            <bnf:call name="long-type"/>
+        </type>
+
+        <encloser>
+            <bnf:call name="long-type"/>
+        </encloser>
+
+        <bnf:string value="::" bnf:ignore="true"/>
+
+        <name>
+            <bnf:call name="method-name"/>
+        </name>
+
+        <bnf:string value="(" bnf:ignore="true"/>
+
+        <arguments>
+            <bnf:call name="arguments"/>
+        </arguments>
+
+        <bnf:string value=")" bnf:ignore="true"/>
+    </method-token>
+</bnf:define>
+
+<bnf:define name="method-name">
+    <bnf:or mode="short-circuit">
+        <bnf:string value=".ctor"/>
+        <bnf:string value=".cctor"/>
+        <bnf:call name="identifier"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="string" bnf:tokenizer="">
+    <bnf:string value="&quot;" bnf:ignore="true"/>
+
+    <bnf:repeated mode="possessive">
+        <bnf:not>
+            <bnf:string value="&quot;"/>
+        </bnf:not>
+
+        <bnf:special type="any"/>
+    </bnf:repeated>
+
+    <bnf:string value="&quot;" bnf:ignore="true"/>
+</bnf:define>
+
+<bnf:define name="File" bnf:tokenizer="">
+    <msil>
+        <bnf:call name="InputSeparators"/>
+        <bnf:call name="Assembly"/>
+        <bnf:call name="InputSeparators"/>
+    </msil>
+</bnf:define>
+
+</bnf:grammar>

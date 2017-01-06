@@ -1,0 +1,147 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release: 4.0
+Patch-ID: bash40-042
+
+Bug-Reported-by:	Florian Weimer <fweimer@redhat.com>
+Bug-Reference-ID:
+Bug-Reference-URL:
+
+Bug-Description:
+
+There are two local buffer overflows in parse.y that can cause the shell
+to dump core when given many here-documents attached to a single command
+or many nested loops.
+
+Patch:
+
+*** ../bash-4.0.41/parse.y	2014-09-27 12:17:56.000000000 -0400
+--- parse.y	2014-09-30 19:41:09.000000000 -0400
+***************
+*** 167,170 ****
+--- 167,173 ----
+  static int reserved_word_acceptable __P((int));
+  static int yylex __P((void));
++ 
++ static void push_heredoc __P((REDIRECT *));
++ static char *mk_alexpansion __P((char *));
+  static int alias_expand_token __P((char *));
+  static int time_command_acceptable __P((void));
+***************
+*** 262,266 ****
+  /* Variables to manage the task of reading here documents, because we need to
+     defer the reading until after a complete command has been collected. */
+! static REDIRECT *redir_stack[10];
+  int need_here_doc;
+  
+--- 265,271 ----
+  /* Variables to manage the task of reading here documents, because we need to
+     defer the reading until after a complete command has been collected. */
+! #define HEREDOC_MAX 16
+! 
+! static REDIRECT *redir_stack[HEREDOC_MAX];
+  int need_here_doc;
+  
+***************
+*** 301,305 ****
+     index is decremented after a case, select, or for command is parsed. */
+  #define MAX_CASE_NEST	128
+! static int word_lineno[MAX_CASE_NEST];
+  static int word_top = -1;
+  
+--- 306,310 ----
+     index is decremented after a case, select, or for command is parsed. */
+  #define MAX_CASE_NEST	128
+! static int word_lineno[MAX_CASE_NEST+1];
+  static int word_top = -1;
+  
+***************
+*** 452,456 ****
+  			  redir.filename = $2;
+  			  $$ = make_redirection (0, r_reading_until, redir);
+! 			  redir_stack[need_here_doc++] = $$;
+  			}
+  	|	NUMBER LESS_LESS WORD
+--- 457,461 ----
+  			  redir.filename = $2;
+  			  $$ = make_redirection (0, r_reading_until, redir);
+! 			  push_heredoc ($$);
+  			}
+  	|	NUMBER LESS_LESS WORD
+***************
+*** 458,462 ****
+  			  redir.filename = $3;
+  			  $$ = make_redirection ($1, r_reading_until, redir);
+! 			  redir_stack[need_here_doc++] = $$;
+  			}
+  	|	LESS_LESS_LESS WORD
+--- 463,467 ----
+  			  redir.filename = $3;
+  			  $$ = make_redirection ($1, r_reading_until, redir);
+! 			  push_heredoc ($$);
+  			}
+  	|	LESS_LESS_LESS WORD
+***************
+*** 515,519 ****
+  			  $$ = make_redirection
+  			    (0, r_deblank_reading_until, redir);
+! 			  redir_stack[need_here_doc++] = $$;
+  			}
+  	|	NUMBER LESS_LESS_MINUS WORD
+--- 520,524 ----
+  			  $$ = make_redirection
+  			    (0, r_deblank_reading_until, redir);
+! 			  push_heredoc ($$);
+  			}
+  	|	NUMBER LESS_LESS_MINUS WORD
+***************
+*** 522,526 ****
+  			  $$ = make_redirection
+  			    ($1, r_deblank_reading_until, redir);
+! 			  redir_stack[need_here_doc++] = $$;
+  			}
+  	|	GREATER_AND '-'
+--- 527,531 ----
+  			  $$ = make_redirection
+  			    ($1, r_deblank_reading_until, redir);
+! 			  push_heredoc ($$);
+  			}
+  	|	GREATER_AND '-'
+***************
+*** 2377,2380 ****
+--- 2382,2400 ----
+  static int esacs_needed_count;
+  
++ static void
++ push_heredoc (r)
++      REDIRECT *r;
++ {
++   if (need_here_doc >= HEREDOC_MAX)
++     {
++       last_command_exit_value = EX_BADUSAGE;
++       need_here_doc = 0;
++       report_syntax_error (_("maximum here-document count exceeded"));
++       reset_parser ();
++       exit_shell (last_command_exit_value);
++     }
++   redir_stack[need_here_doc++] = r;
++ }
++ 
+  void
+  gather_here_documents ()
+*** ../bash-4.0/patchlevel.h	2009-01-04 14:32:40.000000000 -0500
+--- patchlevel.h	2009-02-22 16:11:31.000000000 -0500
+***************
+*** 26,30 ****
+     looks for to find the patch level (for the sccs version string). */
+  
+! #define PATCHLEVEL 41
+  
+  #endif /* _PATCHLEVEL_H_ */
+--- 26,30 ----
+     looks for to find the patch level (for the sccs version string). */
+  
+! #define PATCHLEVEL 42
+  
+  #endif /* _PATCHLEVEL_H_ */

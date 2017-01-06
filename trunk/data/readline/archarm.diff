@@ -1,0 +1,14 @@
+diff -ru readline-6.0/support/shobj-conf readline-6.0+iPhone/support/shobj-conf
+--- readline-6.0/support/shobj-conf	2009-01-04 19:32:42.000000000 +0000
++++ readline-6.0+iPhone/support/shobj-conf	2009-04-09 02:24:20.000000000 +0000
+@@ -157,8 +157,8 @@
+ 	SHLIB_LIBVERSION='$(SHLIB_MAJOR)$(SHLIB_MINOR).$(SHLIB_LIBSUFF)'
+ 	SHLIB_LIBSUFF='dylib'
+ 
+-	SHOBJ_LDFLAGS='-dynamiclib -dynamic -undefined dynamic_lookup -arch_only `/usr/bin/arch`'
+-	SHLIB_XLDFLAGS='-dynamiclib -arch_only `/usr/bin/arch` -install_name $(libdir)/$@ -current_version $(SHLIB_MAJOR)$(SHLIB_MINOR) -compatibility_version $(SHLIB_MAJOR) -v'
++	SHOBJ_LDFLAGS='-dynamiclib -dynamic -undefined dynamic_lookup -arch_only arm'
++	SHLIB_XLDFLAGS='-dynamiclib -arch_only arm -install_name $(libdir)/$@ -current_version $(SHLIB_MAJOR)$(SHLIB_MINOR) -compatibility_version $(SHLIB_MAJOR) -v'
+ 
+ 	SHLIB_LIBS='-lncurses'	# see if -lcurses works on MacOS X 10.1 
+ 	;;

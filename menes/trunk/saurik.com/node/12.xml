@@ -1,0 +1,342 @@
+<body title="Caching Apple's Signature Server" sidead="true">
+
+<p><a href="#howto"><highlight>Click here to skip directly to the instructions.</highlight></a> Personally, I find it much less powerful to say "do this" than "do this, here is how it works, and this is why", because the former just causes more confusion and more problems down the road. However, some disagree. Those people can click this link. ;P</p>
+
+<inset>
+    <p>Please, <em>for the love of all that is holy</em>, do not e-mail me if you have problems. ;P Instead, go to ModMyi.com, where there is a special forum called <a href="http://modmyi.com/forums/3g-s-downgrading/">3G[S] Downgrading</a>, created for the purposes of this article.</p>
+
+    <p>Seriously: there is no way I could possibly hope to answer even the number of e-mails I'm currently receiving regarding this, and the article isn't even out yet. There is this wonderful scene from Bruce Almighty where Bruce sees his e-mail inbox: that happens to me every day. :(</p>
+</inset>
+
+<p>I have very little respect for Apple at this point: I make no secret of this fact. Apple, as a company, has turned into a corporate hypocrisy, embodying the very ideals that it claims to be rebelling against. "Think Different", as a slogan, has become a cold criticism of their own actions with regards to their product lines.</p>
+
+<section title="The Next Hope">
+    <p>Apple is not just a computer company: Apple is a movement. This concept was finally and truly cemented in the public mindset when Apple carved itself a lasting place in the history of marketing with its <a href="http://www.youtube.com/watch?v=OYecfV3ubP8">1984 superbowl commercial</a> for Macintosh.</p>
+
+    <p>Styled after the classic Orwellian dystopia, 1984, this commercial was set in a future where all aspects of individuality had been stamped out by the overlords, constantly vigilant, watching from their television monitors.</p>
+
+    <p>This world, as well as everyone in it, was rendered in a blue and gray: some believe we are to see the overlords as IBM, well renowned for their corporate beaurocracy, and soon to be hated for trying to control our very thoughts with their bland machinery.</p>
+
+    <p>Others, including the creative director of the commercial, Lee Clow, state that the commercial represents the abstract struggle of "the few against the many": Apple's Macintosh standing as a symbol of "empowerment". [<a href="http://en.wikipedia.org/wiki/1984_(advertisement)">Wikipedia</a>]</p>
+</section>
+
+<section title="The True Enemy">
+    <p>However, as time grew on, Apple's real stance on individual expression and "empowerment" in particular, became clear: they are staunchly against it. Apple's insistence on controlling the experience of their products sounds very similar to the "garden of pure ideology" expoused by the Big Brother in their own commercial.</p>
+
+    <blockquote>
+        <p>Today we celebrate the first <em>glorious</em> anniversary of the Information Purification Directives. <em>We</em> have created, for the first time in <em>all</em> history, a garden of <em>pure ideology</em>: where each worker may bloom, secure from the pests of any contradictory... thoughts.</p>
+
+        <p>Our Unification of Thoughts is more powerful a weapon than any fleet or army on Earth. We are one people: with one will, one resolve, one cause. Our enemies shall talk themselves to death and we will bury them with their own confusion. We shall <em>prevail</em>!</p>
+    </blockquote>
+
+    <p></p>
+</section>
+
+<section title="The Point of Jailbreaking">
+    <p>This is why many of us (upwards of 10% of all iPhone users, in fact) "jailbreak" our devices: we want choice. We believe that Apple has maintained its lead as the best mobile hardware platform provider, and we encourage that innovation by purchasing not only their devices but also numerous applications from their App Store; but, and this is important: we want more.</p>
+
+    <p>Sometimes, it is "only" marketing restrictions: there is no fundamental reason why only the 3G[S] can record video (although the quality of the camera on the iPhone 2G and 3G is not very high), or why the iPhone 2G is somehow unable to do MMS.</p>
+
+    <p>Applications like Google Latitude or Voice are likewise "rejected" (Apple likes to claim that they didn't <em>reject</em> these applications, they simply "didn't accept" them...) from the App Store because they might "confuse" the user by replacing functionality that exists with better equivalents.</p>
+
+    <p>Our need for "more", however, goes deeper: jailbreaking isn't just about applications that Apple "rejected", but is also about taking provided tools and going in a new direction. The most popular packages available in Cydia aren't even "applications", but are "extensions": seamless and pervasive modifications to existing software.</p>
+</section>
+
+<section title="An Exploit a Day...">
+    <p>On desktop computers such markets are implicit: the computer is yours, and you can do whatever you want with it. You can purchase any kind of hardware, download any kind of software, and make any modifications you feel to be fit. However, Apple doesn't want us treating our iPhones like computers, no matter how similar they seem.</p>
+
+    <p>This means that those of us who demand to have the freedom to use the device we rightfully own the way we want to use it are in a constant battle with Apple. Each time they release a new product, or even just a software upgrade for an old one, we have to go to work defeating any new protections.</p>
+
+    <p>This arms race is what defines the "homebrew" community on most devices: each upgrade to the PlayStation Portable, for example, brings not only new features but also new restrictions, requiring users to find a new "exploit" to defeat the new defense.</p>
+
+    <p>What makes the iPhone platform special, however, is PwnageTool from the iPhone Dev Team: the trust chain on these devices has been completely defeated, and only with new hardware can Apple fix the issues to keep us out.</p>
+</section>
+
+<section title="The Signature Server">
+    <p>Of course, new hardware comes every year, and Apple decided to strike hard with the new iPhone 3G[S]. Rather than just throw in new local protections, Apple decided that every restore of the device would be verified as being valid and safe by Apple itself.</p>
+
+    <p>To do this, during the restore process, users see "Verifying restore with Apple...", during which time a challenge/response protocol is used between the iPhone and Apple: a "partial digest" of the firmware files being used is sent to a server, which can then decide to sign off on the result... or not.</p>
+
+    <p>Not only does this allow Apple to keep custom firmwares from getting loaded onto the device, but it also allows them to <em>recall existing firmwares</em> by keeping people from restoring to them in the future. To do this they simply would refuse to ever sign, for example, iPhoneOS 3.0 again.</p>
+
+    <p>However, to make this model secure, one must verify that their system is not subject to a simple "replay attack": where one just stores a copy of Apple's sign off and then returns it at a later point. This is a "beginner's attack", and one that is easily mitigated by any of a number of strategies.</p>
+</section>
+
+<section title="For a Purple Ra1ny Day">
+    <p>Apple's 3G[S] security mechanism, however, fails this test. Rather than even using a simple random number, they use a hardcoded challenge per device. The specific number they have chosen is the device's ECID, or "unique-chip-id", a number that all devices have so far had, although we haven't seen any previous use for it.</p>
+
+    <p>This means that, given an ECID, one can ask Apple's signature server to sign any firmware that they currently consider "OK" (which returns a blob that includes the critical SHSH, which is the signature hash) and then store the result forever.</p>
+
+    <p>In practice, there is only one critical file that we need signed: the one with the bug. ;P This is the iBSS, which is one of the modes of iBoot. Given that ECID/iBSS signature, one can load the buggy code and then continue with the jailbreak.</p>
+
+    <p>This is, in fact, what purplera1n.com was doing: it returned to you a file that contained <em>just</em> the signature hash for the iBSS file, as that is "sufficient". Eventually someone may write a tool to use this file.</p>
+</section>
+
+<section title="Personalized Firmware">
+    <p>What iTunes does with these blobs is to "personalize" the firmware file, integrating the ECID, SHSH, and CERT blocks into it, so that the iPhone can verify the result. It does this in a temporary directory where users can actually just watch and grab the files.</p>
+
+    <p>So, many users have gone in and carefully gotten both the iBSS and iBEC files from this personalization mechanism. The iBSS file from this process actually contains no more information than the tiny purplera1nyday file.</p>
+
+    <p>However, and this is unfortunate: just because this information is "sufficient to jailbreak", doesn't mean it is convenient. Without someone writing a special jailbreak tool that uses these files as input you are pretty much stuck.</p>
+</section>
+
+<section title="Your iPhone 3G[S] has an ECID SHSH on file.">
+    <p>Instead, what you really want, is to store the <em>entire</em> personalized firmware set required by iTunes to do a restore (or, more realistically: a full set of SHSH blobs). At this point you should be able to use iTunes to do a "normal" restore of the device.</p>
+
+    <p>This functionality was offered, very near to the end of the window, by Cydia: one needed only to agree to have the process done, and your ECID was used on Cydia's server to generate and store a full set of SHSH blobs using Apple's signature process.</p>
+
+    <p>In doing this, over 50,000 3G[S] devices got their ECID SHSHs "on file", and are now prepared to continue to restore to iPhoneOS 3.0 indefinitely.</p>
+</section>
+
+<section title="A Narrow Window">
+    <p>Unfortunately, due to the timing of the release (it took a while for me to figure out how to do this effectively), many users failed to get their ECID's in by Apple's cutoff. <em>However</em>, while this means these users will not be able to downgrade to (or even stay at) 3.0, an exploit has (supposedly) been found in 3.1.</p>
+
+    <p>This means that, at some point in the tangible but unknown future, users will be able to use iPhoneOS 3.1 on their 3G[S] to jailbreak their devices.</p>
+
+    <p>To faciliate this, the Cydia "on file" system is going to come back online tonight and start signing ECIDs using the 3.1 firmware, to prepare for the coming release from Apple when users will once again be locked out.</p>
+
+    <p>Hopefully, by then, we'll have hundreds of thousands of users fully protected against Apple's "Information Purification Directives".</p>
+</section>
+
+<section title="Bypassing the Overlord" name="howto">
+    <p>To this end, I have constructed a server that duplicates the functionality exposed by Apple's signature server, except using "on file" results rather than live requests.</p>
+
+    <p>All we need, then, is to make iTunes use it. Luckily, most operating systems also have the ability to locally define bypasses on specific hostnames through a file called <syntax>hosts</syntax>. Using this, we can redirect requests to Apple's signature server to Cydia.</p>
+
+    <p>So, open the file <syntax>C:\Windows\System32\drivers\etc\hosts</syntax> (Windows) or <syntax>/etc/hosts</syntax> (Mac OS X) and add the following entry to the bottom of the file.</p>
+
+    <blockquote><syntax><![CDATA[
+74.208.10.249 gs.apple.com
+]]></syntax></blockquote>
+
+    <p>Now, when iTunes thinks it is talking to Apple, it is talking to Cydia instead. Doing this will allow iTunes to access signatures already stored by Cydia's "on file" feature.</p>
+
+    <p>This server will also act as a cache for any SHSH blobs it hasn't seen, acting as an intermediary to Apple's server. This effectively registers your device with the "on file" mechanism, which means you can now enjoy the protections of being able to downgrade your firmware in the future <em>even if you aren't jailbroken</em>.</p>
+</section>
+
+<inset>
+    <p>This point should be stressed: even if you don't jailbreak, and <em>even if you never intend to jailbreak</em>, you should consider using the new "on file" service.</p>
+
+    <p>Let's say that Apple releases an OS upgrade in the future, you take it, and they break something important. Maybe they break your e-mail account, or your todo list. Your business is now crippled.</p>
+
+    <p>If only you could downgrade, right? Alas, Apple won't let you anymore. That's where the new signature cache server comes in: by doing your restores through this server you secure your ability to not accept upgrades from Apple if the need is dire.</p>
+</inset>
+
+<section title="Performing the Restore">
+    <p>Now, one would have hoped that the process would be as easy as "restore using the 3.0 IPSW". If only we were that lucky. The first problem is that a downgrade from 3.1 to 3.0 must be initiated in DFU mode.</p>
+
+    <p>So, we begin: hold down the lock and menu buttons (some call these the power and home buttons) for 10 seconds, letting go of the lock button but continuing to hold menu until iTunes recognizes the device with the message: "iTunes has detected an iPhone in recovery mode. You must restore this iPhone before it can be used with iTunes.".</p>
+
+    <p>Note that, at this point, your iPhone's screen should be <em>entirely black</em>. Many people confuse "DFU" with "recovery" (and in fact, iTunes itself glosses over this), but they are quite different. If you see anything on your screen, such as the iTunes logo and a sync cable, or a cartoon of Steve Jobs swearing in Cyrillic, you are in recovery mode and need to try again. One can find videos online that may help.</p>
+
+    <p>At this point, you should do a "normal" restore to the 3.0 software. When doing this, remember to hold down the option key (on Mac OS X) or the shift key (Windows) while clicking the Restore button in iTunes. Select the firmware (which is probably named iPhone2,1_3.0_7A341_Restore.ipsw), and things should be on their way.</p>
+</section>
+
+<inset>
+    <p>Please note that I do not have signatures for 3.0.1, only for 3.0. For some very small number of users I also have a signature for 3.0.1, but I ran out of time hitting the Wednesday deadline getting the code for this working and generalized.</p>
+
+    <p>If you would like to try restoring to 3.0.1 with my server, therefore, to see if you have 3.0.1 keys on file you can try, but it may fail late in the process with a very weird error. All users "on file", however, have 3.0 ready to go.</p>
+</inset>
+
+<section title="Upcoming 3.1 Exploit">
+    <p>If you encouter "unknown error (3002)", you probably do not have your ECID SHSH's for 3.0 "on file" with Cydia. Unfortunately, as Apple is no longer allowing users to sign the 3.0 firmware, it is no longer possible to register your device with Cydia.</p>
+
+    <p>Luckily, it has been reported that iPhoneOS 3.1 is vulnerable to another exploit. This means that, once a jailbreak is released for 3.1, users will be able to prepare themselves for future jailbreaks even if they missed the first round of signature storage (which I unfortunately was only able to start very late in the 3.0 game).</p>
+
+    <p>Once you even attempt to use this service (or if you tell Cydia to "make your life easier") you will be signed up for the signature tracker, and Cydia HQ will do its best to manage your ability to restore.</p>
+
+    <p>And again, if you have any issues with this process, please please please do not e-mail me. Instead, go to ModMyi.com, where there is a special forum called <a href="http://modmyi.com/forums/3g-s-downgrading/">3G[S] Downgrading</a>, created for the purposes of this article.</p>
+</section>
+
+<section title="NAND Format Invalid">
+    <p>OK, if you were already using 3.0 then this process should "just work". However, if you had already upgraded to 3.1 you will encounted a nasty error: "The iPhone "iPhone" could not be restored. An unknown error occured (1015).". This is <em>expected behavior</em>.</p>
+
+    <p>For people who are curious, what has happened is that a section of the NAND storage has been slightly reorganized in 3.1, and the 3.0 iBoot can no longer parse it. If we pulled out iRecovery and checked the iBoot logs over USB we'd see the following messages (the typos are Apple's).</p>
+
+    <blockquote><syntax><![CDATA[
+[WMR:ERR] NAND format invalid (mismatch, corrupt, read error or blank NAND device)
+[WMR:ERR] boolSignatureFound false  boolProductionFormatVerified true nSig 0x0
+******************************************************************************
+******************************************************************************
+AND: NAND initialisaton failed due to format mismatch or uninitialised NAND.
+AND: Please reboot with reformatting enabled.
+******************************************************************************
+******************************************************************************
+NAND FTL failed initialisation
+]]></syntax></blockquote>
+
+    <p>The first time this happened to me I actually spent a while with MuscleNerd working out how to do what it asked: "reboot with reformatting enabled". That was a <em>severe</em> waste of time: after you fix this, it still won't boot, and you will need to go through a second restore to finish the process.</p>
+    
+    <p>However, it turns out a second restore also formats the NAND correctly by itself. So, without bothering to do anything else to the device (leaving it in the recovery mode it is now in: DFU is no longer required), just start the restore over again in the same manner as before, once again selecting the 3.0 firmware.</p>
+</section>
+
+<section title="Stuck in Restore">
+    <p>Unfortunately, this second restore is <em>also</em> going to fail (*sigh*), and irritatingly enough it is going to cause the <em>exact same error message</em>: "The iPhone "iPhone" could not be restored. An unknown error occured (1015).". This is still <em>expected behavior</em>.</p>
+
+    <p>For those who are again curious, what has happened is that when the device turns on it has to decide what it is going to do: wait for instructions over USB, or continue into the boot process. This is determined by an NVRAM variable named <syntax>auto-boot</syntax>, which is currently set to "false".</p>
+
+    <p>Normally this is set at the end of the restore process, but technically we were unable to finish the restore: it is my understanding that this is because upgrading to 3.1 installed the 3.1 baseband (which is currently not unlockable, btw), and the baseband upgrade in the 3.0 release then fails, stopping the restore.</p>
+
+    <p>However, that seems to be the last and least important part of the restore, so we technically won: we are never, though, going to be able to restore back to 3.0 without hitting this 1015 again, though.</p>
+</section>
+
+<section title="Jailbreak with redsn0w or purplera1n">
+    <p>You have two. The first is to use iRecovery to manually set <syntax>auto-boot</syntax> to "true", and the second is to just go ahead and jailbreak your device.</p>
+
+    <p>We will go ahead and do option #2 (jailbreak), as even just getting iRecovery working on your computer is something that I don't look forward to trying to describe. ;P (In fact, it still isn't working on my Windows computer.)</p>
+
+    <p>At this point, you can just run your jailbreak tool of choice, which should jailbreak the device and boot it into the normal operating system. Congratualations, you just overthrew your orwellian overlord, and have taken back control of your device.</p>
+
+    <p>At least today, <em>we</em> will prevail!</p>
+</section>
+
+<!--blockquote><syntax><![CDATA[
+$ irecovery -s
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+=======================================
+::
+:: iBoot for n88ap, Copyright 2009, Apple Inc.
+::
+::      BUILD_TAG: iBoot-596.24
+::
+::      BUILD_STYLE: RELEASE
+::
+::      USB_SERIAL_NUMBER: CPID:8920 CPRV:14 CPFM:03 SCEP:02 BDID:00 ECID:000003500A188D8F IBFL:01 SRNM:[879231T03NR]
+::
+=======================================
+
+[FTL:MSG] Apple NAND Driver (AND) RO
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE0
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE1
+[NAND] Found Chip ID 0x3295DE987A on FMI1:C8
+[NAND] Found Chip ID 0x3295DE987A on FMI1:CE9
+[FTL:MSG] FIL_Init            [OK]
+[FTL:MSG] BUF_Init            [OK]
+[FTL:MSG] FPart Init          [OK]
+[WMR:ERR] NAND format invalid (mismatch, corrupt, read error or blank NAND device)
+[WMR:ERR] boolSignatureFound false  boolProductionFormatVerified true nSig 0x0
+******************************************************************************
+******************************************************************************
+AND: NAND initialisaton failed due to format mismatch or uninitialised NAND.
+AND: Please reboot with reformatting enabled.
+******************************************************************************
+******************************************************************************
+NAND FTL failed initialisation
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -f 018-5306-002.dmg
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+Loaded image file (len: 0xc2f959, packets: 6240, last: 0x159).
+Sending 0xc2f959 bytes
+...
+Successfully uploaded file!
+Executing it...
+...
+Closing USB connection...
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -c ramdisk
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -f kernelcache.release.s5l8920x
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+Loaded image file (len: 0x47a5d9, packets: 2293, last: 0x5d9).
+Sending 0x47a5d9 bytes
+...
+Successfully uploaded file!
+Executing it...
+...
+Closing USB connection...
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -c bootx
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+=======================================
+::
+:: iBoot for n88ap, Copyright 2009, Apple Inc.
+::
+::      BUILD_TAG: iBoot-596.24
+::
+::      BUILD_STYLE: RELEASE
+::
+::      USB_SERIAL_NUMBER: CPID:8920 CPRV:14 CPFM:03 SCEP:02 BDID:00 ECID:000003500A188D8F IBFL:01 SRNM:[879231T03NR]
+::
+=======================================
+
+[FTL:MSG] Apple NAND Driver (AND) RO
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE0
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE1
+[NAND] Found Chip ID 0x3295DE987A on FMI1:C8
+[NAND] Found Chip ID 0x3295DE987A on FMI1:CE9
+[FTL:MSG] FIL_Init            [OK]
+[FTL:MSG] BUF_Init            [OK]
+[FTL:MSG] FPart Init          [OK]
+read new style signature 0x43313132 (line:305)
+[FTL:MSG] VSVFL Register  [OK]
+[FTL:MSG] VFL Init            [OK]
+[FTL:MSG] VFL_Open            [OK]
+[FTL:MSG] YAFTL Register  [OK]
+yaFTL::YAFTL_Open(l:2738): CXT is not valid . Performing full NAND R/O restore ...
+[FTL:MSG] FTL_Open            [OK]
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -c fsboot
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+HFSInitPartition: 0x4fbe8500
+Not HFS+ (signature 0x0000)
+root filesystem mount failed
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+# irecovery -s
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+=======================================
+::
+:: iBoot for n88ap, Copyright 2009, Apple Inc.
+::
+::      BUILD_TAG: iBoot-596.24
+::
+::      BUILD_STYLE: RELEASE
+::
+::      USB_SERIAL_NUMBER: CPID:8920 CPRV:14 CPFM:03 SCEP:02 BDID:00 ECID:000003500A188D8F IBFL:01 SRNM:[879231T03NR]
+::
+=======================================
+
+[FTL:MSG] Apple NAND Driver (AND) RO
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE0
+[NAND] Found Chip ID 0x3295DE987A on FMI0:CE1
+[NAND] Found Chip ID 0x3295DE987A on FMI1:C8
+[NAND] Found Chip ID 0x3295DE987A on FMI1:CE9
+[FTL:MSG] FIL_Init            [OK]
+[FTL:MSG] BUF_Init            [OK]
+[FTL:MSG] FPart Init          [OK]
+read new style signature 0x43313132 (line:305)
+[FTL:MSG] VSVFL Register  [OK]
+[FTL:MSG] VFL Init            [OK]
+[FTL:MSG] VFL_Open            [OK]
+[FTL:MSG] YAFTL Register  [OK]
+[FTL:MSG] FTL_Open            [OK]
+]]></syntax></blockquote>
+
+<blockquote><syntax><![CDATA[
+$ irecovery -c fsboot
+]]></syntax></blockquote-->
+
+</body>

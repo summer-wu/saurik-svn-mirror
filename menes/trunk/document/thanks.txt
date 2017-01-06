@@ -1,0 +1,20 @@
+Douglas W. Thrift (douglas@douglasthrift.net):
+   Maintains the FreeBSD port and actually _uses_ menes for his projects, thereby making his testing/comments invaluable.
+
+Patrik Husfloen (redoz@redoz.com):
+   Christened menes-szf and has been an important source of feedback and test cases throughout the development process.
+
+Andrei Alexandrescu (andrewalex@hotmail.com):
+   Wrote a kick ass book (that I've never read, but still), and pioneered a lot of the concepts that were used in Menes.
+
+Rani Sharoni (rani_sharoni@hotmail.com):
+   Came up with a really, really cool unbounded IsFunction<> implementation that Menes uses.
+
+Pierre Terdiman (p.terdiman@wanadoo.fr):
+   Developed the technique for the floating point radix sort. Is also an insanely productive coder and good source of inspiration.
+
+Bjarne Stroustrup (?@?):
+   Designed the language that I've come to love and that has been a critical link in the tool chain for most of the work I've done.
+
+Patrick J. LoPresti (p...@cag.lcs.mit.edu):
+   One of the only sane people that has ever piped up on in thread related discussions.

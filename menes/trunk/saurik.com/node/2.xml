@@ -1,0 +1,104 @@
+<body title="Packaging Issues with AppTapp" sidead="true">
+
+<p>Debian's APT, Gentoo's Portage, FreeBSD's Ports... each of these may work very differently internally, from storing binaries on a server for a small number of standard configurations to downloading the source locally and building the software on demand, but they all come down to a command (nearly) as simple as <syntax>install bash</syntax>.</p>
+
+<p>On the iPhone the solution du jour is AppTapp Installer. Developed by NullRiver, Installer has provided the iPhone development community with a small application (easily bootstrapped by systems such as jailbreakme.com), accessible to a general audience, that allows on-the-go application installation and maintenance. Anyone can distribute software via it by setting up their own repository and announcing the URL for users to enter as a new "source". Given that Apple's device is an undocumented and hostile development platform, this is no small feat and should be <em>greatly</em> commended.</p>
+
+<p>However, for packagers, AppTapp can often be a chore to work with. The developers chose to use <a href="http://en.wikipedia.org/wiki/Property_list">Objective-C property lists</a> to store all of the package metadata, including the commands executed during installation, a problem normally attacked with shell scripts. This often yields code that is less than ideal to read at a glance. Imagine dealing with pages of XML for what might be expressed in ten lines of a scripting language.</p>
+
+<blockquote><syntax><![CDATA[
+<array>
+  <string>If</string>
+
+  <array>
+    <array>
+      <string>InstalledPackage</string>
+      <string>com.saurik.Cydia</string>
+    </array>
+  </array>
+
+  <array>
+    <array>
+      <string>IfNot</string>
+      <array>
+        <array>
+          <string>Confirm</string>
+          <string>Performing... continue?</string>
+          <string>Yes</string>
+          <string>No</string>
+        </array>
+...
+]]></syntax></blockquote>
+
+<p>This in and of itself might not be <em>so</em> bad, but they also haven't taken the time to put together a definitive list of the commands you can use in your scripts. Mentions are made during new releases of features, but often they don't work, or their purpose is not discernible from the name. I have occasionally been forced to sit around and poke at the AppTapp binary with a string table editor, looking for names that could be commands.</p>
+
+<p>Even when the format isn't a problem, the semantics themselves are. Installer has taken a very simplistic approach to package management, and have been bolting on new features demanded by the few large repositories that have insight into its development without spending the time to look (at least for long) at existing projects for guidance or allowing external help with their code. This is unfortunate, given the amount of time and effort that have been spent, both in terms of coding and in terms of theory,  on package management in the past.</p>
+
+<section title="Advanced Issues">
+    <p>The work and thought that goes into these systems may not seem obvious, especially given the large number of competitors (it <em>must</em> be easy if everyone else is doing it), but in fact there are a number of challenges that package management solutions have attempted to solve. Here is a list of some common corner cases that people often forget about as they rush into this field:</p>
+
+    <ul> 
+        <li><em>package dependencies</em> - Before I install a blog, I need to have a webserver. Now, I might need "a" webserver, not any one in specific; or, on the flip side, I might need exactly version 2.1 of Apache and no other will do.</li>
+        <li><em>conflicts and alternatives</em> - I installed two vi clones and only one of them can claim the name /bin/vi. It would be nice if the "better" alternative got it but both could otherwise coexist. If not, then the other should at least be removed.</li>
+        <li><em>multiple repositories</em> - Sometimes various versions of the same package might be available from different sources and I still want the newest one. Worse yet, it is reasonable to want to install a specific one from a reliable source.</li>
+        <li><em>versioning "epochs"</em> - Just because version 1.7 looks older than version 13 by raw numbers, it doesn't mean it always <em>is</em> older: rather old packages often make small corrections to their version number (or event outright reset it).</li>
+        <li><em>daemons and initialization scripts</em> - Installing a time synchronization daemon should probably <em>start</em> the daemon. One, perfectly valid, way of looking at the procedure is that you installed a <em>feature</em>, not just a binary.</li>
+        <li><em>obsolescence and replacement</em> - A distribution might need to decide that Firefox should replace all installed copies of Mozilla, or that libffi is now provided by gcc even though it used to be a stand-alone package.</li>
+    </ul>
+
+    <p>Over the years, each of the major package management providers have had to understand these issues and come up with solutions for them; some having succeeded better than others. These lessons tend to be slowly learned over the maintained life of a distribution and are typically added incrementally into their package management: you can often tell the age of a distribution by how intricate its attempts to solve these problems are. It should now be no surprise why Debian and FreeBSD, two projects that were both started in 1993, boast the most well-regarded (and most re-used) solutions: they've simply had the longest to evolve.</p>
+
+    <p>Even as this may be, we still find a proliferation of new package managers: none of the existing solutions are perfect, and everyone has an opinion. This is not always a bad thing. When Gentoo created Portage, they did it with the full knowledge that they were treading into a difficult space; and, to a large extent they have succeeded: carving out a niche by custom building packages for your specific machine.</p>
+
+    <p>But, Portage was really <em>all</em> that Gentoo was building: if you pull the distribution apart the vast majority of its time was spent on a revolutionary package manager, not in tweaking each of the supported packages to work with weird compilers or a centralized configuration tool or whatever else one might expect from the one true distribution that everyone dreams of one day building.</p>
+
+    <inset>
+        <p>This is actually generally good advice: no matter what you are positioning, whether it be a new company or a new distribution, it would behoove you to choose just a few things you are going to differentiate yourself on (preferably just one), and do those things well. Trying to do <em>everything</em> well is a road to not quite managing to stand out and never having enough time to get anything done.</p>
+
+        <p>While it is definitely a simplification, it is not overly so to take a look at some of the more well-known operating system distributions based on what they have differentiated themselves on: Gentoo on deployment, Ubuntu on integration, OpenBSD on security, RedHat on support, Slackware on simplicity, and SuSE on configuration.</p>
+    </inset>
+
+    <p>One should now ask the question: what is NullRiver trying to accomplish with Installer? Given that it is a closed source product from a company whose primary purpose is <em>not</em> this application, we can expect that very little total time is able to be spent on it (a fact that is proven by the continually more in-your-face donation links, despite the lack of interesting upgrades it has received over the last few months).</p>
+
+    <p>Near as I can tell, they concentrated the small amount of time they could afford on making a small (and therefore easily bootstrapped) deployment mechanism with the graphical interface of a standard iPhone application (which, as I've mentioned, is an amazing feat given that Apple's libraries were almost a complete mystery at the time it was written). In this goal they succeeded in force.</p>
+    
+    <p>Given that focus, it is no wonder that Installer seems to have completely ignored the aforementioned core complexities of package management. Additionally, due to the truncated development time, the implementation itself is lacking in its ability to handle border cases (such as running out of disk space). In simple cases (installing to a relatively unused device with a relatively stock configuration) with simple packages (hosted at a single source and contained as part of a single iPhone "application") it does exactly what it is billed to: stretch it any, and it breaks.</p>
+
+    <p>In this, I feel that the goals of the packaging community are changing, especially with Apple's official SDK just around the corner. Our software is getting larger and more featureful and the packages that house it are becoming more and more interdependent. Rather than ending up with mostly stand-alone binaries, we are seeing more and more people attempting to integrate with proven libraries, for everything from multimedia encoding and display to network protocol implementations.</p>
+</section>
+
+<section title="Packaging for Installer">
+    <p>The <em>first</em> job I had for Installer was anything but simple: I intended to port Java (come back in a few days for an article on this success), with a number of dependant libraries and some example applications, to the iPhone. This is a relatively <em>large</em> installation (on the order of 30MB) that really makes sense to divide into a number of separate packages so that people could pick and choose what they needed in order to run the applications they wanted to use.</p>
+    
+    <p>I went into this all rather naively, assuming that "of course" Installer would support features I had seen from other package management solutions, and was actually shocked when it didn't.</p>
+
+    <p>The first problem was a lack of dependency support. The only similar feature Installer had was the ability to ask whether a package had been installed; and, if not, either shut down the installation (which leads the user on an infuriating treasure hunt to find an allowed order) or display notifications (which provides the possibility of the user forgetting a critical package by taking inadequate notes).</p>
+
+    <p>Daily, I would receive messages from my users saying that my software wasn't working; reports that I always succeeded in tracking down to one or another required package not having been installed. Sometimes, convincing the user that they had missed one was difficult, but with time they would see it, install it, and everything would work.</p>
+
+    <p>The development community has also been getting larger. With more and more developers (and more and more repositories), time has to be spent on efficient mechanisms for performing repository metadata updates. I think everyone has experienced the overall slowness of refreshing your source list, and Ste (one of the largest and most popular packagers) has had <a href="http://blog.psmxy.org/2008/01/21/please-update-your-community-sources-package/">serious issues</a> with the number of connections held open by the implementation.</p>
+</section>
+
+<section title="Symbolic Links">
+    <p>Other implementation flaws exist as well. The types of things we've been packaging have been getting more and more complex: symbolic links are more common, for example. Yet, these are barely supported by Installer. In my case, it came down to the number of libraries I was attempting to package.</p>
+
+    <p>When dynamically loadable libraries are installed, it is common practice to place the library in /usr/lib with a name that includes its version number and then to have fallback names for applications that didn't care what version they are using (or are willing to put up with an inexact match) without various portions of the full version string: each a symlink to the single real copy. Many of my packages were libraries, and almost all of them had at least one symbolic link.</p>
+
+    <p>Now, symbolic links are happily stored in modern <a href="http://www.info-zip.org/">InfoZip files</a>, and are even expanded by Installer's standard installation routine (CopyPath)... unless an existing symbolic link exists in their place, in which case the installation will fail as it attempts to overwrite the link. This wouldn't itself be a common problem, except that Installer's standard mechanism for uninstalling files (RemovePath) doesn't work on symbolic links, making reinstallations a guaranteed failure.</p>
+
+    <p>Okay, symbolic links were obviously not supposed to be handled using CopyPath, which even makes sense given that Installer claims to have a feature called LinkPath (documented on the "Featured" website you see when you first open the program). This function was implemented, however, using <a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSFileManager_Class/Reference/Reference.html#//apple_ref/occ/instm/NSFileManager/linkPath:toPath:handler:">linkPath:toPath:handler:</a>, which doesn't exist on the iPhone, causing Installer to immediately close when it reaches that part of the script. It is obvious that I am the only person to have tested it.</p>
+
+    <p>A final attempt using Exec (which allows one to execute an arbitrary external program) on /bin/ln works, assuming the user has BSD Subsystem installed; although, due to the mechanism used to parse Exec commands, doesn't seem to be able to support filenames with spaces in them (neither quoting nor backslash escaping have an effect).</p>
+
+    <p>The only solution that I have so far been able to find that has worked in the general case is to provide a separate shell script that runs /bin/ln, as that gives me complete control over the argument escaping. <em>Even then</em>, I ran into problems: on the new iPhone firmware 1.1.3 (where Installer is run as mobile, setuid root) Installer only runs Exec commands with effective root access, which causes many programs (such as bash) to drop privileges. As I tend to use a lot of bash-specific features in my shell scripts, I ended up being forced to also ship a setuid version of ln.</p>
+
+    <p>Of course, these are just implementation concerns and could be fixed; but, considering I've been waiting to hear back from a bug report I sent about symlink handling back in late November, I think the problem still deserves attention.</p>
+</section>
+
+<section title="Concluding Remarks">
+    <p>What I was trying to do should not have been that hard. Seriously. Even if there were a simpler option I missed, working with an almost entirely undocumented package distribution format that is less than a year old and already isn't being actively maintained is, in itself, a problem.</p>
+
+    <p>To me, that's the most important promise of <a href="/id/1">Telesphoreo and APT</a>: using open source, commonly available, and long vetted solutions to solve problems rather than starting over with entirely iPhone-specific software. When something breaks in APT, it's comforting to know there are thousands of people who have expertise in helping fix it, there's a mailing list and a bug tracking system you can be on, and hundreds of sites with documentation on its usage. You are never alone in the world of Unix.</p>
+</section>
+
+</body>

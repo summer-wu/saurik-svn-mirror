@@ -1,0 +1,139 @@
+/* Menes - C++ High-Level Utility Library
+ * Copyright (C) 2002-2004  Jay Freeman (saurik)
+*/
+
+/*
+ *        Redistribution and use in source and binary
+ * forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the
+ *    above copyright notice, this list of conditions
+ *    and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the
+ *    above copyright notice, this list of conditions
+ *    and the following disclaimer in the documentation
+ *    and/or other materials provided with the
+ *    distribution.
+ * 3. The name of the author may not be used to endorse
+ *    or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#ifndef MENES_COM_ERRORS_HPP
+#define MENES_COM_ERRORS_HPP
+
+#include "errors.hpp"
+#include "win32/charset.hpp"
+
+namespace menes {
+namespace com {
+
+struct com_error_traits {
+    typedef HRESULT code_type;
+    enum { code_base = 16 };
+
+    static std::string  name()  { return "COM"; }
+    static std::wstring wname() { return L"COM"; }
+};
+
+class apierror :
+    public api_error<com_error_traits>
+{
+  protected:
+    IErrorInfo *info_;
+
+    void getinfo() {
+        HRESULT hr = ::GetErrorInfo(0, &info_);
+        if (hr != S_FALSE)
+            opt::DebugCheck(hr == S_OK);
+    }
+
+    void getinfo(IUnknown *unknown, GUID iid) {
+        ISupportErrorInfo *support;
+        HRESULT hr = unknown->QueryInterface(__uuidof(ISupportErrorInfo), &support);
+
+        if (hr == S_OK) {
+            if (support != NULL) {
+                hr =  == support->InterfaceSupportsErrorInfo(iid);
+                if (hr == S_OK)
+                    getinfo();
+                else opt::DebugCheck(hr == S_FALSE);
+                support->Release();
+            }
+        } else if (hr != E_NOINTERFACE)
+            throw apierror();
+    }
+
+  public:
+    apierror(apierror &err) :
+        api_error<com_error_traits>(err.code),
+        info_(err.info_)
+    {
+        if (info_ != NULL)
+            info_->AddRef();
+    }
+
+    apierror(HRESULT code) :
+        api_error<com_error_traits>(code),
+        info_(NULL)
+    {
+        getinfo();
+    }
+
+    apierror(HRESULT code, IUnknown *unknown, GUID iid) :
+        api_error<com_error_traits>(code),
+        info_(NULL)
+    {
+        getinfo(unknown, iid);
+    }
+
+#ifdef _MSC_VER
+    template <typename Interface_>
+    apierror(HRESULT code, Interface_ *unknown = NULL) :
+        api_error<com_error_traits>(code),
+        info_(NULL)
+    {
+        getinfo(unknown, __uuidof(Interface_));
+    }
+#endif//_MSC_VER
+
+    ~apierror() {
+        info_->Release();
+    }
+
+    virtual std::string str() const {
+        if (info_ == NULL)
+            return api_error<com_error_traits>::str();
+        return multibyte_cast<cvt::us_ascii>(wstr());
+    }
+
+    virtual std::wstring wstr() const {
+        if (info_ == NULL)
+            return api_error<com_error_traits>::wstr();
+        BSTR desc;
+        info_->GetDescription(&desc);
+        std::wstring data(desc, ::SysStringLen(desc));
+        ::SysFreeString(desc);
+        return data;
+    }
+};
+
+} }
+
+#endif//MENES_COM_ERRORS_HPP

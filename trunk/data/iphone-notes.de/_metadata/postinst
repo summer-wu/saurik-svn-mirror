@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/apt-key add /usr/share/keyrings/iphone-notes.de-keyring.gpg

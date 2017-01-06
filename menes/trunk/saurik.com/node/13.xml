@@ -1,0 +1,100 @@
+<body title="Using Hard links for Small Themes" sidead="true">
+
+<p>A few days ago, one of the default repositories came to me with a question about packaging themes that boiled down to "how do I deal with the fact that artists are submitting to me packages that include the same files with multiple names, or even multiple slightly different versions of their entire theme that share 90% of the same images in one package".</p>
+
+<p>This can obviously be a problem for both users and repositories: if a theme has numerous identical files the size of both the download and the final extracted result may be many times larger than it really "should be", leading to high bandwidth costs, long transfer times, and increased storage requirements.</p>
+
+<p>As my project for the last week has been to attempt some quality push-back on the default repositories, I decided to use my new "whole package index" to query how prevalent this issue was, and I must say I was utterly floored by the results: packages were much larger than I'd have expected, and most of that space was "wasted".</p>
+
+<p>Luckily, "fixing" this problem doesn't require any new concepts: Debian packages, internally, are tar files, which support standard Unix mechanisms such as <a href="http://en.wikipedia.org/wiki/Symbolic_link">symbolic links</a> or <a href="http://en.wikipedia.org/wiki/Hard_link">hard links</a>. To learn more about these concepts, I recommend people reading this check out Wikipedia, which has articles on each.</p>
+
+<section title="Automating the Process">
+    <p>Unfortunately, finding all of the duplicate files, especially if you are not the person who put together the files in the first place, can be quite the chore for someone who is not a developer (as many of the people building packagers are not). Thankfully, there are already a few existing tools for helping with this problem.</p>
+
+    <p>To demonstrate the effect, let's use one to link up a package I pulled from the field. The tool we will use is called "hardlink" and is available on most common Linux distributions (including RedHat/Fedora and Debian/Ubuntu). The end result should have all files that are the same pointing to the same underlying contents.</p>
+
+    <inset>
+        <p>For a more complete lists of programs that do this, I found an article on Wikipedia (which Wikipedia unfortunately claims is not notable and will likely be removed once I draw attention to it) that lists do this particular transformation: <a href="http://en.wikipedia.org/wiki/Fdupes">Fdupes</a>.</p>
+    </inset>
+</section>
+
+<section title="A Quick Demonstration">
+    <p>First, I downloaded a theme that is currently available in Cydia.</p>
+
+    <blockquote><syntax><![CDATA[
+# ls
+afterhours.deb
+]]></syntax></blockquote>
+
+    <p>We will now extract this theme, making certain to get both the control and data members of the package (as we need to be able to put it back together).</p>
+
+    <blockquote><syntax><![CDATA[
+# dpkg-deb -x afterhours.deb afterhours
+# dpkg-deb -e afterhours.deb afterhours/DEBIAN
+]]></syntax></blockquote>
+
+    <p>This theme happens to be about 80MB large. Because Debian packages are compressed, the package itself is only 60MB.</p>
+
+    <blockquote><syntax><![CDATA[
+# du -s *
+82324   afterhours
+60500   afterhours.deb
+]]></syntax></blockquote>
+
+    <p>The hardlink command takes the name of a directory which it will scan for duplicates. It must be noted, though, that "duplicates" in this context pays attention to a number of properties of the file that you might not care about.</p>
+
+    <p>For our purposes, it is likely that we must maintain properties of the file like owner and permissions, but the timestamp is something we can forget: if two files have different timestamps but are otherwise the same file, we can link them together.</p>
+
+    <p>To ignore the timestamp we use -t; additionally I am passing -m, to get "maximal" linkage (in practice I have yet to see this make a difference).</p>
+
+    <blockquote><syntax><![CDATA[
+# hardlink -tm afterhours
+Mode:     real
+Files:    3738
+Linked:   2507 files
+Compared: 2865 files
+Saved:    49.27 MiB
+Duration: 0.86 seconds
+]]></syntax></blockquote>
+
+    <p>And here we notice how important thinking about this is: we just found out that 50MB, or 70%, of this package is wasted space. This space not only gets used up when the package is extracted, but because compression algorithms analyze narrow windows of the file, even though 70% of this is waste, the final package is still going to be much larger than it needs to be.</p>
+
+    <p>As we extracted the complete package (using both -e and -x), we can now rebuild it easily using -b. The resulting package should be a drop-in replacement for the old one (assuming hard linking that package is safe, which should be true for themes, but see below for a barely more detailed discussion).</p>
+
+    <blockquote><syntax><![CDATA[
+# dpkg-deb -b afterhours afterhours.deb
+dpkg-deb: warning: 'afterhours/DEBIAN/control' contains user-defined field 'Name'
+dpkg-deb: warning: 'afterhours/DEBIAN/control' contains user-defined field 'Author'
+dpkg-deb: warning: 'afterhours/DEBIAN/control' contains user-defined field 'Depiction'
+dpkg-deb: warning: 'afterhours/DEBIAN/control' contains user-defined field 'Sponsor'
+dpkg-deb: building package `com.modmyi.afterhours' in `afterhours.deb'.
+dpkg-deb: warning: ignoring 4 warnings about the control file(s)
+]]></syntax></blockquote>
+
+    <p>Checking out how large the result is, we see we've saved a <em>lot</em> of space: even the final compressed package is 30% the original size.</p>
+
+    <blockquote><syntax><![CDATA[
+# du -s *
+26152   afterhours
+17284   afterhours.deb
+]]></syntax></blockquote>
+
+    <p>Finally, in case anyone believes that this savings could not persist once the package is extracted at the destination, let's delete the directory and re-extract the package from the new file to see how large it is.</p>
+
+    <blockquote><syntax><![CDATA[
+# rm -rf afterhours
+# dpkg-deb -x afterhours.deb afterhours
+# dpkg-deb -e afterhours.deb afterhours/DEBIAN
+# du -s afterhours
+26172   afterhours
+]]></syntax></blockquote>
+
+    <p>(Yes: this size is slightly different than before: the exact size of directory entries can change depending on the order that files are added to them, making the disk usage of things that should be about the same differ by small amounts.)</p>
+</section>
+
+<inset>
+    <p><highlight>Warning</highlight>: if two directory entries ("files") are hard linked to the same underlying inode ("file" ;P), editing that file will change the content accessible by both links. This, therefore, means you should not hard link together files that users will expect to be able to modify separately.</p>
+    <p>Given the semantics of themes installed by packages, this should be safe. However, people who are concerned can make this linking more (but not entirely) obvious by using symbolic links instead of hard links. Please understand, though, that getting the paths right for symbolic links can be trickier, and I don't know of a tool that automates the process of linking duplicates.</p>
+</inset>
+
+</body>

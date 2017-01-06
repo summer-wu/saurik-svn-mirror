@@ -1,0 +1,12 @@
+diff -ru indent-2.2.9/src/indent.h indent-2.2.9+iPhone/src/indent.h
+--- indent-2.2.9/src/indent.h	2002-11-10 21:02:48.000000000 +0000
++++ indent-2.2.9+iPhone/src/indent.h	2008-01-01 23:08:20.000000000 +0000
+@@ -96,8 +96,6 @@
+ /* Size of the input program, not including the ' \n\0' we add at the end */
+ extern unsigned long in_prog_size;
+ 
+-/* The output file. */
+-extern FILE *output;
+ 
+ 
+ 

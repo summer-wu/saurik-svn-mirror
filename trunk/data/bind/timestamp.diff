@@ -1,0 +1,15 @@
+diff -ru bind-9.4.2/bin/named/main.c bind-9.4.2+iPhone/bin/named/main.c
+--- bind-9.4.2/bin/named/main.c	2006-11-10 18:51:14.000000000 +0000
++++ bind-9.4.2+iPhone/bin/named/main.c	2008-06-19 04:33:26.000000000 +0000
+@@ -816,11 +816,7 @@
+ 	 * strings named.core | grep "named version:"
+ 	 */
+ 	strlcat(version,
+-#ifdef __DATE__
+-		"named version: BIND " VERSION " (" __DATE__ ")",
+-#else
+ 		"named version: BIND " VERSION,
+-#endif
+ 		sizeof(version));
+ 	result = isc_file_progname(*argv, program_name, sizeof(program_name));
+ 	if (result != ISC_R_SUCCESS)

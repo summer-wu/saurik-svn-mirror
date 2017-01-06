@@ -1,0 +1,69 @@
+struct Input_ {
+    float4 color_ : COLOR0;
+
+    float4 light0_ : TEXCOORD0;
+    float4 light1_ : TEXCOORD1;
+    float4 light2_ : TEXCOORD2;
+    float3 light3_ : TEXCOORD3;
+
+    float4 texcoord0_ : TEXCOORD4;
+    float4 texcoord1_ : TEXCOORD5;
+    float4 texcoord2_ : TEXCOORD6;
+    float4 texcoord3_ : TEXCOORD7;
+};
+
+struct Output_ {
+    float4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform sampler2D depth,
+    uniform float divisor
+) {
+    Output_ output;
+
+    float3 normal = float3(
+        input.light0_.w,
+        input.light1_.w,
+        input.light2_.w
+    );
+
+    float diffuse[4];
+    diffuse[0] = max(0.0f, dot(input.light0_.xyz, normal));
+    diffuse[1] = max(0.0f, dot(input.light1_.xyz, normal));
+    diffuse[2] = max(0.0f, dot(input.light2_.xyz, normal));
+    diffuse[3] = max(0.0f, dot(input.light3_.xyz, normal));
+
+    float3 coord[4];
+    coord[0] = ((float3) input.texcoord0_) / input.texcoord0_.w;
+    coord[1] = ((float3) input.texcoord1_) / input.texcoord1_.w;
+    coord[2] = ((float3) input.texcoord2_) / input.texcoord2_.w;
+    coord[3] = ((float3) input.texcoord3_) / input.texcoord3_.w;
+
+    float4 color = float4(0, 0, 0, 0);
+
+    if (saturate(coord[0].x) == coord[0].x && saturate(coord[0].y) == coord[0].y)
+        color += tex2D(depth, float3((coord[0].xy + float2(0, 0)) / 2, coord[0].z)) * diffuse[0];
+    else
+        color += diffuse[0];
+
+    if (saturate(coord[1].x) == coord[1].x && saturate(coord[1].y) == coord[1].y)
+        color += tex2D(depth, float3((coord[1].xy + float2(0, 1)) / 2, coord[1].z)) * diffuse[1];
+    else
+        color += diffuse[1];
+
+    if (saturate(coord[2].x) == coord[2].x && saturate(coord[2].y) == coord[2].y)
+        color += tex2D(depth, float3((coord[2].xy + float2(1, 0)) / 2, coord[2].z)) * diffuse[2];
+    else
+        color += diffuse[2];
+
+    if (saturate(coord[3].x) == coord[3].x && saturate(coord[3].y) == coord[3].y)
+        color += tex2D(depth, float3((coord[3].xy + float2(1, 1)) / 2, coord[3].z)) * diffuse[3];
+    else
+        color += diffuse[3];
+
+    output.color_ = input.color_ * float4(color.rgb / divisor, color.a / 4);
+
+    return output;
+}

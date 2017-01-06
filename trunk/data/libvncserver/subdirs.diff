@@ -1,0 +1,14 @@
+diff -ru LibVNCServer-0.9.8/Makefile.in LibVNCServer-0.9.8+iPhone/Makefile.in
+--- LibVNCServer-0.9.8/Makefile.in	2011-03-30 11:34:39.000000000 +0000
++++ LibVNCServer-0.9.8+iPhone/Makefile.in	2011-08-03 09:17:58.000000000 +0000
+@@ -266,8 +266,8 @@
+ top_srcdir = @top_srcdir@
+ with_ffmpeg = @with_ffmpeg@
+ @WITH_X11VNC_TRUE@X11VNC = x11vnc
+-SUBDIRS = libvncserver examples libvncclient vncterm classes client_examples test $(X11VNC)
+-DIST_SUBDIRS = libvncserver examples libvncclient vncterm classes client_examples test
++SUBDIRS = libvncserver libvncclient classes test $(X11VNC)
++DIST_SUBDIRS = libvncserver libvncclient classes test
+ EXTRA_DIST = CMakeLists.txt rfb/rfbint.h.cmake rfb/rfbconfig.h.cmake
+ bin_SCRIPTS = libvncserver-config
+ pkgconfigdir = $(libdir)/pkgconfig

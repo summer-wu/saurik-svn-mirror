@@ -1,0 +1,40 @@
+JocStrap - Java/Objective-C Bootstrap
+by Jay Freeman (saurik)
+saurik@saurik.com
+http://www.saurik.com/
+
+Objective-C:
+
+#include <stdio.h>
+#include <Foundation/Foundation.h>
+int main() {
+    printf("%f\n", [NSDate timeIntervalSinceReferenceDate]);
+    printf("%f\n", [[[NSCalendarDate alloc] initWithTimeIntervalSinceNow: 0] timeIntervalSince1970]);
+}
+
+Java:
+
+import joc.*;
+public class HelloDesktop {
+    public static void main(String[] args) {
+        System.loadLibrary("jocstrap");
+        System.out.println(NSCalendarDate.timeIntervalSinceReferenceDate());
+        System.out.println(new NSDate().initWithTimeIntervalSinceNow$(0).timeIntervalSince1970());
+    }
+}
+
+Translation:
+
+[MyClass alloc] -> new MyClass()
+[MyClass myMessage: 0 with: 1] -> Class.myMessage$with$(0, 1)
+[myObject myMessage: 0 with: 1] -> myObject.myMessage$with$(0, 1)
+
+Occasionally identifiers will be escaped with a leading $ for compatibility with Java.
+This may be caused either by a keyword conflict or to keep from accidentally overriding methods of Object.
+
+Issues:
+
+Return types often are decayed to NSObject. This will be dealt with by providing type overrides on various methods. For right now, please cast the types.
+NSAutoreleasePool's aren't to be used directly. Please instantiate a joc.Scope() object and .close() it when you are done. I am going to make Scope derive from NSAutoreleasePool so you can access it's functionality, but haven't yet. Otherwise, memory management should be mostly automatic.
+NSException should be marked Throwable. I haven't done this yet, but it will be done. Right now these objects are marshalled back as joc.NativeException, which is weird.
+Strings come back, but you should take them back as NSString or (better yet), CharSequence, as then you can handle getting back either a Java string or an Objective-C string from a message call. You can use .toString() to get a Java string from either.

@@ -1,0 +1,538 @@
+diff -ru ffmpeg-export-2008-02-26/libavcodec/armv4l/dsputil_arm_s.S ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/dsputil_arm_s.S
+--- ffmpeg-export-2008-02-26/libavcodec/armv4l/dsputil_arm_s.S	2007-09-05 11:05:33.000000000 +0000
++++ ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/dsputil_arm_s.S	2008-05-20 09:05:01.000000000 +0000
+@@ -72,8 +72,8 @@
+ 
+ @ ----------------------------------------------------------------
+         .align 8
+-        .global put_pixels16_arm
+-put_pixels16_arm:
++        .global _put_pixels16_arm
++_put_pixels16_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -134,8 +134,8 @@
+ 
+ @ ----------------------------------------------------------------
+         .align 8
+-        .global put_pixels8_arm
+-put_pixels8_arm:
++        .global _put_pixels8_arm
++_put_pixels8_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -196,8 +196,8 @@
+ 
+ @ ----------------------------------------------------------------
+         .align 8
+-        .global put_pixels8_x2_arm
+-put_pixels8_x2_arm:
++        .global _put_pixels8_x2_arm
++_put_pixels8_x2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -265,8 +265,8 @@
+         .word 4b
+ 
+         .align 8
+-        .global put_no_rnd_pixels8_x2_arm
+-put_no_rnd_pixels8_x2_arm:
++        .global _put_no_rnd_pixels8_x2_arm
++_put_no_rnd_pixels8_x2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -336,8 +336,8 @@
+ 
+ @ ----------------------------------------------------------------
+         .align 8
+-        .global put_pixels8_y2_arm
+-put_pixels8_y2_arm:
++        .global _put_pixels8_y2_arm
++_put_pixels8_y2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -445,8 +445,8 @@
+         .word 4b
+ 
+         .align 8
+-        .global put_no_rnd_pixels8_y2_arm
+-put_no_rnd_pixels8_y2_arm:
++        .global _put_no_rnd_pixels8_y2_arm
++_put_no_rnd_pixels8_y2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -618,8 +618,8 @@
+ .endm
+ 
+         .align 8
+-        .global put_pixels8_xy2_arm
+-put_pixels8_xy2_arm:
++        .global _put_pixels8_xy2_arm
++_put_pixels8_xy2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+@@ -654,8 +654,8 @@
+         .word 0x0F0F0F0F
+ 
+         .align 8
+-        .global put_no_rnd_pixels8_xy2_arm
+-put_no_rnd_pixels8_xy2_arm:
++        .global _put_no_rnd_pixels8_xy2_arm
++_put_no_rnd_pixels8_xy2_arm:
+         @ void func(uint8_t *block, const uint8_t *pixels, int line_size, int h)
+         @ block = word aligned, pixles = unaligned
+         pld [r1]
+diff -ru ffmpeg-export-2008-02-26/libavcodec/armv4l/jrevdct_arm.S ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/jrevdct_arm.S
+--- ffmpeg-export-2008-02-26/libavcodec/armv4l/jrevdct_arm.S	2005-12-22 01:10:11.000000000 +0000
++++ ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/jrevdct_arm.S	2008-05-20 09:03:43.000000000 +0000
+@@ -54,8 +54,8 @@
+         .text
+         .align
+ 
+-        .global j_rev_dct_ARM
+-j_rev_dct_ARM:
++        .global _j_rev_dct_ARM
++_j_rev_dct_ARM:
+         stmdb   sp!, { r4 - r12, lr }   @ all callee saved regs
+ 
+         sub sp, sp, #4                  @ reserve some space on the stack
+diff -ru ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_arm.S ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_arm.S
+--- ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_arm.S	2007-12-02 15:43:08.000000000 +0000
++++ ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_arm.S	2008-05-20 09:03:13.000000000 +0000
+@@ -54,9 +54,9 @@
+ 
+         .text
+         .align
+-        .global simple_idct_ARM
++        .global _simple_idct_ARM
+ 
+-simple_idct_ARM:
++_simple_idct_ARM:
+         @@ void simple_idct_ARM(int16_t *block)
+         @@ save stack for reg needed (take all of them),
+         @@ R0-R3 are scratch regs, so no need to save them, but R0 contains the pointer to block
+diff -ru ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_armv5te.S ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_armv5te.S
+--- ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_armv5te.S	2007-07-05 20:08:51.000000000 +0000
++++ ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_armv5te.S	2008-05-20 09:02:30.000000000 +0000
+@@ -42,9 +42,9 @@
+ w57:    .long W57
+ 
+         .align
+-        .type idct_row_armv5te, %function
+-        .func idct_row_armv5te
+-idct_row_armv5te:
++        @.type idct_row_armv5te, %function
++        @.func idct_row_armv5te
++_idct_row_armv5te:
+         str    lr, [sp, #-4]!
+ 
+         ldrd   v1, [a1, #8]
+@@ -148,7 +148,7 @@
+         strd   a3, [a1, #8]
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+         .macro idct_col
+         ldr    a4, [a1]              /* a4 = col[1:0] */
+@@ -263,9 +263,9 @@
+         .endm
+ 
+         .align
+-        .type idct_col_armv5te, %function
+-        .func idct_col_armv5te
+-idct_col_armv5te:
++        @.type idct_col_armv5te, %function
++        @.func idct_col_armv5te
++_idct_col_armv5te:
+         str    lr, [sp, #-4]!
+ 
+         idct_col
+@@ -335,12 +335,12 @@
+         str    a2, [a1, #(16*4)]
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .type idct_col_put_armv5te, %function
+-        .func idct_col_put_armv5te
+-idct_col_put_armv5te:
++        @.type idct_col_put_armv5te, %function
++        @.func idct_col_put_armv5te
++_idct_col_put_armv5te:
+         str    lr, [sp, #-4]!
+ 
+         idct_col
+@@ -455,12 +455,12 @@
+         strh   a2, [v2, -lr]
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .type idct_col_add_armv5te, %function
+-        .func idct_col_add_armv5te
+-idct_col_add_armv5te:
++        @.type idct_col_add_armv5te, %function
++        @.func idct_col_add_armv5te
++_idct_col_add_armv5te:
+         str    lr, [sp, #-4]!
+ 
+         idct_col
+@@ -608,118 +608,118 @@
+         strh   a2, [v2]
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .global simple_idct_armv5te
+-        .type simple_idct_armv5te, %function
+-        .func simple_idct_armv5te
+-simple_idct_armv5te:
++        .global _simple_idct_armv5te
++        @.type simple_idct_armv5te, %function
++        @.func simple_idct_armv5te
++_simple_idct_armv5te:
+         stmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, lr}
+ 
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+ 
+         sub    a1, a1, #(16*7)
+ 
+-        bl     idct_col_armv5te
++        bl     _idct_col_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_armv5te
++        bl     _idct_col_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_armv5te
++        bl     _idct_col_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_armv5te
++        bl     _idct_col_armv5te
+ 
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .global simple_idct_add_armv5te
+-        .type simple_idct_add_armv5te, %function
+-        .func simple_idct_add_armv5te
+-simple_idct_add_armv5te:
++        .global _simple_idct_add_armv5te
++        @.type simple_idct_add_armv5te, %function
++        @.func simple_idct_add_armv5te
++_simple_idct_add_armv5te:
+         stmfd  sp!, {a1, a2, v1, v2, v3, v4, v5, v6, v7, fp, lr}
+ 
+         mov    a1, a3
+ 
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+ 
+         sub    a1, a1, #(16*7)
+ 
+-        bl     idct_col_add_armv5te
++        bl     _idct_col_add_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_add_armv5te
++        bl     _idct_col_add_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_add_armv5te
++        bl     _idct_col_add_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_add_armv5te
++        bl     _idct_col_add_armv5te
+ 
+         add    sp, sp, #8
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .global simple_idct_put_armv5te
+-        .type simple_idct_put_armv5te, %function
+-        .func simple_idct_put_armv5te
+-simple_idct_put_armv5te:
++        .global _simple_idct_put_armv5te
++        @.type simple_idct_put_armv5te, %function
++        @.func simple_idct_put_armv5te
++_simple_idct_put_armv5te:
+         stmfd  sp!, {a1, a2, v1, v2, v3, v4, v5, v6, v7, fp, lr}
+ 
+         mov    a1, a3
+ 
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+         add    a1, a1, #16
+-        bl     idct_row_armv5te
++        bl     _idct_row_armv5te
+ 
+         sub    a1, a1, #(16*7)
+ 
+-        bl     idct_col_put_armv5te
++        bl     _idct_col_put_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_put_armv5te
++        bl     _idct_col_put_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_put_armv5te
++        bl     _idct_col_put_armv5te
+         add    a1, a1, #4
+-        bl     idct_col_put_armv5te
++        bl     _idct_col_put_armv5te
+ 
+         add    sp, sp, #8
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc
+diff -ru ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_armv6.S ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_armv6.S
+--- ffmpeg-export-2008-02-26/libavcodec/armv4l/simple_idct_armv6.S	2007-07-05 20:08:51.000000000 +0000
++++ ffmpeg-export-2008-02-26+iPhone/libavcodec/armv4l/simple_idct_armv6.S	2008-05-20 09:01:50.000000000 +0000
+@@ -191,9 +191,9 @@
+   a2 = dest
+ */
+         .align
+-        .type idct_row_armv6, %function
+-        .func idct_row_armv6
+-idct_row_armv6:
++        @.type idct_row_armv6, %function
++        @.func idct_row_armv6
++_idct_row_armv6:
+         str    lr, [sp, #-4]!
+ 
+         ldr    lr, [a1, #12]         /* lr = row[7,5] */
+@@ -238,7 +238,7 @@
+         strh   a3, [a2, #(16*5)]
+         strh   a3, [a2, #(16*7)]
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+ /*
+   Compute IDCT of single column, read as row.
+@@ -246,9 +246,9 @@
+   a2 = dest
+ */
+         .align
+-        .type idct_col_armv6, %function
+-        .func idct_col_armv6
+-idct_col_armv6:
++        @.type idct_col_armv6, %function
++        @.func idct_col_armv6
++_idct_col_armv6:
+         stmfd  sp!, {a2, lr}
+ 
+         ldr    a3, [a1]              /* a3 = row[2,0] */
+@@ -268,7 +268,7 @@
+         strh   v5, [a2, #(16*7)]
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+ /*
+   Compute IDCT of single column, read as row, store saturated 8-bit.
+@@ -277,9 +277,9 @@
+   a3 = line size
+ */
+         .align
+-        .type idct_col_put_armv6, %function
+-        .func idct_col_put_armv6
+-idct_col_put_armv6:
++        @.type idct_col_put_armv6, %function
++        @.func idct_col_put_armv6
++_idct_col_put_armv6:
+         stmfd  sp!, {a2, a3, lr}
+ 
+         ldr    a3, [a1]              /* a3 = row[2,0] */
+@@ -301,7 +301,7 @@
+         sub    a2, a2, a3, lsl #3
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+ /*
+   Compute IDCT of single column, read as row, add/store saturated 8-bit.
+@@ -310,9 +310,9 @@
+   a3 = line size
+ */
+         .align
+-        .type idct_col_add_armv6, %function
+-        .func idct_col_add_armv6
+-idct_col_add_armv6:
++        @.type idct_col_add_armv6, %function
++        @.func idct_col_add_armv6
++_idct_col_add_armv6:
+         stmfd  sp!, {a2, a3, lr}
+ 
+         ldr    a3, [a1]              /* a3 = row[2,0] */
+@@ -359,7 +359,7 @@
+         sub    a2, a2, a3, lsl #3
+ 
+         ldr    pc, [sp], #4
+-        .endfunc
++        @.endfunc
+ 
+ /*
+   Compute 8 IDCT row transforms.
+@@ -394,62 +394,62 @@
+         .endm
+ 
+         .align
+-        .global ff_simple_idct_armv6
+-        .type ff_simple_idct_armv6, %function
+-        .func ff_simple_idct_armv6
++        .global _ff_simple_idct_armv6
++        @.type ff_simple_idct_armv6, %function
++        @.func ff_simple_idct_armv6
+ /* void ff_simple_idct_armv6(DCTELEM *data); */
+-ff_simple_idct_armv6:
++_ff_simple_idct_armv6:
+         stmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, lr}
+         sub    sp, sp, #128
+ 
+         mov    a2, sp
+-        idct_rows idct_row_armv6, 2
++        idct_rows _idct_row_armv6, 2
+         mov    a2, a1
+         mov    a1, sp
+-        idct_rows idct_col_armv6, 2
++        idct_rows _idct_col_armv6, 2
+ 
+         add    sp, sp, #128
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .global ff_simple_idct_add_armv6
+-        .type ff_simple_idct_add_armv6, %function
+-        .func ff_simple_idct_add_armv6
++        .global _ff_simple_idct_add_armv6
++        @.type ff_simple_idct_add_armv6, %function
++        @.func ff_simple_idct_add_armv6
+ /* ff_simple_idct_add_armv6(uint8_t *dest, int line_size, DCTELEM *data); */
+-ff_simple_idct_add_armv6:
++_ff_simple_idct_add_armv6:
+         stmfd  sp!, {a1, a2, v1, v2, v3, v4, v5, v6, v7, fp, lr}
+         sub    sp, sp, #128
+ 
+         mov    a1, a3
+         mov    a2, sp
+-        idct_rows idct_row_armv6, 2
++        idct_rows _idct_row_armv6, 2
+         mov    a1, sp
+         ldr    a2, [sp, #128]
+         ldr    a3, [sp, #(128+4)]
+-        idct_rows idct_col_add_armv6, 1
++        idct_rows _idct_col_add_armv6, 1
+ 
+         add    sp, sp, #(128+8)
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc
+ 
+         .align
+-        .global ff_simple_idct_put_armv6
+-        .type ff_simple_idct_put_armv6, %function
+-        .func ff_simple_idct_put_armv6
++        .global _ff_simple_idct_put_armv6
++        @.type ff_simple_idct_put_armv6, %function
++        @.func ff_simple_idct_put_armv6
+ /* ff_simple_idct_put_armv6(uint8_t *dest, int line_size, DCTELEM *data); */
+-ff_simple_idct_put_armv6:
++_ff_simple_idct_put_armv6:
+         stmfd  sp!, {a1, a2, v1, v2, v3, v4, v5, v6, v7, fp, lr}
+         sub    sp, sp, #128
+ 
+         mov    a1, a3
+         mov    a2, sp
+-        idct_rows idct_row_armv6, 2
++        idct_rows _idct_row_armv6, 2
+         mov    a1, sp
+         ldr    a2, [sp, #128]
+         ldr    a3, [sp, #(128+4)]
+-        idct_rows idct_col_put_armv6, 1
++        idct_rows _idct_col_put_armv6, 1
+ 
+         add    sp, sp, #(128+8)
+         ldmfd  sp!, {v1, v2, v3, v4, v5, v6, v7, fp, pc}
+-        .endfunc
++        @.endfunc

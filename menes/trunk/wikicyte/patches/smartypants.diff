@@ -1,0 +1,13 @@
+Index: smartypants.py
+===================================================================
+--- smartypants.py	(revision 2870)
++++ smartypants.py	(working copy)
+@@ -587,7 +587,7 @@
+ 	str = re.sub(r"""'"(?=\w)""", """&#8216;&#8220;""", str)
+ 
+ 	# Special case for decade abbreviations (the '80s):
+-	str = re.sub(r"""\b'(?=\d{2}s)""", r"""&#8217;""", str)
++	str = re.sub(r"""\B'(?=\d{2}(s|\b))""", r"""&#8217;""", str)
+ 
+ 	close_class = r"""[^\ \t\r\n\[\{\(\-]"""
+ 	dec_dashes = r"""&#8211;|&#8212;"""

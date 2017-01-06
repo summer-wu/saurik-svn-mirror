@@ -1,0 +1,12 @@
+Package: com.bigboss.patchsafari2
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 2.1.3248-1
+Description: generally allow browsing local files
+Name: file:// for MobileSafari
+Depends: mobilesubstrate (>= 0.9.2587-1)
+Pre-Depends: dpkg (>= 1.13.25-5)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.bigboss.patchsafari2/

@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<bnf:grammar
+    xmlns:xi="http://www.w3.org/2003/XInclude"
+    xmlns:bnf="http://www.saurik.com/menes/bnf/0.9"
+    xmlns:bnf0="file://menes/bnf/0.9"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    name="Bnf Grammar"
+    goal="Grammar"
+    bnf:tokenizer="InputSeparators"
+>
+
+<xi:include href="general.xml"/>
+
+<bnf:define name="Separator" bnf:tokenizer="">
+    <bnf:optional>
+        <bnf:string value="@" bnf:ignore="true"/>
+
+        <bnf:optional>
+            <xsl:attribute name="tokenizer">
+                <bnf:call name="RuleName"/>
+            </xsl:attribute>
+        </bnf:optional>
+    </bnf:optional>
+</bnf:define>
+
+<bnf:define name="Grammar">
+    <xsl:stylesheet version="2.0">
+        <!--xsl:namespace-alias stylesheet-prefix="bnf0" result-prefix="bnf"/-->
+
+        <xsl:template match="/">
+            <bnf0:grammar>
+                <bnf:special type="bof"/>
+                <bnf:call name="Separator"/>
+
+                <bnf:repeated>
+                    <bnf:call name="Rule"/>
+                </bnf:repeated>
+
+                <bnf:special type="eof"/>
+            </bnf0:grammar>
+        </xsl:template>
+    </xsl:stylesheet>
+</bnf:define>
+
+<bnf:define name="Rule">
+    <bnf0:rule>
+        <xsl:attribute name="name">
+            <bnf:call name="RuleName"/>
+        </xsl:attribute>
+
+        <bnf:string value=":=" bnf:ignore="true"/>
+        <bnf:call name="Contents"/>
+        <bnf:string value=";" bnf:ignore="true"/>
+    </bnf0:rule>
+</bnf:define>
+
+<bnf:define name="RuleName" bnf:tokenizer="">
+    <bnf:multiple mode="possessive">
+        <bnf:call name="RuleNameChar"/>
+    </bnf:multiple>
+</bnf:define>
+
+<bnf:define name="RuleNameChar">
+    <bnf:special type="letter"/>
+</bnf:define>
+
+<bnf:define name="Contents">
+    <bnf:call name="Separator"/>
+
+    <bnf:repeated>
+        <bnf:call name="Content"/>
+    </bnf:repeated>
+</bnf:define>
+
+<bnf:define name="Content">
+    <bnf:or>
+        <bnf0:call>
+            <xsl:attribute name="name">
+                <bnf:call name="RuleName"/>
+            </xsl:attribute>
+        </bnf0:call>
+
+        <bnf0:special bnf:tokenizer="">
+            <bnf:string value="#" bnf:ignore="true"/>
+
+            <xsl:attribute name="type">
+                <bnf:call name="RuleName"/>
+            </xsl:attribute>
+        </bnf0:special>
+
+        <bnf0:element>
+            <bnf:block bnf:tokenizer="">
+                <bnf:string value="&lt;" bnf:ignore="true"/>
+
+                <xsl:attribute name="local">
+                    <bnf:call name="RuleName"/>
+                </xsl:attribute>
+
+                <bnf:string value="&gt;" bnf:ignore="true"/>
+            </bnf:block>
+
+            <bnf:call name="Contents"/>
+            <bnf:string value="&lt;/&gt;" bnf:ignore="true"/>
+        </bnf0:element>
+
+        <bnf0:block>
+            <bnf:string value="(" bnf:ignore="true"/>
+            <bnf:call name="Contents"/>
+            <bnf:string value=")" bnf:ignore="true"/>
+        </bnf0:block>
+
+        <bnf0:or>
+            <bnf:string value="[" bnf:ignore="true"/>
+            <bnf:call name="Contents"/>
+            <bnf:string value="]" bnf:ignore="true"/>
+        </bnf0:or>
+
+        <bnf0:not>
+            <bnf:string value="!" bnf:ignore="true"/>
+            <bnf:call name="Contents"/>
+        </bnf0:not>
+
+        <bnf0:range bnf:tokenizer="">
+            <bnf:string value="'" bnf:ignore="true"/>
+
+            <xsl:attribute name="begin">
+                <bnf:special type="any"/>
+            </xsl:attribute>
+
+            <bnf:string value="-" bnf:ignore="true"/>
+
+            <xsl:attribute name="end">
+                <bnf:special type="any"/>
+            </xsl:attribute>
+
+            <bnf:string value="'" bnf:ignore="true"/>
+        </bnf0:range>
+
+        <bnf0:string bnf:tokenizer="">
+            <bnf:string value="&quot;" bnf:ignore="true"/>
+
+            <xsl:attribute name="value">
+                <bnf:repeated>
+                    <bnf:not>
+                        <bnf:string value="&quot;"/>
+                    </bnf:not>
+
+                    <bnf:special type="any"/>
+                </bnf:repeated>
+            </xsl:attribute>
+
+            <bnf:string value="&quot;" bnf:ignore="true"/>
+        </bnf0:string>
+
+        <bnf0:repeated>
+            <bnf:call name="Content"/>
+            <bnf:string value="*" bnf:ignore="true"/>
+        </bnf0:repeated>
+
+        <bnf0:optional>
+            <bnf:call name="Content"/>
+            <bnf:string value="?" bnf:ignore="true"/>
+        </bnf0:optional>
+
+        <bnf0:multiple>
+            <bnf:call name="Content"/>
+            <bnf:string value="+" bnf:ignore="true"/>
+        </bnf0:multiple>
+    </bnf:or>
+</bnf:define>
+
+</bnf:grammar>

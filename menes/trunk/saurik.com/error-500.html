@@ -1,0 +1,65 @@
+<html><head>
+
+<style>
+    body {
+        background-color: #0000aa;
+        color: #ffffff;
+        font-family: monospace;
+        font-size: larger;
+    }
+
+    pre {
+        font-family: 'Lucida Console', monospace;
+    }
+
+    a {
+        color: #ffffff;
+    }
+</style>
+
+</head><body>
+
+<pre>A problem has been detected and Saurik's website has been shut down to prevent
+damage to his computer.
+
+The problem seems to be caused by the following exception: #(jex ? jex.getClass().getName() : jsex.name)
+
+#(jex ? jex.getMessage() : jsex.message)
+
+If this is the first time you've seen this Stop error screen,
+restart your web browser. If this screen appears again, follow
+these steps:
+
+Recheck that you are attempting to navigate to a valid URL. If this was
+the target of an off-site link, ask the maintainer of the referring site
+for any new information on the whereabouts of your information.
+
+If problems continue, disable or remove any newly installed extensions or
+GreaseMonkey scripts. Disable browser features such as caching or cookies.
+#{ if (agent.match(/Windows/)) {
+
+#{If you need to use Safe Mode to remove or disable components, restart
+your computer, press F8 to select Advanced Startup Options, and then
+select Safe Mode.}
+
+} else if (agent.match(/Macintosh/)) {
+
+#{If you need to use Safe Mode to remove or disable components, restart
+your computer, wait for the startup tone, and immediately press and hold
+the shift key until you see the gray Apple logo and progress indicator.}
+
+} }
+
+If you are still unable to find what you are looking for, please feel free
+to contact the author and developer of the website at the following e-mail
+address: <a href="mailto:saurik@saurik.com">saurik@saurik.com</a>. He will, eventually, respond ;P.
+
+Technical information:
+
+*** STOP: 0x#(java.lang.Long.toHexString(request_id)) (0x#(java.lang.Long.toHexString(new Date().getTime())))
+#{ if (jex) { #{
+
+*** #{ jex.printStackTrace(_w); }
+} } }</pre>
+
+</body></html>

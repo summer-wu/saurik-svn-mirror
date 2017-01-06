@@ -1,0 +1,62 @@
+diff -ru vim71/src/globals.h vim71+iPhone/src/globals.h
+--- vim71/src/globals.h	2007-05-07 19:44:26.000000000 +0000
++++ vim71+iPhone/src/globals.h	2008-06-18 02:18:30.000000000 +0000
+@@ -1080,11 +1080,7 @@
+ 
+ /* these are in version.c */
+ extern char *Version;
+-#if defined(HAVE_DATE_TIME) && defined(VMS) && defined(VAXC)
+-extern char longVersion[];
+-#else
+ extern char *longVersion;
+-#endif
+ 
+ /*
+  * Some file names are stored in pathdef.c, which is generated from the
+diff -ru vim71/src/main.c vim71+iPhone/src/main.c
+--- vim71/src/main.c	2007-05-07 19:38:44.000000000 +0000
++++ vim71+iPhone/src/main.c	2008-06-18 02:18:17.000000000 +0000
+@@ -235,10 +235,6 @@
+     /* Init the table of Normal mode commands. */
+     init_normal_cmds();
+ 
+-#if defined(HAVE_DATE_TIME) && defined(VMS) && defined(VAXC)
+-    make_version();	/* Construct the long version string. */
+-#endif
+-
+     /*
+      * Allocate space for the generic buffers (needed for set_init_1() and
+      * EMSG2()).
+diff -ru vim71/src/version.c vim71+iPhone/src/version.c
+--- vim71/src/version.c	2007-05-12 10:23:44.000000000 +0000
++++ vim71+iPhone/src/version.c	2008-06-18 02:18:23.000000000 +0000
+@@ -30,29 +30,7 @@
+ char		*Version = VIM_VERSION_SHORT;
+ static char	*mediumVersion = VIM_VERSION_MEDIUM;
+ 
+-#if defined(HAVE_DATE_TIME) || defined(PROTO)
+-# if (defined(VMS) && defined(VAXC)) || defined(PROTO)
+-char	longVersion[sizeof(VIM_VERSION_LONG_DATE) + sizeof(__DATE__)
+-						      + sizeof(__TIME__) + 3];
+-    void
+-make_version()
+-{
+-    /*
+-     * Construct the long version string.  Necessary because
+-     * VAX C can't catenate strings in the preprocessor.
+-     */
+-    strcpy(longVersion, VIM_VERSION_LONG_DATE);
+-    strcat(longVersion, __DATE__);
+-    strcat(longVersion, " ");
+-    strcat(longVersion, __TIME__);
+-    strcat(longVersion, ")");
+-}
+-# else
+-char	*longVersion = VIM_VERSION_LONG_DATE __DATE__ " " __TIME__ ")";
+-# endif
+-#else
+ char	*longVersion = VIM_VERSION_LONG;
+-#endif
+ 
+ static void version_msg __ARGS((char *s));
+ 

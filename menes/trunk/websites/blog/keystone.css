@@ -1,0 +1,101 @@
+a {
+    color: #ccccff;
+    text-decoration: none;
+}
+
+a:active {
+    color: #ccccff;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #666688;
+}
+
+body {
+    background: #333366;
+
+    scrollbar-face-color: #222255;
+    scrollbar-shadow-color: #111144;
+    scrollbar-highlight-color: #333366;
+    scrollbar-3dlight-color: #222255;
+    scrollbar-darkshadow-color: #333333;
+    scrollbar-track-color: #444477;
+    scrollbar-arrow-color: #000000;
+}
+
+body, td {
+    font-family: verdana, sans-serif;
+    font-size: 10pt;
+}
+
+input, textarea {
+    border: 1px;
+    font-family: verdana, sans-serif;
+    font-size: 8pt;
+    padding: 2px;
+}
+
+pre {
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.content {
+    background: #000000;
+    color: #bbbbbb;
+    font-family: serif;
+    font-family: cursive;
+    padding: 3px;
+}
+
+#header-window .title-caption {
+    font-weight: bold;
+}
+
+.input-label {
+    color: #ffffff;
+}
+
+.menu-bar {
+    text-align: right;
+}
+
+.status-bar {
+    background: #333333;
+    font-size: 8pt;
+    font-weight: bold;
+    padding: 3px;
+}
+
+.time-stamp {
+    font-size: 8pt;
+    text-align: right;
+}
+
+.title-bar {
+    background: #111144;
+    color: #ffffff;
+}
+
+.title-bar td {
+    padding: 3px;
+}
+
+.title-caption {
+    text-align: left;
+}
+
+.window {
+    border-color: #111144;
+    border-style: solid;
+    border-width: 2px;
+    margin-bottom: 10px;
+    width: 600px;
+}

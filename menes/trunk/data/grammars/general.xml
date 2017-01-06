@@ -1,0 +1,31 @@
+<?xml version="1.1"?>
+<bnf:grammar xmlns:bnf="http://www.saurik.com/menes/bnf/0.9">
+
+<bnf:define name="LineSeparator">
+    <bnf:or mode="short-circuit">
+        <!--bnf:string value="&#xd;&#xa;"/>
+        <bnf:string value="&#xd;"/-->
+        <bnf:string value="&#xa;"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="WhiteSpace">
+    <bnf:or>
+        <bnf:string value=" "/>
+        <bnf:string value="&#x9;"/>
+        <!-- XXX: bnf:string value="&#xc;"/-->
+        <bnf:call name="LineSeparator"/>
+    </bnf:or>
+</bnf:define>
+
+<bnf:define name="InputSeparator">
+    <bnf:call name="WhiteSpace" bnf:ignore="true"/>
+</bnf:define>
+
+<bnf:define name="InputSeparators" skip-debug="true">
+    <bnf:repeated>
+        <bnf:call name="InputSeparator"/>
+    </bnf:repeated>
+</bnf:define>
+
+</bnf:grammar>

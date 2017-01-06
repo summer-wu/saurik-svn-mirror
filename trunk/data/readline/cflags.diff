@@ -1,0 +1,21 @@
+diff -ru readline-6.0/configure.in readline-6.0+iPhone/configure.in
+--- readline-6.0/configure.in	2009-01-23 15:53:47.000000000 +0000
++++ readline-6.0+iPhone/configure.in	2009-04-10 17:13:20.000000000 +0000
+@@ -101,17 +101,11 @@
+ echo "Beginning configuration for readline-$LIBVERSION for ${host_cpu}-${host_vendor}-${host_os}"
+ echo ""
+ 
+-# We want these before the checks, so the checks can modify their values.
+-test -z "$CFLAGS" && CFLAGS=-g auto_cflags=1
+-
+ AC_PROG_MAKE_SET
+ AC_PROG_CC
+ dnl AC_AIX
+ AC_MINIX
+ 
+-# If we're using gcc and the user hasn't specified CFLAGS, add -O to CFLAGS.
+-test -n "$GCC" && test -n "$auto_cflags" && CFLAGS="$CFLAGS -O"
+-
+ AC_PROG_GCC_TRADITIONAL
+ AC_PROG_INSTALL
+ AC_CHECK_PROG(AR, ar, , ar)

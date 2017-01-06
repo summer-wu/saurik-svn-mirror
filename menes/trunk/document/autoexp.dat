@@ -1,0 +1,200 @@
+; To find what the debugger considers the type of a variable to
+; be, add it to the Watch window and look at the Type column.
+;
+;   Letter  Description                 Sample         Display
+;   ------  --------------------------  ------------   -------------
+;   d,i     Signed decimal integer      0xF000F065,d   -268373915
+;   u       Unsigned decimal integer    0x0065,u       101
+;   o       Unsigned octal integer      0xF065,o       0170145
+;   x,X     Hexadecimal integer         61541,X        0X0000F065
+;   l,h     long or short prefix for    00406042,hx    0x0c22
+;             d, i, u, o, x, X
+;   f       Signed floating-point       3./2.,f        1.500000
+;   e       Signed scientific-notation  3./2.,e        1.500000e+000
+;   g       Shorter of e and f          3./2.,g        1.5
+;   c       Single character            0x0065,c       'e'
+;   s       Zero-terminated string      pVar,s         "Hello world"
+;   su      Unicode string              pVar,su        "Hello world"
+;
+; For details of other format specifiers see Help under:
+; "format specifiers/watch variable"
+;
+; The special format <,t> specifies the name of the most-derived 
+; type of the object. This is especially useful with pointers or
+; references to a base class.
+;
+; There are some special entries allowed in the AutoExpand section:
+; $BUILTIN is used to display more complex types that need to do more
+; than just show a member variable or two.
+; $ADDIN allows external DLLs to be added to display even more complex
+; types via the EE Add-in API. The first argument is the DLL name, the
+; second argument is the name of the export from the DLL to use. For 
+; further information on this API see the sample called EEAddIn.
+;
+
+[AutoExpand]
+
+;;;;;;;;;;;;;;;;
+;; intrinsics ;;
+;;;;;;;;;;;;;;;;
+
+__m64   =<m64_i64,x>
+__m128  =$BUILTIN(M128)
+__m128i =$BUILTIN(M128I)
+__m128d =$BUILTIN(M128D)
+
+;;;;;;;;;;;;;
+;; <afx.h> ;;
+;;;;;;;;;;;;;
+
+CArchiveException =cause=<m_cause>
+CFile             =hFile=<m_hFile> name=<m_strFileName.m_pchData,s>
+CFileException    =cause=<m_cause> OS Error=m_lOsError
+CMemFile          =pos=<m_nPosition> size=<m_nFileSize>
+CObject           =<,t>
+CRuntimeClass     =<m_lpszClassName,s>
+CStdioFile        =FILE*=<m_pStream> name=<m_strFilename.m_pchData,s>
+CTimeSpan         =time=<m_time>
+CTime             =time=<m_time>
+
+;;;;;;;;;;;;;;;;;
+;; <afxcoll.h> ;;
+;;;;;;;;;;;;;;;;;
+
+CByteArray  =count=<m_nCount>
+CPtrList    =count=<m_nCount>
+CStringList =count=<m_nCount>
+
+; same for all CXXXArray classes
+; same for CXXXList
+; same for CMapXXToXX
+
+;;;;;;;;;;;;;;;;;;
+;; <afxstat_.h> ;;
+;;;;;;;;;;;;;;;;;;
+
+CProcessLocalObject =<,t>
+CThreadLocalObject  =<,t>
+
+;;;;;;;;;;;;;;;;
+;; <afxwin.h> ;;
+;;;;;;;;;;;;;;;;
+
+CDC        =hDC=<m_hDC> attrib=<m_hAttribDC>
+CPaintDC   =<,t> hWnd=<m_hWnd>
+CPoint     =x=<x> y=<y>
+CRect      =top=<top> bottom=<bottom> left=<left> right=<right>
+CSize      =cx=<cx> cy=<cy>
+CWnd       =<,t> hWnd=<m_hWnd>
+CWinApp    =<,t> <m_pszAppName,s>
+CWinThread =<,t> h=<m_hThread> proc=<m_pfnThreadProc>
+
+;;;;;;;;;;;;;;;;
+;; <windef.h> ;;
+;;;;;;;;;;;;;;;;
+
+tagPOINT =x=<x> y=<y>
+tagRECT  =top=<top> bottom=<bottom> left=<left> right=<right>
+
+;;;;;;;;;;;;;;;;;
+;; <winuser.h> ;;
+;;;;;;;;;;;;;;;;;
+
+tagMSG =msg=<message,x> wp=<wParam,x> lp=<lParam,x>
+
+;;;;;;;;;;;;;;;;;;;;;
+;; MFC/ATL Strings ;;
+;;;;;;;;;;;;;;;;;;;;;
+
+ATL::CStringT<*>       =<m_pszData>
+CSimpleStringT<*>      =<m_pszData>
+ATL::CSimpleStringT<*> =<m_pszData>
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; ATL Miscellaneous ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
+_com_error        =<m_hresult,hr>
+_bstr_t           =<m_Data->m_wstr,su> (<m_Data->m_RefCount,u>)
+_com_ptr_t<*>     =<m_pInterface>
+_LARGE_INTEGER    =<QuadPart>
+ATL::CComPtr<*>   =<p>
+ATL::CComBSTR     =<m_str,su>
+ATL::CComQIPtr<*> =<p>
+
+tagVARIANT =$BUILTIN(VARIANT)
+VARIANT    =$BUILTIN(VARIANT)
+_GUID      =$BUILTIN(GUID)
+
+; see EEAddIn sample for how to use these
+;_SYSTEMTIME=$ADDIN(EEAddIn.dll,AddIn_SystemTime)
+;_FILETIME=$ADDIN(EEAddIn.dll,AddIn_FileTime)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; C++ Template Library ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+std::basic_string<char,std::char_traits<char>,std::allocator<char> >                               =$BUILTIN(NSTDSTRING)
+std::basic_string<unsigned short,std::char_traits<unsigned short>,std::allocator<unsigned short> > =$BUILTIN(WSTDSTRING)
+std::basic_string<wchar_t,std::char_traits<wchar_t>,std::allocator<wchar_t> >                      =$BUILTIN(WSTDSTRING)
+
+std::deque<*>          =size=<_Mysize>
+std::list<*>           =size=<_Mysize>
+std::map<*>            =size=<_Mysize>
+std::multimap<*>       =size=<_Mysize>
+std::set<*>            =size=<_Mysize>
+
+std::queue<*>          =size=<c._Mysize>
+std::stack<*>          =size=<c._Mysize>
+
+std::pair<*>           =first=<first> second=<second>
+std::priority_queue<*> =first=<c._First> last=<c._Last>
+std::vector<*>         =length=<_Mylast - _Myfirst,u>
+
+std::binder1st<*>      =op=<op> value=<value>
+std::binder2nd<*>      =op=<op> value=<value>
+
+std::less<*>           =lessthan
+std::greater<*>        =greaterthan
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Optasia Graphics ;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+Optasia::Image =h=<height> w=<width> f=<format>
+
+;;;;;;;;;;;;;;;;;;
+;; Optasia Math ;;
+;;;;;;;;;;;;;;;;;;
+
+Vector2<*> =x=<x> y=<y>
+Vector3<*> =x=<x> y=<y> z=<z>
+Vector4<*> =x=<x> y=<y> z=<z> w=<w>
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Optasia Modelling ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+
+Optasia::ISceneTree =<,t>
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Menes Miscellaneous ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ext::Exception  =<,t> msg=<GetMessage()>
+gui::Object     =<,t>
+
+com::Handle<*> =<manager_.member_>
+ext::Handle<*> =<manager_.member_>
+
+ext::Circular<*>     =size=<size_>
+ext::Pair<*>         =head=<head_> tail=<tail_>
+ext::RedBlackTree<*> =size=<size_>
+ext::String          =<size_>: <data_.data_.data_.pointer_,s>
+ext::Vector<*>       =size=<size_>
+
+; This section lets you define your own errors for the HRESULT display.
+; You need to list the error code in unsigned decimal, followed by the message.
+; Changes will take effect the next time you redisplay the variable.
+[hresult]
+;1234=my custom error code

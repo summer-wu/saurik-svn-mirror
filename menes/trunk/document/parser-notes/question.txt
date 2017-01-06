@@ -1,0 +1,44 @@
+    696 <p0:rule name="Variable">
+    697     <p0:production p0:simplified="repeated">
+    698         <p0:call name="Loop"/>
+    699     </p0:production>
+    700 </p0:rule>
+    701
+    702 <p0:rule name="Loop" mode="path-branching">
+    703     <p0:production p0:simplified="repeated">
+    704         <p0:call name="Terminal"/>
+    705         <p0:call name="Loop"/>
+    706     </p0:production>
+    707
+    708     <p0:production p0:simplified="repeated"/>
+    709 </p0:rule>
+
+    693 <p0:rule name="Variable">
+    694     <p0:production p0:simplified="repeated" p0:lc-phase="4">
+    695         <p0:call name="Loop"/>
+    696     </p0:production>
+    697 </p0:rule>
+    698
+    699 <p0:rule name="Loop" mode="path-branching">
+    700     <p0:production p0:lc-phase="1">
+    701         <p0:call name="Terminal" p0:unlambda="true"/>
+    702         <p0:call name="Loop{-Terminal}"/>
+    703     </p0:production>
+    704 </p0:rule>
+    705
+    706 <p0:rule name="Loop{-Terminal}" prefixed="true">
+    707     <p0:production p0:lc-phase="2b">
+    708         <p0:call name="Loop"/>
+    709         <p0:call name="Loop{-Loop}"/>
+    710     </p0:production>
+    711 </p0:rule>
+    712
+    713 <p0:rule name="Loop{-Loop}" prefixed="true">
+    714     <p0:production p0:lc-phase="2b">
+    715         <p0:call name="Loop{-Loop}"/>
+    716     </p0:production>
+    717 </p0:rule>
+    718
+    719 <p0:rule name="Loop{-Loop}" prefixed="true">
+    720     <p0:production p0:lc-phase="3"/>
+    721 </p0:rule>

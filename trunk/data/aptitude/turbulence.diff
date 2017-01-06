@@ -1,0 +1,12 @@
+diff -ru aptitude_0.4.11.11.orig/src/generic/apt/aptitude_resolver_universe.h aptitude_0.4.11.11.orig+iPhone/src/generic/apt/aptitude_resolver_universe.h
+--- aptitude_0.4.11.11.orig/src/generic/apt/aptitude_resolver_universe.h	2008-11-20 03:17:12.000000000 +0000
++++ aptitude_0.4.11.11.orig+iPhone/src/generic/apt/aptitude_resolver_universe.h	2014-06-12 08:14:47.000000000 +0000
+@@ -178,7 +178,7 @@
+   unsigned int get_id() const
+   {
+     if(!ver.end())
+-      return ver->ID;
++      return ver->ID2 << 16 | ver->ID1;
+     else
+       // non-installed versions are faked.
+       //

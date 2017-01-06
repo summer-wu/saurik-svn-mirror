@@ -1,0 +1,6 @@
+#!/bin/sh
+case "$1" in
+    (remove|purge)
+        /usr/bin/apt-key del 04BBB74B
+    ;;
+esac

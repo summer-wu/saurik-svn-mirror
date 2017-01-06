@@ -1,0 +1,30 @@
+var sidebar_width = 15.5;
+var measure = 39.5;
+
+#$css{
+
+#header {
+    width: #(measure)em;
+}
+
+#content {
+    width: #(measure + 6)em;
+}
+
+#page {
+    width: #(measure + sidebar_width + 7.8)em;
+}
+
+#sidebar {
+    width: #(sidebar_width)em;
+}
+
+.blockquote_ {
+    width: #(measure - line_height * 2 - 1)em;
+}
+
+.inset_ {
+    width: #(measure)em;
+}
+
+}

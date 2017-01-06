@@ -1,0 +1,2 @@
+#!/bin/bash
+icc -E -dM - < /dev/null

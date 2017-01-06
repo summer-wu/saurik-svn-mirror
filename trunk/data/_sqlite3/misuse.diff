@@ -1,0 +1,53 @@
+diff -ru sqlite-3.5.9/src/vdbeapi.c sqlite-3.5.9+iPhone/src/vdbeapi.c
+--- sqlite-3.5.9/src/vdbeapi.c	2008-05-13 12:52:46.000000000 +0000
++++ sqlite-3.5.9+iPhone/src/vdbeapi.c	2008-08-01 03:22:00.000000000 +0000
+@@ -1072,6 +1072,9 @@
+ int sqlite3_bind_double(sqlite3_stmt *pStmt, int i, double rValue){
+   int rc;
+   Vdbe *p = (Vdbe *)pStmt;
++  if( p==0 ){
++    return SQLITE_MISUSE;
++  }
+   sqlite3_mutex_enter(p->db->mutex);
+   rc = vdbeUnbind(p, i);
+   if( rc==SQLITE_OK ){
+@@ -1086,6 +1089,9 @@
+ int sqlite3_bind_int64(sqlite3_stmt *pStmt, int i, sqlite_int64 iValue){
+   int rc;
+   Vdbe *p = (Vdbe *)pStmt;
++  if( p==0 ){
++    return SQLITE_MISUSE;
++  }
+   sqlite3_mutex_enter(p->db->mutex);
+   rc = vdbeUnbind(p, i);
+   if( rc==SQLITE_OK ){
+@@ -1097,6 +1103,9 @@
+ int sqlite3_bind_null(sqlite3_stmt *pStmt, int i){
+   int rc;
+   Vdbe *p = (Vdbe*)pStmt;
++  if( p==0 ){
++    return SQLITE_MISUSE;
++  }
+   sqlite3_mutex_enter(p->db->mutex);
+   rc = vdbeUnbind(p, i);
+   sqlite3_mutex_leave(p->db->mutex);
+@@ -1125,6 +1134,9 @@
+ int sqlite3_bind_value(sqlite3_stmt *pStmt, int i, const sqlite3_value *pValue){
+   int rc;
+   Vdbe *p = (Vdbe *)pStmt;
++  if( p==0 ){
++    return SQLITE_MISUSE;
++  }
+   sqlite3_mutex_enter(p->db->mutex);
+   rc = vdbeUnbind(p, i);
+   if( rc==SQLITE_OK ){
+@@ -1137,6 +1149,9 @@
+ int sqlite3_bind_zeroblob(sqlite3_stmt *pStmt, int i, int n){
+   int rc;
+   Vdbe *p = (Vdbe *)pStmt;
++  if( p==0 ){
++    return SQLITE_MISUSE;
++  }
+   sqlite3_mutex_enter(p->db->mutex);
+   rc = vdbeUnbind(p, i);
+   if( rc==SQLITE_OK ){

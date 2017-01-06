@@ -1,0 +1,11 @@
+Package: com.saurik.stealth
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 1.0.3227-1
+Name: MobileSubstrate "Stealth Mode"
+Depends: mobilesubstrate
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.stealth/
+Homepage: http://cydia.saurik.com/info/com.saurik.stealth/

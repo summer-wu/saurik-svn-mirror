@@ -1,0 +1,25 @@
+struct Input_ {
+    float4 color_ : COLOR0;
+    float3 normal_ : TEXCOORD0;
+    float3 light_ : TEXCOORD1;
+    float3 camera_ : TEXCOORD2;
+};
+
+struct Output_ {
+    float4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input
+) {
+    Output_ output;
+    float diffuse = dot(-input.light_, input.normal_);
+    diffuse = 1.0f - step(diffuse, 0.3f) * 0.2f;
+    float specular = dot(reflect(input.light_, input.normal_), input.camera_);
+    specular = step(0.7f, specular);
+    specular *= step(0, diffuse);
+    diffuse = max(0, diffuse);
+    float edge = step(0.25f, dot(input.normal_, input.camera_));
+    output.color_ = (diffuse * input.color_ + specular) * edge;
+    return output;
+}

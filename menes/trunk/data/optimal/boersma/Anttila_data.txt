@@ -1,0 +1,260 @@
+"ooTextFile"
+"Collection" 3
+
+
+"OTGrammar" "Anttila"
+
+11 constraints
+! Undominated NoClash, InitialStress, strong ending for final heavies
+"S\s{TRESS-TO-}
+W\s{EIGHT}"        100  0
+"W\s{EIGHT-TO-}
+S\s{TRESS}"        100  0
+"*S\s{TRESS}
+/ high"            100  0
+"*S\s{TRESS}
+/ mid"             100  0
+"*S\s{TRESS}
+/ low"             100  0
+"*U\s{NSTR}
+/ high"            100  0
+"*U\s{NSTR}
+/ mid"             100  0
+"*U\s{NSTR}
+/ low"             100  0
+"*HH"              100  0
+"*LL"              100  0
+"*L\s{APSE}"       100  0
+
+0 fixed rankings
+
+22 inputs
+
+Disyllabic:
+"kala" 2
+   "k\a'.lo.jen"                       1 1 0 0   0 0 0 1 0   1 1   ! 1
+   "k\a'.loi.den"                      1 2 0 0   0 0 0 1 1   0 1   ! 0
+"lasi" 2
+   "l\a'.si.en"                        1 1 0 0   0 1 0 0 0   1 1   ! 1
+   "(l\a'.sei.den)"                    1 2 0 0   0 1 0 0 1   0 1   ! 0
+
+Trisyllabic light penults:
+"kamera" 2
+   "k\a'.me.r\o`i.den"                 1 1 0 0   1 0 0 0 1   1 0   ! 720
+   "k\a'.me.ro.jen"                    1 1 0 0   0 0 0 1 0   2 2   ! 4    kolle(e)gojen
+"hetero" 2
+   "h\e'.te.r\o`i.den"                 1 1 0 1   0 0 0 0 1   1 0   ! 389
+   "h\e'.te.ro.jen"                    1 1 0 0   0 0 1 0 0   2 2   ! 2    heterojen imagojen
+"naapuri" 2
+   "n\a'a.pu.ri.en"                    0 1 0 0   0 1 0 0 0   1 2   ! 368
+   "n\a'a.pu.r\e`i.den"                0 1 1 0   0 0 0 0 1   0 0   ! 215
+
+Trisyllabic heavy penults:
+"maailma" 2
+   "m\a'a.il.mo.jen"                   0 2 0 0   0 0 0 1 1   0 2   ! 45
+   "m\a'a.il.m\o`i.den"                0 2 0 0   1 0 0 0 3   0 0   ! 46
+"korjaamo" 2
+   "k\o'r.jaa.mo.jen"                  0 2 0 0   0 0 1 0 1   0 2   ! 350
+   "k\o'r.jaa.m\o`i.den"               0 2 0 1   0 0 0 0 3   0 0   ! 76
+"poliisi" 2
+   "p\o'.lii.si.en"                    1 2 0 0   0 1 0 0 0   0 2   ! 806
+   "p\o'.lii.s\e`i.den"                1 2 1 0   0 0 0 0 2   0 0   ! 13
+
+among which (?):
+!"mansikka"           "man.si.koi.den"
+!"fyysikko"
+!"lemmikki"
+
+Quadrisyllabic light penults:
+"taiteilija" 2
+   "t\a'i.tei.li.j\o`i.den"            0 2 0 0   1 0 0 0 2   0 1   ! 276 p.23
+   "t\a'i.tei.li.jo.jen"               0 2 0 0   0 0 0 1 1   1 3   ! 0
+"luettelo" 2
+   "l\u'.et.te.l\o`i.den"              1 2 0 1   0 0 0 0 1   0 1   ! 25
+   "l\u'.et.te.lo.jen"                 1 2 0 0   0 0 1 0 0   1 3   ! 0
+"ministeri" 2
+   "m\i'.nis.te.ri.en"                 1 2 0 0   0 1 0 0 0   1 3   ! 234
+   "m\i'.nis.te.r\e`i.den"             1 2 1 0   0 0 0 0 1   0 1   ! 39 p.20,23
+
+Quadrisyllabic heavy penults:
+"luonnehdinta" 2
+   "l\u'on.neh.d\i`n.to.jen"           0 2 0 0   0 0 0 1 2   0 1   ! 1 p.23
+   "l\u'on.neh.d\i`n.toi.den"          0 3 0 0   0 0 0 1 4   0 1   ! 0
+"edustusto" 2
+   "\e'.dus.t\u`s.to.jen"              1 2 0 0   0 0 1 0 1   0 1   ! 84 p.23
+   "\e'.dus.t\u`s.toi.den"             1 3 0 0   0 0 1 0 3   0 1   ! 0
+"margariini" 2
+   "m\a'r.ga.r\i`i.ni.en"              0 1 0 0   0 1 0 0 0   0 1   ! 736 p.23
+   "m\a'r.ga.r\i`i.nei.den"            0 2 0 0   0 1 0 0 2   0 1   ! 0
+
+Quinquisyllabic light penults:
+"ajattelija" 2
+   "\a'.jat.te.li.j\o`i.den"           1 2 0 0   1 0 0 0 1   1 2   ! 101
+   "\a'.jat.te.li.jo.jen"              1 2 0 0   0 0 0 1 0   2 4   ! 0
+"televisio" 2
+   "t\e'.le.vi.si.\o`i.den"            1 1 0 1   0 0 0 0 1   3 2   ! 41
+   "t\e'.le.vi.si.o.jen"               1 1 0 0   0 0 1 0 0   4 4   ! 0
+"Aleksanteri" 2
+   "\A'.lek.s\a`n.te.ri.en"            1 2 0 0   0 1 0 0 1   1 2   ! 15
+   "\A'.lek.s\a`n.te.r\e`i.den"        1 2 1 0   0 0 0 0 2   0 0   ! 2
+
+XXLHL:
+"evankelista" 2
+   "\e'.van.ke.l\i`s.to.jen"           1 2 0 0   0 0 0 1 0   0 2   ! 2
+   "\e'.van.ke.l\i`s.toi.den"          1 3 0 0   0 0 0 1 2   0 2   ! 0
+!  "\e'.van.ke.lis.t\o`i.den"          1 3 0 0   1 0 0 0 2   0 2   ! 0
+"italiaano" 2
+   "\i'.ta.li.\a`a.no.jen"             1 1 0 0   0 0 1 0 0   2 2   ! 1
+   "\i'.ta.li.\a`a.noi.den"            1 2 0 0   0 0 1 0 2   2 2   ! 0
+!  "\i'.ta.li.aa.n\o`i.den"            1 2 0 1   0 0 0 0 2   2 2   ! 0
+"sosialisti" 2
+   "s\o'.si.a.l\i`s.ti.en"             1 1 0 0   0 1 0 0 0   2 2   ! 99
+   "s\o'.si.a.l\i`s.tei.den"           1 2 0 0   0 1 0 0 2   2 2   ! 0
+!  "s\o'.si.a.lis.t\e`i.den"           1 2 1 0   0 0 0 0 2   2 2   ! 0
+
+XXHHL:
+"koordinaatisto" 2
+   "k\o'or.di.n\a`a.tis.to.jen"        0 2 0 0   0 0 1 0 1   0 2   ! 8
+!  "k\o'or.di.naa.t`is.to.jen"         0 2 0 0   0 0 1 0 1   0 2   ! 0
+   "k\o'or.di.n\a`a.tis.t\o`i.den"     0 2 0 1   0 0 0 0 3   0 0   ! 2
+!  "k\o'or.di.naa.t\i`s.toi.den"       0 3 0 0   0 0 1 0 3   0 2   ! 0
+"avantgardisti" 2
+   "\a'.vant.g\a`r.dis.ti.en"          1 3 0 0   0 1 0 0 2   0 2   ! 2
+!  "\a'.vant.gar.d\i`s.ti.en"          1 3 0 0   0 1 0 0 2   0 2   ! 0
+   "\a'.vant.g\a`r.dis.t\e`i.den"      1 3 1 0   0 0 0 0 4   0 0   ! 0
+!  "\a'.vant.gar.d\i`s.tei.den"        1 4 0 0   0 1 0 0 4   0 2   ! 0
+
+XXXLHL:
+! "intellektuelli" 2
+!  "\i'n.tel.l\e`k.tu.\e`l.li.en"      0 2 0 0   0 1 0 0 2   0 1
+!  "\i'n.tel.l\e`k.tu.\e`l.lei.den"    0 3 0 0   0 1 0 0 4   0 1
+!  "\i'n.tel.l\e`k.tu.el.l\e`i.den"    0 3 1 0   0 0 0 0 4   0 1
+
+Septisyllabic heavy penults:
+! "eksistentialisti" 2
+! "\e'k.sis.t\e`n.ti.a.l\i`s.ti.en"    0 2 0 0   0 1 0 0 2   1 2
+! "\e'k.sis.t\e`n.ti.a.l\i`s.tei.den"  0 3 0 0   0 1 0 0 4   1 2
+! "\e'k.sis.t\e`n.ti.a.lis.t\e`i.den"  0 3 1 0   0 0 0 0 4   1 2
+
+XXXXLL:
+! "meteorologi" 2
+!  "m\e'.te.o.ro.lo.gi.en"             1 1 0 0   0 1 0 0 0   5 5
+!  "m\e'.te.o.ro.lo.g\e`i.den"         1 1 1 0   0 0 0 0 1   4 3
+
+
+"PairDistribution" "Anttila"
+44
+
+Disyllabic:
+"kala"               "k\a'.lo.jen"                       500
+"kala"               "k\a'.loi.den"                      0
+"lasi"               "l\a'.si.en"                        500
+"lasi"               "(l\a'.sei.den)"                    0
+
+Trisyllabic light penults:
+"kamera"             "k\a'.me.r\o`i.den"                 720
+"kamera"             "k\a'.me.ro.jen"                    0 ! 4    kolle(e)gojen
+"hetero"             "h\e'.te.r\o`i.den"                 389
+"hetero"             "h\e'.te.ro.jen"                    2    heterojen imagojen
+"naapuri"            "n\a'a.pu.ri.en"                    368
+"naapuri"            "n\a'a.pu.r\e`i.den"                215
+
+Trisyllabic heavy penults:
+"maailma"            "m\a'a.il.mo.jen"                   45
+"maailma"            "m\a'a.il.m\o`i.den"                46
+"korjaamo"           "k\o'r.jaa.mo.jen"                  350
+"korjaamo"           "k\o'r.jaa.m\o`i.den"               76
+"poliisi"            "p\o'.lii.si.en"                    806
+"poliisi"            "p\o'.lii.s\e`i.den"                13
+
+among which (?):
+!"mansikka"           "man.si.koi.den"
+!"fyysikko"
+!"lemmikki"
+
+Quadrisyllabic light penults:
+"taiteilija"         "t\a'i.tei.li.j\o`i.den"            276
+"taiteilija"         "t\a'i.tei.li.jo.jen"               0
+"luettelo"           "l\u'.et.te.l\o`i.den"              25
+"luettelo"           "l\u'.et.te.lo.jen"                 0
+"ministeri"          "m\i'.nis.te.ri.en"                 234
+"ministeri"          "m\i'.nis.te.r\e`i.den"             39
+
+Quadrisyllabic heavy penults:
+"luonnehdinta"       "l\u'on.neh.d\i`n.to.jen"           1
+"luonnehdinta"       "l\u'on.neh.d\i`n.toi.den"          0
+"edustusto"          "\e'.dus.t\u`s.to.jen"              84
+"edustusto"          "\e'.dus.t\u`s.toi.den"             0
+"margariini"         "m\a'r.ga.r\i`i.ni.en"              736
+"margariini"         "m\a'r.ga.r\i`i.nei.den"            0
+
+Quinquisyllabic light penults:
+"ajattelija"         "\a'.jat.te.li.j\o`i.den"           101
+"ajattelija"         "\a'.jat.te.li.jo.jen"              0
+"televisio"          "t\e'.le.vi.si.\o`i.den"            41
+"televisio"          "t\e'.le.vi.si.o.jen"               0
+"Aleksanteri"        "\A'.lek.s\a`n.te.ri.en"            15
+"Aleksanteri"        "\A'.lek.s\a`n.te.r\e`i.den"        2
+
+XXLHL:
+"evankelista"        "\e'.van.ke.l\i`s.to.jen"           2
+"evankelista"        "\e'.van.ke.l\i`s.toi.den"          0
+"italiaano"          "\i'.ta.li.\a`a.no.jen"             1
+"italiaano"          "\i'.ta.li.\a`a.noi.den"            0
+"sosialisti"         "s\o'.si.a.l\i`s.ti.en"             99
+"sosialisti"         "s\o'.si.a.l\i`s.tei.den"           0
+
+XXHHL:
+"koordinaatisto"     "k\o'or.di.n\a`a.tis.to.jen"        8
+"koordinaatisto"     "k\o'or.di.n\a`a.tis.t\o`i.den"     2
+"avantgardisti"      "\a'.vant.g\a`r.dis.ti.en"          2
+"avantgardisti"      "\a'.vant.g\a`r.dis.t\e`i.den"      0
+
+
+"Distributions" "target"
+1 ""
+44
+"/kala/ \-> k\a'.lo.jen"   1
+"/kala/ \-> k\a'.loi.den"  0
+"/lasi/ \-> l\a'.si.en"     1
+"/lasi/ \-> (l\a'.sei.den)" 0
+"/kamera/ \-> k\a'.me.r\o`i.den"   1
+"/kamera/ \-> k\a'.me.ro.jen"      0
+"/hetero/ \-> h\e'.te.r\o`i.den" 389/391
+"/hetero/ \-> h\e'.te.ro.jen"      2/391
+"/naapuri/ \-> n\a'a.pu.ri.en"       368/583
+"/naapuri/ \-> n\a'a.pu.r\e`i.den"   215/583
+"/maailma/ \-> m\a'a.il.mo.jen"     45/91
+"/maailma/ \-> m\a'a.il.m\o`i.den"  46/91
+"/korjaamo/ \-> k\o'r.jaa.mo.jen"     350/426
+"/korjaamo/ \-> k\o'r.jaa.m\o`i.den"   76/426
+"/poliisi/ \-> p\o'.lii.si.en"    806/819
+"/poliisi/ \-> p\o'.lii.s\e`i.den" 13/819
+"/taiteilija/ \-> t\a'i.tei.li.j\o`i.den"  276/276
+"/taiteilija/ \-> t\a'i.tei.li.jo.jen"        0
+"/luettelo/ \-> l\u'.et.te.l\o`i.den"  25/25
+"/luettelo/ \-> l\u'.et.te.lo.jen"       0
+"/ministeri/ \-> m\i'.nis.te.ri.en"     234/273
+"/ministeri/ \-> m\i'.nis.te.r\e`i.den"  39/273
+"/luonnehdinta/ \-> l\u'on.neh.d\i`n.to.jen"    1/1
+"/luonnehdinta/ \-> l\u'on.neh.d\i`n.toi.den"   0
+"/edustusto/ \-> \e'.dus.t\u`s.to.jen"   84/84
+"/edustusto/ \-> \e'.dus.t\u`s.toi.den"   0
+"/margariini/ \-> m\a'r.ga.r\i`i.ni.en"  736/736
+"/margariini/ \-> m\a'r.ga.r\i`i.nei.den"  0
+"/ajattelija/ \-> \a'.jat.te.li.j\o`i.den"  101/101
+"/ajattelija/ \-> \a'.jat.te.li.jo.jen"       0
+"/televisio/ \-> t\e'.le.vi.si.\o`i.den"  41/41
+"/televisio/ \-> t\e'.le.vi.si.o.jen"      0
+"/Aleksanteri/ \-> \A'.lek.s\a`n.te.ri.en"     15/17
+"/Aleksanteri/ \-> \A'.lek.s\a`n.te.r\e`i.den"  2/17
+"/evankelista/ \-> \e'.van.ke.l\i`s.to.jen" 2/2
+"/evankelista/ \-> \e'.van.ke.l\i`s.toi.den" 0
+"/italiaano/ \-> \i'.ta.li.\a`a.no.jen" 1/1
+"/italiaano/ \-> \i'.ta.li.\a`a.noi.den" 0
+"/sosialisti/ \-> s\o'.si.a.l\i`s.ti.en" 99/99
+"/sosialisti/ \-> s\o'.si.a.l\i`s.tei.den" 0
+"/koordinaatisto/ \-> k\o'or.di.n\a`a.tis.to.jen" 8/10
+"/koordinaatisto/ \-> k\o'or.di.n\a`a.tis.t\o`i.den" 2/10
+"/avantgardisti/ \-> \a'.vant.g\a`r.dis.ti.en" 2/2
+"/avantgardisti/ \-> \a'.vant.g\a`r.dis.t\e`i.den" 0

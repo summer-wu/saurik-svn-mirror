@@ -1,0 +1,21 @@
+<html><head><title>Soft Shadows from Environment Map Light Probes</title>
+</head><body>
+    <h1>Soft Shadows from Environment Map Light Probes</h1>
+    <h4>by Jay Freeman</h4>
+
+    <p>The goal of this project was to implement an algorithm for doing light detection, capable of rendering real-time soft shadows, based on light probes generated from environment maps.</p>
+    <p>To this end, I first implemented <a href="http://gl.ict.usc.edu/research/MedianCut/">an algorithm specified by Paul Debevec</a> for doing light detection, involving median cuts of luminance.</p>
+
+    <p>This algorithm splits an environment map into a number of individual light sources. In his poster abstract, he indicated that 64 such lights was enough to perform decent soft shadows. This became my challenge. In order to obtain 64 shadow maps, I looked at the various bottlenecks in the shadow mapping process. In order to minimize the number of copies back from the graphics card I perform, I pack multiple shadow maps into a single texture, and then manually perform the perspective math calculations in my shader so as to avoid using the now incorrect TXP instruction. This, however, causes issues with the resolution of shadow maps, to wit I've targetted the viewing frustums of the shadow maps to better target the objects.</p>
+
+    <a href="http://test.saurik.com/classes/cs280-f06/project-Jay.tgz">Project Code</a>
+
+    <h3>Ennis</h3>
+    <img src="ennis.jpg"/>
+
+    <h3>Pisa</h3>
+    <img src="pisa.jpg"/>
+
+    <h3>Uffizi</h3>
+    <img src="uffizi.jpg"/>
+</body></html>

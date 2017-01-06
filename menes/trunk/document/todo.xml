@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<todo:list xmlns:todo="http://www.saurik.com/menes/doc/todo-0.9">
+
+<todo:item id="string-cvt" name="Basic String Conversions"/>
+<todo:item id="gc" name="Garbage Collector"/>
+<todo:item id="parser" name="Generalized Parser"/>
+<todo:item id="perl-regex" name="Perl-Compatible RegEx"/>
+<todo:item id="xpath" name="XPath"/>
+<todo:item id="xslt" name="XSL/T"/>
+<todo:item id="bdb-api" name="Berkeley DB API"/>
+<todo:item id="db-layer" name="Database Layer"/>
+<todo:item id="db-pool" name="Database Pooling"/>
+<todo:item id="linked-list" name="Linked List"/>
+<todo:item id="hashtable" name="Hashtable"/>
+<todo:item id="date-manip" name="Date Manipulation"/>
+<todo:item id="atum-c++" name="Atum/C++"/>
+<todo:item id="atum" name="Atum"/>
+<todo:item id="shell" name="Shell Environment"/>
+<todo:item id="editor" name="Text Editor"/>
+<todo:item id="os" name="Operating System"/>
+<todo:item id="intro-sort" name="Introspective Sort"/>
+<todo:item id="radix-tree" name="Digital/Radix Search Tree"/>
+<todo:item id="thread-return" name="Thread Return Values"/>
+<todo:item id="scm" name="Source Control Management"/>
+<todo:item id="bug-tracker" name="Bug Tracking System"/>
+<todo:item id="xml-diff" name="XML Difference Engine"/>
+<todo:item id="auth-layer" name="Authentication Layer"/>
+<todo:item id="imap-daemon" name="IMAP Daemon"/>
+<todo:item id="mime-parser" name="MIME Parser"/>
+<todo:item id="szf-serialized" name="Serialized Object Representation"/>
+
+</todo:list>

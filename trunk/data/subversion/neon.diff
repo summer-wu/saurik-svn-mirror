@@ -1,0 +1,18 @@
+diff -ru subversion-1.4.6/build/ac-macros/neon.m4 subversion-1.4.6+iPhone/build/ac-macros/neon.m4
+--- subversion-1.4.6/build/ac-macros/neon.m4	2006-10-20 23:44:09.000000000 +0000
++++ subversion-1.4.6+iPhone/build/ac-macros/neon.m4	2007-12-28 12:43:02.000000000 +0000
+@@ -38,10 +38,11 @@
+     if test "$withval" = "yes" ; then
+       AC_MSG_ERROR([--with-neon requires an argument.])
+     else
+-      neon_config="$withval/bin/neon-config"
++            svn_allowed_neon_on_system="yes"
++            SVN_NEON_INCLUDES="-I$withval/include/neon"
++            NEON_LIBS="$withval/lib/libneon.dylib"
++            svn_lib_neon="yes"
+     fi
+-
+-    SVN_NEON_CONFIG()
+   ],
+   [
+     if test -d $abs_srcdir/neon ; then

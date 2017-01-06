@@ -1,0 +1,12 @@
+Index: libffi/src/arm/ffi.c
+===================================================================
+--- gcc/libffi/src/arm/ffi.c	(revision 130618)
++++ gcc+iPhone/libffi/src/arm/ffi.c	(working copy)
+@@ -199,6 +199,7 @@
+ 
+ /* This function is jumped to by the trampoline */
+ 
++__private_extern__
+ unsigned int
+ ffi_closure_SYSV_inner (closure, respp, args)
+      ffi_closure *closure;

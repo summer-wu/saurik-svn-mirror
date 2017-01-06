@@ -1,0 +1,32 @@
+diff -ru ffmpeg-export-2008-05-20/libavcodec/mjpega_dump_header_bsf.c ffmpeg-export-2008-05-20+iPhone/libavcodec/mjpega_dump_header_bsf.c
+--- ffmpeg-export-2008-05-20/libavcodec/mjpega_dump_header_bsf.c	2007-05-19 00:53:41.000000000 +0000
++++ ffmpeg-export-2008-05-20+iPhone/libavcodec/mjpega_dump_header_bsf.c	2008-06-02 02:56:08.000000000 +0000
+@@ -56,15 +56,24 @@
+     bytestream_put_be32(&poutbufp, buf_size + 44); /* pad field size */
+     bytestream_put_be32(&poutbufp, 0);             /* next ptr */
+ 
++    uint32_t dqt = 0, dht = 0, sof0 = 0;
++
+     for (i = 0; i < buf_size - 1; i++) {
+         if (buf[i] == 0xff) {
+             switch (buf[i + 1]) {
+-            case DQT:  /* quant off */
+-            case DHT:  /* huff  off */
+-            case SOF0: /* image off */
+-                bytestream_put_be32(&poutbufp, i + 46);
++            case DQT:
++                dqt = i + 46;
++                break;
++            case DHT:
++                dht = i + 46;
++                break;
++            case SOF0:
++                sof0 = i + 46;
+                 break;
+             case SOS:
++                bytestream_put_be32(&poutbufp, dqt); /* quant off */
++                bytestream_put_be32(&poutbufp, dht); /* huff off */
++                bytestream_put_be32(&poutbufp, sof0); /* image off */
+                 bytestream_put_be32(&poutbufp, i + 46); /* scan off */
+                 bytestream_put_be32(&poutbufp, i + 46 + AV_RB16(buf + i + 2)); /* data off */
+                 bytestream_put_buffer(&poutbufp, buf + 2, buf_size - 2); /* skip already written SOI */

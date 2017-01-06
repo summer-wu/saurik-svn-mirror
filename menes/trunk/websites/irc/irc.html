@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><style>
+</style><script language="JavaScript1.1">
+    javascriptVersion = new Array(1, 1, 0, 0);
+</script><script language="JavaScript1.2">
+    javascriptVersion = new Array(1, 2, 0, 0);
+</script><script language="JavaScript1.3">
+    javascriptVersion = new Array(1, 3, 0, 0);
+</script><script language="JavaScript1.4">
+    javascriptVersion = new Array(1, 4, 0, 0);
+</script><script language="JavaScript1.5">
+    javascriptVersion = new Array(1, 5, 0, 0);
+</script><script type="text/javascript">
+
+var acrobatVersion;
+var flashVersion;
+var javaVersion;
+var javascriptVersion;
+
+var engineName;
+var engineVersion;
+
+if (navigator.product == "Gecko") {
+    engineName = "Gecko";
+    engineVersion = navigator.productSub.replace(/([0-9][0-9][0-9][0-9])([0-9][0-9])([0-9][0-9])/, "$1.$2.$3").split(/\./);
+} else if (navigator.userAgent.match(/ Opera /)) {
+    engineName = "Presto";
+    engineVersion = navigator.userAgent.replace(/^.* Opera ([0-9.]+).*$/, "$1").split(/\./);
+} else if (navigator.appName == "Microsoft Internet Explorer") {
+    engineName = "Trident";
+    // XXX: service packs!
+    engineVersion = navigator.appVersion.replace(/^.*[( ]MSIE ([0-9.]*)[;)].*/, "$1").split(/\./);
+}
+
+alert(engineName + ": " + engineVersion);
+
+for (var i in navigator) {
+    document.write(i + ": " + navigator[i] + "<br/>");
+}
+
+if (navigator.plugins && navigator.plugins.length) {
+    var acrobat = navigator.plugins["Adobe Acrobat"];
+    if (acrobat)
+        acrobatVersion = acrobat.description.replace(/^Adobe Acrobat Plug-In Version ([0-9]+).0*([0-9]+) for Netscape$/, "$1.$2.0.0").split(/\./);
+
+    for (var i in navigator.plugins) {
+        var plugin = navigator.plugins[i];
+        if (plugin.description && plugin.name.match(/^Java/)) {
+            var version = plugin.description.replace(/^.*([0-9]+)\.([0-9]+)\.([0-9]+)(_0*([0-9]+))?.*$/, "$1.$2.$3.$5").replace(/\.$/, ".0").split(/\./);
+            if (!javaVersion || javaVersion < version)
+                javaVersion = version;
+        }
+    }
+
+    var flash = navigator.plugins["Shockwave Flash"];
+    if (flash)
+        flashVersion = flash.description.replace(/^Shockwave Flash ([0-9]+)\.([0-9]+) +r([0-9]+)$/, "$1.$2.$3.0").split(/\./);
+} else if (ActiveXObject) {
+    try {
+        var flash = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");
+        flashVersion = flash.getVariable("$version").replace(/^WIN ([0-9]+),([0-9]+),([0-9]+),([0-9]+)$/, "$1.$2.$3.$4").split(/\./);
+    } catch (e) {
+    }
+
+    if (navigator.javaEnabled()) {
+    }
+}
+
+/*if (acrobatVersion)
+    alert("Acrobat: " + acrobatVersion);
+if (flashVersion)
+    alert("Flash: " + flashVersion);
+if (javaVersion)
+    alert("Java: " + javaVersion);
+if (javascriptVersion)
+    alert("JavaScript: " + javascriptVersion);*/
+
+function wowzers() {
+    alert("wow");
+}
+
+function makeParam(name, value) {
+    var param = document.createElement("param");
+    param.setAttribute("name", name);
+    param.setAttribute("value", value);
+    return param;
+}
+
+function _initialize() {
+if (flashVersion >= [8, 0, 0]) {
+    alert("hello");
+    var movie = "aflax.swf?callback=wowzers";
+
+    var html =
+        "<object" +
+            " id=\"AflaxConnect\"" +
+            " width=\"1\"" +
+            " height=\"1\"" +
+            " type=\"application/x-shockwave-flash\"" +
+            " data=\"" + movie + "\"" +
+        ">" +
+            "<param name=\"allowScriptAccess\" value=\"sameDomain\"/>" +
+            "<param name=\"bgcolor\" value=\"#ffffffff\"/>" +
+            "<param name=\"movie\" value=\"" + movie + "\"/>" +
+            "<param name=\"scale\" value=\"noscale\"/>" +
+            "<param name=\"salign\" value=\"lt\"/>" +
+            //"<param name=\"wmode\" value=\"transparent\"/>" +
+        "</object";
+
+    var div = document.createElement("div");
+    div.innerHTML = html;
+    document.body.appendChild(div);
+} }
+
+// http://developer.apple.com/internet/webcontent/detectplugins.html
+
+/*var applet = document.createElement("applet");
+applet.code = "JavaSocket.class";
+applet.name = "JavaSocket";
+applet.width = "1";
+applet.height = "1";
+applet.setAttribute("mayscript", "mayscript");
+document.appendChild(applet);*/
+
+/*var sock = new java.net.Socket("cruiser.saurik.com", 9090);
+var sout = new java.io.PrintWriter(sock.getOutputStream(), true);
+sout.println("hello");*/
+
+/*alert("wow");
+alert(applet.newSocket().get());
+alert(document.JavaSocket.getString());
+document.JavaSocket.setString("wow");*/
+
+</script></head><body onload="javascript:_initialize()">
+
+<input type="submit" onclick="javascript:main()"/>
+
+<!--object id="AflaxConnect" type="application/x-shockwave-flash" data="aflax.swf?callback=wowzers" width="10" height="10">
+    <param name="allowScriptAccess" value="sameDomain"/>
+    <param name="bgcolor" value="#ffffff"/>
+    <param name="movie" value="aflax.swf?callback=wowzers"/>
+    <param name="scale" value="noscale"/>
+    <param name="salign" value="lt"/>
+</object-->
+
+</body></html>

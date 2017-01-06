@@ -1,0 +1,63 @@
+struct Input_ {
+    float4 position_ : POSITION;
+    float3 normal_ : NORMAL;
+    float4 color_ : DIFFUSE;
+};
+
+struct Output_ {
+    float4 projected_ : POSITION;
+    float4 color_ : COLOR0;
+
+    float4 light0_ : TEXCOORD0;
+    float4 light1_ : TEXCOORD1;
+    float4 light2_ : TEXCOORD2;
+    float3 light3_ : TEXCOORD3;
+
+    float4 texcoord0_ : TEXCOORD4;
+    float4 texcoord1_ : TEXCOORD5;
+    float4 texcoord2_ : TEXCOORD6;
+    float4 texcoord3_ : TEXCOORD7;
+};
+
+Output_ main(
+    in Input_ input,
+
+    uniform float4x4 mvp,
+    uniform float4x4 mv,
+
+    uniform float4x4 lv0,
+    uniform float4x4 lv1,
+    uniform float4x4 lv2,
+    uniform float4x4 lv3,
+
+    uniform float4x4 t0,
+    uniform float4x4 t1,
+    uniform float4x4 t2,
+    uniform float4x4 t3
+) {
+    Output_ output;
+    output.projected_ = mul(mvp, input.position_);
+    output.color_ = input.color_;
+
+    float3 normal = mul(mv, float4(input.normal_, 0)).xyz;
+
+    float3 object = mul(mv, input.position_).xyz;
+    float3 light[4];
+
+    light[0] = normalize(mul(lv0, float4(0, 0, 0, 1)).xyz - object);
+    light[1] = normalize(mul(lv1, float4(0, 0, 0, 1)).xyz - object);
+    light[2] = normalize(mul(lv2, float4(0, 0, 0, 1)).xyz - object);
+    light[3] = normalize(mul(lv3, float4(0, 0, 0, 1)).xyz - object);
+
+    output.light0_ = float4(light[0], normal.x);
+    output.light1_ = float4(light[1], normal.y);
+    output.light2_ = float4(light[2], normal.z);
+    output.light3_ = light[3];
+
+    output.texcoord0_ = mul(t0, input.position_);
+    output.texcoord1_ = mul(t1, input.position_);
+    output.texcoord2_ = mul(t2, input.position_);
+    output.texcoord3_ = mul(t3, input.position_);
+
+    return output;
+}

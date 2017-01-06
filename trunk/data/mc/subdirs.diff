@@ -1,0 +1,12 @@
+diff -ru mc-4.6.1/Makefile.in mc-4.6.1+iPhone/Makefile.in
+--- mc-4.6.1/Makefile.in	2005-07-23 16:53:13.000000000 +0000
++++ mc-4.6.1+iPhone/Makefile.in	2008-06-30 21:52:52.000000000 +0000
+@@ -242,7 +242,7 @@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ AUTOMAKE_OPTIONS = 1.5
+-SUBDIRS = intl po m4 vfs slang edit src lib doc syntax
++SUBDIRS = intl po m4 vfs slang edit src lib syntax
+ EXTRA_DIST = FAQ HACKING INSTALL.FAST MAINTAINERS README.QNX TODO
+ noinst_DATA = mc.spec mc.qpg pkginfo prototype
+ dist_noinst_SCRIPTS = build-glib1.sh build-glib2.sh

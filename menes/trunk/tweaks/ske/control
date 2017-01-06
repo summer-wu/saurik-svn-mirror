@@ -1,0 +1,11 @@
+Package: com.saurik.iphone.ske
+Priority: optional
+Section: Development
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.2973-1
+Description: enforces support for injecting keypresses
+Name: Simulated Key Events
+Depends: mobilesubstrate (>= 0.9.2966-1)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Tag: purpose::extension, role::developer

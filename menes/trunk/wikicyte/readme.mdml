@@ -1,0 +1,109 @@
+# Python Version
+
+WikiCyte was developed against Python 2.5. I make no warranty or guarantee that it will work with an older version.
+
+
+# C Libraries
+
+In order for WikiCyte to work, you will need to have both libxml2 and libtidy installed on your system.
+
+
+# Required Python Modules
+
+WikiCyte relies on a number of existing Python libraries, for handling everything from database access to XML parsing. These libraries will need to be installed separately by the administrator. As much as possible, these are off-the-shelf parts. What follows are descriptions of components you need to install.
+
+## lxml
+
+[lxml](http://codespeak.net/lxml/) is a Python binding for the libxml2 and libxslt libraries. It is used for internal XSL/T transformations to simplify generated markup. This library is very common and should be a part of any reasonable distribution of Linux.
+
+## psycopg2
+
+There are a large number of PostgreSQL database bindings for Python. The only one I found to be remotely reasonable, however, is [psycopg2](http://initd.org/). The author's website (which used TRAC) is currently down, but you can still get to the source code with Subversion. Luckily, this is the library *everyone else* also uses, so it should be in your distribution of Linux.
+
+## pytz
+
+[pytz](http://pytz.sourceforge.net/) is an incredibly flexible library for handling and managing timezones. It is available in most distributions, although its name is often shortened to tz. It is recommended you glance at the documentation so you will be able to describe your timezone to WikiCyte.
+
+
+# Included Python Modules
+
+Sometimes, though, the upstream versions of these packages are either missing or buggy, and we need special modified copies to use WikiCyte. These packages are all included with WikiCyte, so you do not need to find and install them. However, it is useful to document their modifications so that later upgrades are possible.
+
+## markdown
+
+[Python Markdown](http://www.freewisdom.org/projects/python-markdown/) is the library used to parse the "Wiki" syntax used by WikiCyte: [Markdown](http://daringfireball.net/projects/markdown/). Unfortunately, the version of Python Markdown in Debian is quite old and doesn't work very well.
+
+Even worse, I have managed to find a bug in the upstream version of Markdown. So, to use WikiCyte you need to use Python Markdown 2.x modified with markdown.diff. Alternatively, you can download my pre-constructed Debian package of this version of Python Markdown from my APT repository.
+
+http://apt.saurik.com/debs/python-markdown_2.0-2_all.deb
+
+## smartypants
+
+I was unable to find a version of SmartPants, in Python, that came with any reasonable distribution of Linux. However, there was one random website that had a project called [smartypants.py](http://web.chad.org/projects/smartypants.py/) that served the job. I have included this copy of smartypants with WikiCyte. While I was at it, I fixed a bug with how it handled decade abbreviations.
+
+## utidylib
+
+While commonly supported, [µTidylib](http://utidylib.berlios.de/) was not written well enough to be able to port easily to 64-bit machines. A number of minor changes (included in utidylib.diff) were needed in order to keep the entire Apache process from segment faulting when it is used.
+
+
+# WMD Markdown Editor
+
+Included you will also find a copy of [WMD](http://wmd-editor.com/), the WYSIWY-*mean* editor. It contains both a little toolbar for helping users manipulate Markdown syntax as well as a mechanism for generating a preview panel.
+
+Unfortunately, the preview panel uses a JavaScript implementation of Markdown that is not compatible with Python Markdown, limiting its effectiveness. I am working on addressing this for a future version of WikiCyte.
+
+
+# Wikidiff2
+
+The diff algorithm from WikiCyte has been provided by the MediaWiki project, the backend used by Wikipedia. This decision was made as the Wikimedia Foundation has spent a large amount of time optimizing their algorithm for both performance and functionality.
+
+This comes in the form of a PHP 5 module called Wikidiff2. You can find the original code on MediaWiki's extension site. Of course, this is a PHP module, and WikiCyte is written using Python.
+
+http://www.mediawiki.org/wiki/Extension:Wikidiff2
+
+Fortunately, it was developed using SWIG: a technology designed to abstract making native binary extensions for numerous scripting languages, such as PHP /and Python/. A very minor set of changes (mostly search/replace) modifies the source code to compile a Python module.
+
+So, to do this, get the tarball, patch the code with wikidiff2.diff, and compile it as you otherwise would expect. The installation requires only copying the generated .py and .so files to the following locations:
+
+/usr/lib/python2.5/wikidiff2.py
+/usr/lib/python2.5/lib-dynload/_wikidiff2.so
+
+
+# Authentication:
+
+The way authentication works with WikiCyte is to just use the default Apache configuration. I felt this was more logical than trying to build an entirely separate authentication mechanism. This is also quite flexible, as Apache supports things like LDAP (which can be used to access things like University-wide authentication mechanisms).
+
+The core limitation with this, though, is that you can't have an anonymous user in any obvious manner with HTTP authentication: you have to force people to login with a challenge failure. I almost setup something awesome for this with cookies, but then realized there was a separate, complimentary problem: approval.
+
+Specifically, it would be useful to let people logged in see a "beta" version of the website, and approve sections of it as they believe they are "good". This way you can go around and make a number of changes, and then decide it was a bad idea or approve them all (something most Wikis are poor at).
+
+Therefore, I decided to go for a split hostname model. This isn't technically required, but is so strewn into the metaphore that I feel it correct to document it here. So, you may have www.example.com be the "live website", and beta.example.com be the "beta site being edited". To make this happen, you simply have beta.example.com authenticated, and www.example.com not be.
+
+
+# Configuration Script
+
+The way WikiCyte is configured is through a Python script called "cynfig.py". This has a few keys, all of which have long names designed to invoke a feeling of true understanding.
+
+    local_timezone = pytz.timezone('US/Pacific')
+    psycopg2_dsn = {'database': 'ccs', 'port': 5432}
+    markdown_extensions = ['def_list', 'headerid', 'tables']
+    anonymous_users = ['ucsb', 'UCSB', 'ccs', 'CCS']
+    known_proxies = ['74.208.10.249', '74.208.44.105', '74.208.64.169', '74.208.103.154', '74.208.105.171']
+
+For your site-specific configuration, you may (but this is required, no?) also need to tell Apache further filter rules. Here is an example that uses XSL/T to convert your Wiki code to XHTML:
+
+    def before(req):
+        req.add_output_filter('XSLT')
+        req.add_output_filter('INCLUDES')
+        req.write('''<!--#include virtual="/entities.xml"-->''')
+
+Note that the timezone setting requires pytz to be imported into the configuration script.
+
+    import pytz
+
+
+# Setup
+
+* Create a database in PostgreSQL or identify an existing database to which you would like to add WikiCyte functionality. WikiCyte uses its own schema, and will not conflict with your existing data (unless you already have a schema named WikiCyte, which would be awkward).
+
+* Run wikicyte.sql (as a bash script), passing it your database details. Running it by itself should print usage information.

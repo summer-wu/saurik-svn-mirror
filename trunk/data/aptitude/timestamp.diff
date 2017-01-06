@@ -1,0 +1,14 @@
+diff -ru aptitude-0.4.4.orig/src/main.cc aptitude-0.4.4.orig+iPhone/src/main.cc
+--- aptitude-0.4.4.orig/src/main.cc	2006-10-27 04:26:08.000000000 +0000
++++ aptitude-0.4.4.orig+iPhone/src/main.cc	2008-06-18 06:36:30.000000000 +0000
+@@ -96,8 +96,8 @@
+ 
+ static void show_version()
+ {
+-  printf(_("%s %s compiled at %s %s\n"),
+-	   PACKAGE, VERSION, __DATE__, __TIME__);
++  printf(_("%s %s\n"),
++	   PACKAGE, VERSION);
+ #ifdef __GNUC__
+   printf(_("Compiler: g++ %s\n"), __VERSION__);
+ #endif

@@ -1,0 +1,17 @@
+diff -ru Python-2.5.1/Makefile.pre.in Python-2.5.1+iPhone/Makefile.pre.in
+--- Python-2.5.1/Makefile.pre.in	2006-12-08 20:46:13.000000000 +0000
++++ Python-2.5.1+iPhone/Makefile.pre.in	2008-01-09 08:21:39.000000000 +0000
+@@ -775,11 +775,11 @@
+ 	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+ 		./$(BUILDPYTHON) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
+-		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
++		-x 'bad_coding|badsyntax|site-packages|test' $(DESTDIR)$(LIBDEST)
+ 	PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
+ 		./$(BUILDPYTHON) -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
+-		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
++		-x 'bad_coding|badsyntax|site-packages|test' $(DESTDIR)$(LIBDEST)
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+ 		./$(BUILDPYTHON) -Wi -t $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST)/site-packages -f \

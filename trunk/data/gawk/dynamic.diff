@@ -1,0 +1,19 @@
+diff -r -u gawk-3.1.6/configure.ac gawk-3.1.6+iPhone/configure.ac
+--- gawk-3.1.6/configure.ac	2007-10-22 06:51:06.000000000 +0000
++++ gawk-3.1.6+iPhone/configure.ac	2007-12-27 12:18:29.000000000 +0000
+@@ -285,15 +285,6 @@
+ dnl This is known to be very primitive
+ AC_CHECK_HEADER(dlfcn.h,
+ 	[AC_DEFINE([DYNAMIC], 1, [dynamic loading is possible])
+-	if test "$GCC" = yes
+-	then
+-		# Add others here as appropriate,
+-		# one day use GNU libtool.
+-		if uname | $EGREP -i 'linux|freebsd|cygwin' > /dev/null
+-		then
+-			LDFLAGS="$LDFLAGS -export-dynamic"
+-		fi
+-	fi
+ 
+ 	# Check this separately. Some systems have dlopen
+ 	# in libc. Notably freebsd and cygwin.

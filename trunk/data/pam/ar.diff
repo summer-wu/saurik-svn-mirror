@@ -1,0 +1,12 @@
+diff -ru pam-32.1/pam/modules/pammodutil/Makefile pam-32.1+iPhone/pam/modules/pammodutil/Makefile
+--- pam-32.1/pam/modules/pammodutil/Makefile	2009-04-08 08:45:37.000000000 +0000
++++ pam-32.1+iPhone/pam/modules/pammodutil/Makefile	2009-04-08 08:45:52.000000000 +0000
+@@ -37,7 +37,7 @@
+ 	$(CC) $(CFLAGS) $(CPPFLAGS) $(TARGET_ARCH) -c $< -o $@
+ 
+ $(LIBSTATIC): $(SLIBOBJECTS)
+-	ar cr $@ $(SLIBOBJECTS)
++	$(AR) cr $@ $(SLIBOBJECTS)
+ 	$(RANLIB) $@
+ 
+ install:

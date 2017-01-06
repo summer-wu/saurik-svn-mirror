@@ -1,0 +1,19 @@
+#$css{
+
+body {
+    font-size: .6em;
+}
+
+#page {
+    width: 320px;
+}
+
+#header {
+    width: 320px;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+}

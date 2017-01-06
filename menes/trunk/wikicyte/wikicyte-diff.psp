@@ -1,0 +1,75 @@
+<html><style type="text/css">
+
+* {
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Georgia, serif;
+    font-size: 12px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.diff-deletedline,
+.diff-addedline {
+    font-weight: bold;
+}
+
+.diff-context,
+.diff-deletedline,
+.diff-addedline {
+    padding: 0 0 0 10px;
+    width: 405px;
+}
+
+.diff-lineno {
+    background-color: #eeeeee;
+    border-bottom: 5px solid white;
+    border-top: 5px solid white;
+    height: 10px;
+}
+
+table {
+    width: 875px;
+}
+
+.diff-marker {
+    font-weight: bold;
+    text-align: center;
+    width: 20px;
+}
+
+.diff-context {
+    /*background-color: #ffffdd;*/
+    color: #666666;
+}
+
+.diffchange {
+    background-color: #eeeeff;
+    color: blue;
+}
+
+.diff-deletedline {
+    /*background-color: #ffdddd;*/
+    color: #bb0000;
+    border-left: 3px solid #bb0000;
+}
+
+.diff-addedline {
+    /*background-color: #d0ffd0;*/
+    color: #009900;
+    border-left: 3px solid #009900;
+}
+
+</style></head><body>
+<table cellspacing="0" cellpadding="0">
+    <%=diff%>
+</table>
+</body></html>

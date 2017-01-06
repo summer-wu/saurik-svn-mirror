@@ -1,0 +1,19 @@
+diff -ru gettext-0.17/gettext-tools/libgrep/regex.c gettext-0.17+iPhone/gettext-tools/libgrep/regex.c
+--- gettext-0.17/gettext-tools/libgrep/regex.c	2007-10-07 19:37:37.000000000 +0000
++++ gettext-0.17+iPhone/gettext-tools/libgrep/regex.c	2008-04-04 19:45:52.000000000 +0000
+@@ -45,13 +45,13 @@
+ #  include <wctype.h>
+ # endif
+ 
+-# ifdef _LIBC
+-/* We have to keep the namespace clean.  */
+ #  define regfree(preg) __regfree (preg)
+ #  define regexec(pr, st, nm, pm, ef) __regexec (pr, st, nm, pm, ef)
+ #  define regcomp(preg, pattern, cflags) __regcomp (preg, pattern, cflags)
+ #  define regerror(errcode, preg, errbuf, errbuf_size) \
+ 	__regerror(errcode, preg, errbuf, errbuf_size)
++# ifdef _LIBC
++/* We have to keep the namespace clean.  */
+ #  define re_set_registers(bu, re, nu, st, en) \
+ 	__re_set_registers (bu, re, nu, st, en)
+ #  define re_match_2(bufp, string1, size1, string2, size2, pos, regs, stop) \

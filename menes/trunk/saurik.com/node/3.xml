@@ -1,0 +1,341 @@
+<body title="Solving the iPhone's DNS Issues" sidead="true">
+
+<p>Anyone who has spent much time attempting to use their iPhone as a Unix workstation has probably noticed that something seems awry with Apple's implementation of DNS resolution (note that Apple did, in fact, fix this this bug during the beta period for iPhoneOS 2.0). Just attempting to ping common webservers often does not work.</p>
+
+<blockquote><syntax>
+iphone:~ root# ping -c 1 www.yahoo.com
+ping: <highlight>unknown host</highlight>
+</syntax></blockquote>
+
+<p>Not every hostname fails in this way, however. In fact, most seem to be just fine, leading one to an irritating feeling of arbitrary, yet deterministic, failure. Even different variations of the same hostname (which one would expect would be handled by the same DNS server) may behave differently.</p>
+
+<blockquote><syntax>
+iphone:~ root# ping -c 1 yahoo.com
+PING <highlight>yahoo.com (66.94.234.13)</highlight>: 56 data bytes
+64 bytes from 66.94.234.13: icmp_seq=0 ttl=57 time=31.833 ms
+--- yahoo.com ping statistics ---
+1 packets transmitted, 1 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 31.833/31.833/31.833/0.000 ms
+</syntax></blockquote>
+
+<p>Most infuriatingly, though, sometimes the same hostname that was tried earlier with success now just fails, adding inconsistency to injury: if you've recently gone to the hostname using MobileSafari the information is somehow correctly cached, allowing everything to function correctly. This led to the "solution" Will Dietz used for a while in <a href="http://code.google.com/p/inewsgroup/">iNewsGroup</a>: first make a <a href="http://code.google.com/p/inewsgroup/source/browse/trunk/newsfunctions.m?r=26#288">"fake" HTTP request</a> to the hostname in question, and then follow up with the standard resolving code path.</p>
+
+<p>Thankfully, an iPhone hacker named <a href="http://www.wickedpsyched.com/">core</a> managed to provide some clarity to this mess and isolated what fails: CNAMEs (DNS records which do not directly have an address, but instead refer to other records) don't work, everything else does.</p>
+
+<blockquote><syntax>
+iphone:~ root# host -t a yahoo.com
+<highlight>yahoo.com has address</highlight> 216.109.112.135
+yahoo.com has address 66.94.234.13
+iphone:~ root# host -t a www.yahoo.com
+<highlight>www.yahoo.com is an alias for</highlight> www.yahoo-ht3.akadns.net.
+www.yahoo-ht3.akadns.net has address 69.147.114.210
+</syntax></blockquote>
+
+<p>In the <a href="http://www.wickedpsyched.com/iphone/nettools/">Network Tools</a> area of his iPhone website, he documents a solution to the problem: cutting the resolver library out of BIND and linking to it directly, forsaking Apple's implementation. He also provides working replacement binaries for many common utilities like ping and wget.</p>
+
+<p>However, as someone who is attempting to maintain <a href="/id/1">a rather large repository of ported applications</a> this solution is rather hands-on, requiring possibly intricate modifications to each individual package. You first need to make certain it is actually using the functions supported by BIND's libresolv (such as getaddrinfo) as well as modifying the build scripts of the program to link it in (a task which can be quite easy or incredibly infuriating).</p>
+
+<p>Ideally, the fix would be something that was so brain-dead that it could almost be automated, would work on absolutely any program no matter how it was organized, and would take at most a minute to apply. I, therefore, set out on a twelve hour long quest to isolate the underlying problem in order to come up with a better option.</p>
+
+<section title="The Solution">
+    <p>It turns out that, in fact, Apple's resolver library has a serious bug in it. However, it is one that we can work around using a small amount of code added to the very beginning of main in any program that needs to use networking functions. This fix is almost automatable, universally applicable, and trivial to apply.</p>
+
+    <blockquote><syntax><![CDATA[
+#include <mach-o/nlist.h>
+...
+int main() {
+    struct nlist nl[2];
+    memset(nl, 0, sizeof(nl));
+    nl[0].n_un.n_name = (char *) "_useMDNSResponder";
+    nlist("/usr/lib/libc.dylib", nl);
+    if (nl[0].n_type != N_UNDF)
+        * (int *) nl[0].n_value = 0;
+]]></syntax></blockquote>
+
+    <inset>
+    <p>Unfortunately, Apple is not very good about making their headers safe from C++ name mangling. If you attempt this fix with a C++ project and get a link error for <syntax>nlist(char const*, nlist*)</syntax>, you should make the following change:</p>
+
+    <blockquote><syntax><![CDATA[
+extern "C" {
+    #include <mach-o/nlist.h>
+}
+]]></syntax></blockquote>
+</inset>
+
+    <p>For those who are curious how I figured this out, I have written up the critical path from "it doesn't work" to "here's the problem" in this article. I hope that it may provide someone else a few analysis techniques. If all you want is a fix that lets you get on with your work, here is where you should stop reading.</p>
+</section>
+
+<section title="How the Mac OS X Resolver Works">
+    <p>It turns out that, unlike on most Unix systems, gethostbyname does not directly perform DNS queries on Darwin. Instead, there is a process called lookupd that provides a centralized cache of DNS information. From the article <a href="http://docs.info.apple.com/article.html?artnum=30770">Mac OS X: What is Lookupd?</a> on AppleCare:</p>
+
+    <blockquote>
+        <p>Lookupd is a daemon that simplifies the tasks of the Unix-style library routines that need system and network administration information. These routines, such as getpwuid, gethostbyname, and getgrent, are principally part of the C library (also known as libc). They access information like user names, computer addresses, and group IDs.</p>
+    </blockquote>
+
+    <p>As Apple puts most of their source code <a href="http://www.opensource.apple.com/darwinsource/">on their website</a> we can actually pull the code for gethostbyname and see how it does this. Below, reformatted slightly, is the relevant logic from <a href="http://www.opensource.apple.com/darwinsource/10.4.10.x86/Libinfo-222.4.12/lookup.subproj/lu_host.c">lu_host.c</a>:</p>
+
+    <blockquote><syntax><![CDATA[
+if (res == NULL)
+    res = cache_gethostbyname(name, WANT_A4_ONLY);
+
+if (res != NULL)
+    from_cache = 1;
+else if (_lu_running())
+    res = lu_gethostbyname(name, WANT_A4_ONLY, err);
+else {
+    pthread_mutex_lock(&_host_lock);
+    res = copy_host(_old_gethostbyname(name));
+    *err = h_errno;
+    pthread_mutex_unlock(&_host_lock);
+}
+]]></syntax></blockquote>
+
+    <p>The function _lu_running does more than just check: if it isn't running, it will also start it if required. Killing lookupd is thereby futile as the next time anything is resolved it will respawn. Renaming the binary, however, is quite effective. In this case, it falls back to the original implementation of gethostbyname.</p>
+
+    <inset>
+        <p>If you want to test this yourself, you should be <em>extremely</em> careful as lookupd is also used to lookup user and group identifiers. It is therefore advised that you rename /usr/sbin/DirectoryService instead, which should provide similar fallback behavior.</p>
+    </inset>
+
+</section>
+
+<section title="Comparing the iPhone's Behavior">
+    <p>As lookupd does not come with the iPhone, it seems reasonable that providing a copy of it and getting it integrated might fix things (although it does require a few assumptions about _old_gethostbyname being itself broken). Before setting out on such an ambitious mission, though, we should verify that the iPhone still uses this mechanism. A quick way to do that would be to verify that _lu_running still exists.</p>
+
+    <p>To do this we use the tool <a href="http://developer.apple.com/documentation/Darwin/Reference/ManPages/man1/nm.1.html">nm</a>, which displays the symbol tables of a binary. If the function _lu_running still exists, its name should be imported by whatever object file provides gethostbyname. Only, it isn't: not only is _lu_running no longer used, but the entire object file it was a part of doesn't exist anymore, and as been replaced by gethostnamadr.o.</p>
+
+    <blockquote><syntax><![CDATA[
+iphone:/usr/lib root# nm libc.dylib
+...
+libc.dylib(gethostnamadr.o):
+...
+3002feac T _gethostbyname
+]]></syntax></blockquote>
+
+    <p>Doing a little sleuthing on Google shows that this file comes from the BSD kernel, but is not present in the Darwin fork. Assuming that Apple would have taken the code back from FreeBSD (as they already have other networking code pulled from that branch) we can correlate the exported symbols with the variables in various versions of FreeBSD in order to isolate something close to when Apple's fork is from.</p>
+
+    <p>The end result is that Apple almost certainly modified a version from the end of April, 2005. For the purposes of this discussion, it seems reasonable to assume they took <a href="http://www.freebsd.org/cgi/cvsweb.cgi/src/lib/libc/net/gethostnamadr.c?rev=1.28;content-type=text%2Fx-cvsweb-markup">version 1.28</a>, mostly as its log message sounds more like it was a final release candidate than other contemporary variants.</p>
+
+    <inset>
+        <p>Doing this kind of analysis takes a long time and requires careful notes. As an example of the kind of difference we can detect, __copy_hostent is exported by version 1.29 but does not appear in libc.dylib. To bound our search on the other side, gethostbyname_r was only first introduced in 1.25, along with a few hostdata related global variables, all of which are easily seen in Apple's copy. This narrows the version down to one of four, all of which were committed within a two day period.</p>
+    </inset>
+
+    <p>This version, though, definitely does not contain the bug. This is still highly useful, however, as we can now debug this problem with help of something at least approximating the code that is failing. Our next step is to build a simple test application that we can use as a base. (Yes, there are a few warnings, but I wanted to keep the code simple for this formatting.)</p>
+
+    <blockquote><syntax><![CDATA[
+#include <stdio.h>
+#include <netdb.h>
+#include <resolv.h>
+#include <errno.h>
+#include <arpa/inet.h>
+
+int main(int argc, char **argv) {
+    struct hostent *host = gethostbyname(argv[1]);
+
+    if (host == NULL)
+        herror("resolv");
+    else {
+        printf("%s =", host->h_name);
+        struct in_addr **list = host->h_addr_list;
+        for (size_t i = 0; list[i] != NULL; ++i)
+            printf(" %s", inet_ntoa(*list[i]));
+        printf("\n");
+    }
+}
+]]></syntax></blockquote>
+
+    <p>Running this doesn't really provide anything very enlightening, but the libc sources are strewn with debugging flags we can turn on using the RES_DEBUG option. These flags are reset by calls to initialize the resolver library so we will need to do this manually before our call to gethostbyname, which otherwise will do it behind our backs after we have added our flag.</p>
+
+    <blockquote><syntax><![CDATA[
+res_init();
+_res.options |= RES_DEBUG;
+]]></syntax></blockquote>
+
+    <inset>
+        <p>This debugging code might cause the following compilation error:</p>
+
+        <blockquote><syntax><![CDATA[
+arm-apple-darwin-ld: Undefined symbols:
+_res_9_init
+collect2: ld returned 1 exit status
+]]></syntax></blockquote>
+
+        <p>The reason this happens is because the iPhone ships with BIND 8.0 libraries, whereas you are using the newer BIND 9.0 header files. The symbols were changed between the two due to incompatible prototypes. To solve this, add the following before all the other include directives:</p>
+
+        <blockquote><syntax><![CDATA[
+#define BIND_8_COMPAT
+#include <arpa/nameser.h>
+]]></syntax></blockquote>
+    </inset>
+
+    <p>Here is a dump of the expected output:</p>
+
+    <blockquote><syntax><![CDATA[
+;; res_querydomain(www.yahoo.com, <Nil>, 1, 1)
+;; res_query(www.yahoo.com, 1, 1)
+;; res_mkquery(0, www.yahoo.com, 1, 1)
+;; res_send()
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35973
+;; flags: rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;;      www.yahoo.com, type = A, class = IN
+;; Querying server (# 1) address = 217.160.246.234
+;; got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35973
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 9, ADDITIONAL: 4
+;;      www.yahoo.com, type = A, class = IN
+www.yahoo.com.          1m17s IN CNAME  www.yahoo-ht3.akadns.net.
+www.yahoo-ht3.akadns.net.  49S IN A  69.147.114.210
+akadns.net.             18h6m14s IN NS  eur1.akadns.net.
+akadns.net.             18h6m14s IN NS  use3.akadns.net.
+akadns.net.             18h6m14s IN NS  use4.akadns.net.
+akadns.net.             18h6m14s IN NS  usw2.akadns.net.
+akadns.net.             18h6m14s IN NS  asia9.akadns.net.
+akadns.net.             18h6m14s IN NS  za.akadns.org.
+akadns.net.             18h6m14s IN NS  zb.akadns.org.
+akadns.net.             18h6m14s IN NS  zc.akadns.org.
+akadns.net.             18h6m14s IN NS  zd.akadns.org.
+za.akadns.org.          18h6m14s IN A   195.219.3.169
+zb.akadns.org.          18h6m14s IN A   206.132.100.105
+zc.akadns.org.          18h6m14s IN A   124.211.40.4
+zd.akadns.org.          18h6m14s IN A   63.209.3.132
+www.yahoo-ht3.akadns.net = 69.147.114.210
+]]></syntax></blockquote>
+
+    <p>What we see on the iPhone is much... simpler.</p>
+
+    <blockquote><syntax><![CDATA[
+;; res_querydomain(www.yahoo.com, <Nil>, 1, 1)
+;; res_mkquery(0, www.yahoo.com, 1, 1)
+resolv: Unknown server error
+]]></syntax></blockquote>
+
+    <p>The next step is to test res_query and verify that it works. It is supposed to be printing that debugging information, but it might have been drastically changed (or even removed). In this case it seems to function fine: it simply generates a different result. As before, the difference in the shear <em>amount</em> of output is staggering. When we run the original version of the function (which we can easily do from a desktop machine) we get back a large DNS response that includes recursively gathered data on the CNAME.</p>
+
+    <blockquote><syntax><![CDATA[
+0x000: b1 e6 81 80 00 01 00 02 00 09 00 04  ............
+0x00c: 03 77 77 77 05 79 61 68 6f 6f 03 63  .www.yahoo.c
+0x018: 6f 6d 00 00 01 00 01 c0 0c 00 05 00  om..........
+0x024: 01 00 00 01 2b 00 1a 03 77 77 77 09  ....+...www.
+0x030: 79 61 68 6f 6f 2d 68 74 33 06 61 6b  yahoo-ht3.ak
+0x03c: 61 64 6e 73 03 6e 65 74 00 c0 2b 00  adns.net..+.
+0x048: 01 00 01 00 00 00 3b 00 04 45 93 72  ......;..E.r
+0x054: d2 c0 39 00 02 00 01 00 01 c8 15 00  ..9.........
+0x060: 0f 02 7a 62 06 61 6b 61 64 6e 73 03  ..zb.akadns.
+0x06c: 6f 72 67 00 c0 39 00 02 00 01 00 01  org..9......
+0x078: c8 15 00 05 02 7a 63 c0 64 c0 39 00  .....zc.d.9.
+0x084: 02 00 01 00 01 c8 15 00 05 02 7a 64  ..........zd
+0x090: c0 64 c0 39 00 02 00 01 00 01 c8 15  .d.9........
+0x09c: 00 07 04 65 75 72 31 c0 39 c0 39 00  ...eur1.9.9.
+0x0a8: 02 00 01 00 01 c8 15 00 07 04 75 73  ..........us
+0x0b4: 65 33 c0 39 c0 39 00 02 00 01 00 01  e3.9.9......
+0x0c0: c8 15 00 07 04 75 73 65 34 c0 39 c0  .....use4.9.
+0x0cc: 39 00 02 00 01 00 01 c8 15 00 07 04  9...........
+0x0d8: 75 73 77 32 c0 39 c0 39 00 02 00 01  usw2.9.9....
+0x0e4: 00 01 c8 15 00 08 05 61 73 69 61 39  .......asia9
+0x0f0: c0 39 c0 39 00 02 00 01 00 01 c8 15  .9.9........
+0x0fc: 00 05 02 7a 61 c0 64 c0 fe 00 01 00  ...za.d.....
+0x108: 01 00 01 c8 15 00 04 c3 db 03 a9 c0  ............
+0x114: 61 00 01 00 01 00 01 c8 15 00 04 ce  a...........
+0x120: 84 64 69 c0 7c 00 01 00 01 00 01 c8  .di.|.......
+0x12c: 15 00 04 7c d3 28 04 c0 8d 00 01 00  ...|.(......
+0x138: 01 00 01 c8 15 00 04 3f d1 03 84     .......?...
+]]></syntax></blockquote>
+
+    <p>The new iPhone version of the function <em>only</em> provides the referenced name. It doesn't print any debugging information, however, which indicates that it might very well be called: it's just been heavily modified (and broken).</p>
+
+    <blockquote><syntax><![CDATA[
+0x000: 25 00 01 00 00 01 00 01 00 00 00 00  %...........
+0x00c: 03 77 77 77 05 79 61 68 6f 6f 03 63  .www.yahoo.c
+0x018: 6f 6d 00 00 01 00 01 03 77 77 77 05  om......www.
+0x024: 79 61 68 6f 6f 03 63 6f 6d 00 00 05  yahoo.com...
+0x030: 00 01 00 1c ac 08 00 1a 03 77 77 77  .........www
+0x03c: 09 79 61 68 6f 6f 2d 68 74 33 06 61  .yahoo-ht3.a
+0x048: 6b 61 64 6e 73 03 6e 65 74 00        kadns.net.
+]]></syntax></blockquote>
+
+    <p>During a normal call to gethostbyname, this data would be the contents of the response packet returned by the DNS server, which should have done a recursive query on our behalf. Something in Apple's code is apparently mocking this up rather than just providing it and isn't going to the trouble of providing everything that's actually needed. The code which parses this data (a function named gethostanswer) therefore returns "unknown server error".</p>
+
+    <p>Unfortunately, this information isn't specific enough to actually let us <em>fix</em> the problem. For this, we need to make some guesses as to the new implementation of res_query. We know this function is defined in res_query.o, so we can use the aforementioned nm in order to see if any of the symbols in the file changed (a rough approximation of "did the code change"). I've cut away all of the expected symbols (except res_query itself) so we can quickly see what's new/different.</p>
+
+    <blockquote><syntax>
+iphone:/usr/lib root# nm libc.dylib
+...
+libc.dylib(res_query.o):
+00000000 U _DNSServiceProcessResult
+00000000 U _DNSServiceQueryRecord
+00000000 U _DNSServiceRefDeallocate
+00000000 U _DNSServiceRefSockFD
+...
+300a96b0 T _res_query
+300a9bcc t _res_query_callback
+300a9490 t _res_query_old
+...
+38006c20 d _useMDNSResponder
+</syntax></blockquote>
+
+    <p>It definitely seems to have gained some friends. From this output, it seems safe to presume that the original implementation was renamed to _old and that res_query itself was modified to use the other new symbols (DNSService*, useMDNSResponder, and res_query_callback). With this, we can now return to Google to find out what these symbols mean.</p>
+
+</section>
+
+<section title="DNS Service Discovery API">
+    <p>The only symbols that are generally known are the first four, which are from what Apple calls the <a href="http://developer.apple.com/documentation/Networking/Reference/DNSServiceDiscovery_CRef/index.html">DNS Service Discovery (DNS-SD) API</a>, a part of their zero-configuration networking implementation, Bonjour. This amounts to Apple's take on gethostbyname and provides a very similar feature set: a simple call that provides access to multiple, configurable, resolution backends.</p>
+
+    <p>The gateway function for this system is DNSServiceQueryRecord. As this API is designed for serious asynchronous usage, it really just manages file descriptors that are sent the results. These are deallocated with DNSServiceRefDeallocate while the actual file descriptor is accessed with DNSServiceRefSockFD. Finally, the file descriptor is sent a serialized event, and so another API call is needed to request the event be parsed and handled: DNSServiceProcessResult.</p>
+
+    <p>One option at this point is to just use DNS-SD directly, bypassing the damaged gethostbyname wrappers. While this would work, it is even less desirable to me than linking against libresolv as it would require irritating code changes, especially due to the asynchronous callback system. It also would make the block of code entirely Apple specific, as while gethostbyname is supported on most platforms, DNS-SD is not.</p>
+
+    <p>Will Dietz, who was re-evaluating the aforementioned DNS fixes he made for iNewsGroup at around the time I had reached this stage in my discoveries, decided on a compromise: <a href="http://code.google.com/p/inewsgroup/source/browse/trunk/newsfunctions.m?r=94#429">using the DNS-SD API to prime the cache</a> rather than attempting an HTTP request. This has the benefit of not requiring a lengthy timeout period when the server isn't running an HTTP daemon.</p>
+</section>
+
+<section title="The mDNSResponder Process">
+    <p>To make much more progress, we need to understand what the new res_query does that is so different from the original, and what our options are for circumventing it. Reading further into the documentation, we find that all of the functionality available using DNS-SD is provided by a daemon called mDNSResponder, which the iPhone starts on boot using launchd.</p>
+
+    <blockquote>
+        <p>The DNS Service Discovery API requires the services of the mDNSResponder daemon. Mac OS X, versions 10.2 and later, include an mDNSResponder daemon as part of the operating system.</p>
+    </blockquote>
+
+    <p>This sounds very similar to the setup used by gethostbyname and lookupd so we might expect it to work similarly: take away mDNSResponder and maybe the code will fail-over to a more foolproof code path. The easiest way to stop the mDNSResponder service is by temporarily removing the process using launchctl.</p>
+
+    <blockquote><syntax>
+iphone:~ root# launchctl remove com.apple.mDNSResponder
+</syntax></blockquote>
+
+    <p>At this point, all of our Unix code works! Every DNS call resolves correctly and no hostnames are left with weird error messages. <em>But</em>, all of Apple's software <em>doesn't</em> work, leaving MobileSafari useless and many other applications crippled. While this might be helpful for a transient last-ditch fix, it definitely isn't a permanent solution. A little better is turning it off during a query and then resuming it later, but we still run the risk of damaging background transactions (such as MobileMail checking for new messages).</p>
+</section>
+
+<section title="Modifying Private Variables">
+    <p>Here is where the final symbol we found comes into play: useMDNSResponder. Based on the name alone, we might presume that this is a boolean variable that, were it set to false, would bypass all attempts to utilize mDNSResponder, forcing our process to <em>always</em> use the working fallback functionality. Taking the address of the symbol nm provided shows us that this is, in fact, true.</p>
+
+    <blockquote><syntax><![CDATA[
+#include <stdbool.h>
+...
+int main() {
+    * (bool *) 0x38006c20 = false;
+]]></syntax></blockquote>
+
+    <p>Now, this fix, while very simple, is a little risky: it relies on Apple not modifying and recompiling res_query.o, and there being generally few modifications to libc in general. Otherwise, the location of this symbol might change, leaving 0x38006c20 to be occupied by something else: we'd be left with a memory corruption disaster. While this symbol hasn't yet ever moved (it is in the same place in 1.0 through 1.1.3 of the iPhone firmware) it would be foolhardy to rely on this fact.</p>
+
+    <p>Instead, we need a way to look up this address when the program starts up. Unfortunately, this symbol doesn't really want to be found. The standard tool for doing this type of search, <a href="http://developer.apple.com/documentation/Darwin/Reference/Manpages/man3/dlsym.3.html">dlsym</a> (part of the dyld library), only works on "public" symbols. These are identifiable in our nm output as their type is an upper-case letter (U, T, etc.); useMDNSResponder is marked 't'.</p>
+
+    <p>Luckily, there is a lower-level API that is designed to directly manipulate symbol tables and is exported by Apple's libc: <a href="http://developer.apple.com/documentation/Darwin/Reference/ManPages/man3/nlist.3.html">nlist</a>. This API, rather than running on the libraries loaded by our current process, takes the filename of a Mach-O binary in which to search for symbols. If a symbol is not found, the API marks the symbol N_UNDF (which is, incidentally, valued 0, which means that if the API fails entirely we can treat this case identically to nlist not working at all, saving us some error checking logic).</p>
+
+    <blockquote><syntax><![CDATA[
+#include <mach-o/nlist.h>
+#include <stdbool.h>
+...
+int main() {
+    struct nlist nl[2];
+    memset(nl, 0, sizeof(nl));
+    nl[0].n_un.n_name = (char *) "_useMDNSResponder";
+    nlist("/usr/lib/libc.dylib", nl);
+    if (nl[0].n_type != N_UNDF)
+        * (bool *) nl[0].n_value = false;
+]]></syntax></blockquote>
+
+    <p>This code finally allows us to, independent of library version, bypass Apple's broken hack. If Apple were ever to remove the useMDNSResponder variable the code will also be rendered harmless (although if Apple doesn't fix the underlying bug it will also be rendered impotent to fix it). The only remaining change is to remove the reliance on stdbool.h, as some applications define their own bool, which can lead to conflicts. This brings us to the code provided in the solution near the beginning of this article.</p>
+</section>
+
+<section title="Concluding Remarks">
+    <p>While we can expect this type of work to be continuously needed within the Apple development community thanks to that company's insistence on maintaining a closed software platform, the same types of challenges often crop up any time parts of a system are no longer able to be directly maintained. It is therefore my hope that the descriptions contained in this article will have been of use in providing some inspiration in conquering upcoming challenges seen by many developers to come.</p>
+</section>
+
+</body>

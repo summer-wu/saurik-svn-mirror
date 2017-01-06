@@ -1,0 +1,18 @@
+diff -ru pam-32.1/pam/modules/Makefile pam-32.1+iPhone/pam/modules/Makefile
+--- pam-32.1/pam/modules/Makefile	2002-03-28 08:43:24.000000000 +0000
++++ pam-32.1+iPhone/pam/modules/Makefile	2009-04-08 08:37:42.000000000 +0000
+@@ -13,7 +13,7 @@
+ 
+ all:	
+ 	@echo building the static modutil library
+-	make -C pammodutil all
++	$(MAKE) -C pammodutil all
+ 	@echo modules sources available are:
+ 	@ls -d $(MODDIRS) 2>/dev/null ; echo :--------
+ 	@echo
+@@ -56,4 +56,4 @@
+ 			$(MAKE) -C $$i clean ; \
+ 		} fi ; \
+ 	done
+-	make -C pammodutil clean
++	$(MAKE) -C pammodutil clean

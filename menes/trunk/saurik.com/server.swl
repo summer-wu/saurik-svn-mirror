@@ -1,0 +1,166 @@
+#</dat/swl/menes.js>
+#</dat/swl/iphone.js>
+#</dat/swl/server.js>
+#</dat/swl/database.js>
+
+var javax = Packages.javax;
+java.lang.Class.forName("org.postgresql.Driver");
+
+var xsl = Packages.com.saurik.xsl;
+xsl.getFactory().setURIResolver(new javax.xml.transform.URIResolver({
+    resolve: function (href, base) {
+        alert("resolve('" + href + "')");
+        _assert(false);
+        return null;
+    }
+}));
+
+serve("beta.saurik.com", 80, function (target, request, response, dispatch) {
+    #</dat/swl/response.js>
+    #</dat/swl/parameters.js>
+
+    var db = java.sql.DriverManager.getConnection("jdbc:postgresql:saurik?user=postgres"); try {
+        sql.Modify(db, "set standard_conforming_strings = on");
+        db.setAutoCommit(false);
+
+        var agent = request.getHeader("User-Agent");
+        var referrer = request.getHeader("Referer");
+
+        sql.Modify(db, "#$sql{
+            insert into "request" (
+                "client",
+                "agent",
+                "method",
+                "url",
+                "query",
+                "referrer"
+            ) values (?::inet, ?, ?, ?, ?, ?)
+        }" ,
+            request.getRemoteAddr(),
+            agent,
+            request.getMethod(),
+            request.getRequestURL().toString(),
+            request.getQueryString(),
+            referrer
+        );
+
+        var request_id = sql.Get(db, "#$sql{
+            select currval('"request_id_seq"')
+        }");
+
+        db.commit();
+
+        var uri = request.getRequestURI();
+        var host = request.getHeader("Host");
+
+        function sendNode(node) {
+            response.setContentType("text/html; charset=utf-8");
+            _w = response.getWriter();
+
+            if (host == "beta.saurik.com" && new java.io.File("node/" + node + "_.xml").exists())
+                node = node + "_";
+
+            var style = new java.io.FileReader("style.xsl");
+            var source = new java.io.FileReader("node/" + node + ".xml");
+            xsl.Transform(style, source, _w);
+
+            response.setStatus(200);
+        }
+
+        if (host != "www.saurik.com" && host != "beta.saurik.com") {
+            response.setHeader("Location", "http://www.saurik.com" + uri);
+            response.setStatus(301);
+        } else try {
+
+            var location = sql.Get(db, "#$sql{
+                select "location"
+                from "legacy"
+                where ? ~ "legacy"."pattern"
+            }", uri);
+
+            var rex;
+
+            if (location != null) {
+                response.setHeader("Location", location);
+                response.setStatus(301);
+            } else if (uri == "/jay-1.jpg") {
+                response.setContentType("image/jpeg");
+                send("jay-1.jpg");
+                response.setStatus(200);
+            } else if (uri == "/jay-2.jpg") {
+                response.setContentType("image/jpeg");
+                send("jay-2.jpg");
+                response.setStatus(200);
+            } else if (uri == "/irc-script") {
+                response.setContentType("text/javascript");
+                _w = response.getWriter();
+                #{#</dat/irc/script.js>}
+                response.setStatus(200);
+            } else if (uri == "/irc-style") {
+                response.setContentType("text/css");
+                _w = response.getWriter();
+                #{#</dat/irc/style.css>}
+                response.setStatus(200);
+            } else if (uri == "/robots.txt") {
+                response.setContentType("text/plain");
+                _w = response.getWriter();
+                #{#<robots.txt>}
+                response.setStatus(200);
+            } else if (uri == "/iphone.css") {
+                response.setContentType("text/css");
+                _w = response.getWriter();
+                #<iphone.swl>
+                response.setStatus(200);
+            } else if (uri == "/desktop.css") {
+                response.setContentType("text/css");
+                _w = response.getWriter();
+                #<desktop.swl>
+                response.setStatus(200);
+            } else if (uri == "/style.css") {
+                response.setContentType("text/css");
+                _w = response.getWriter();
+                #<style.swl>
+                response.setStatus(200);
+            } else if (rex = /\/id\/([0-9]*)/.exec(uri)) {
+                sendNode(rex[1]);
+            } else {
+                var node = sql.Get(db, "#$sql{
+                    select "id"
+                    from "node"
+                    where '/' || "node"."uri" = ?
+                }", uri);
+
+                if (node != null)
+                    sendNode(node);
+                else {
+                    _w = response.getWriter();
+                    #{#<error-404.html>}
+                    response.setStatus(404);
+                }
+            }
+        } catch (jsex) {
+            db.rollback();
+            var jex = jsex.javaException;
+            //jex = jex.getException().getException();
+            _w = response.getWriter();
+            #{#<error-500.html>}
+            response.setStatus(500);
+        }
+
+        sql.Modify(db, "#$sql{
+            update "request" set
+                "finish" = now(),
+                "status" = ?
+            where "request"."id" = ?
+        }",
+            response.getStatus(),
+            request_id
+        );
+
+        db.commit();
+    } finally {
+        db.close();
+    }
+
+    request.setHandled(true);
+});

@@ -1,0 +1,12 @@
+diff -ru nmap-4.50/libdnet-stripped/configure.in nmap-4.50+iPhone/libdnet-stripped/configure.in
+--- nmap-4.50/libdnet-stripped/configure.in	2007-11-27 06:22:46.000000000 +0000
++++ nmap-4.50+iPhone/libdnet-stripped/configure.in	2007-12-24 19:50:24.000000000 +0000
+@@ -226,7 +226,7 @@
+ elif test "$ac_cv_dnet_bsd_bpf" = yes ; then
+ 	AC_LIBOBJ([eth-bsd])
+ elif test "$ac_cv_dnet_linux_pf_packet" = yes ; then
+-	AC_LIBOBJ([eth-linux])
++	AC_LIBOBJ([eth-bsd])
+ elif test "$ac_cv_header_net_raw_h" = yes ; then
+ 	AC_LIBOBJ([eth-snoop])
+ elif test "$ac_cv_header_sys_ndd_var_h" = yes ; then

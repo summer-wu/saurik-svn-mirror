@@ -1,0 +1,1 @@
+test -z "${CFG_INCLUDE_SYS_PTRACE_H+@}"

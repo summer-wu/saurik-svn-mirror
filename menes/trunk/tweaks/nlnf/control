@@ -1,0 +1,11 @@
+Package: com.saurik.iphone.nlnf
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 1.0.3389
+Description: fix phone numbers for roaming and locales
+Name: Net.-Local Number Format
+Depends: mobilesubstrate (>= 0.9.3997)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.iphone.nlnf/

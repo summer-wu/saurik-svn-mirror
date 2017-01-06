@@ -1,0 +1,25 @@
+diff -ru wget-1.9.1/src/main.c wget-1.9.1+iPhone/src/main.c
+--- wget-1.9.1/src/main.c	2003-10-11 13:57:11.000000000 +0000
++++ wget-1.9.1+iPhone/src/main.c	2008-01-30 17:24:39.000000000 +0000
+@@ -1,3 +1,5 @@
++#include <mach-o/nlist.h>
++
+ /* Command line parsing.
+    Copyright (C) 1995, 1996, 1997, 1998, 2000, 2001, 2002
+    Free Software Foundation, Inc.
+@@ -267,6 +269,15 @@
+ int
+ main (int argc, char *const *argv)
+ {
++#if !defined(__ENVIRONMENT_ASPEN_VERSION_MIN_REQUIRED__) || __ENVIRONMENT_ASPEN_VERSION_MIN_REQUIRED__ < 10200
++    struct nlist nl[2];
++    memset(nl, 0, sizeof(nl));
++    nl[0].n_un.n_name = (char *) "_useMDNSResponder";
++    nlist("/usr/lib/libc.dylib", nl);
++    if (nl[0].n_type != N_UNDF)
++        *(int *) nl[0].n_value = 0;
++#endif
++
+   char **url, **t;
+   int i, c, nurl, status, append_to_log;
+ 

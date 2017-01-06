@@ -1,0 +1,136 @@
+Actual instructions are relative. Disassembly is absolute.
+This appears to be the full bot code.
+
+0000  call 15                        (8004 000F 0000)
+0003  call 27                        (8004 0018 0000)
+0006  call 48                        (8004 002A 0000)
+0009  call 78                        (8004 0045 0000)
+0012  jmp 3                          (8006 FFF7 0000)
+0015  rand [3579], 4                 (2020 0DFB 0004)
+0018  rand [3580], 10                (2020 0DFC 000A)
+0021  add [3580], 1                  (200F 0DFC 0001)
+0024  ret                            (0005 0000 0000)
+0027  sense r2                       (401E 0002 0000)
+0030  jns 45                         (800E 000F 0000)
+0033  energy r2                      (401A 0002 0000)
+0036  cmp r2, 10000                  (6017 0002 2710)
+0039  jg 45                          (8009 0006 0000)
+0042  eat                            (001F 0000 0000)
+0045  ret                            (0005 0000 0000)
+0048  mov r0, [3579]                 (4001 0000 0DFB)
+0051  rand r1, 3576                  (6020 0001 0DF8)
+0054  peek r0, r1                    (5024 0000 0001)
+0057  jns 75                         (800E 0012 0000)
+0060  cmp r0, [r1]                   (7017 0000 1000)
+0063  je 75                          (800B 000C 0000)
+0066  rand r1, 3600                  (6020 0001 0E10)
+0069  mov r0, [r1]                   (7001 0000 1000)
+0072  poke [3579], r1                (1023 0DFB 0001)
+0075  ret                            (0005 0000 0000)
+0078  cmp [3580], 0                  (2017 0DFC 0000)
+0081  je 96                          (800B 000F 0000)
+0084  travel [3579]                  (001B 0DFB 0000)
+0087  jns 96                         (800E 0009 0000)
+0090  sub [3580], 1                  (2010 0DFC 0001)
+0093  ret                            (0005 0000 0000)
+0096  call 15                        (8004 FFAF 0000)
+0099  jmp 78                         (8006 FFEB 0000)
+
+
+Note that these are random integers from 0015 and 0018.
+3579 = 0002
+3580 = 0008
+
+
+-----------------------------------------------------
+Here ends useful code and here begins filler.
+-----------------------------------------------------
+
+0102  mov [2], [3]                   (0001 0002 0003)
+0105  call [5]                       (0004 0005 0006)
+0108  jl [8]                         (0007 0008 0009)
+0111  jge [11]                       (000A 000B 000C)
+0114  js [14]                        (000D 000E 000F)
+0117  sub [1], [2]                   (0010 0001 0002)
+
+...
+
+-----------------------------------------------------
+After tons of filler, there's a bit of data
+referenced from earlier.
+-----------------------------------------------------
+
+3561  call [5]                       (0004 0005 0006)
+3564  jl [8]                         (0007 0008 0009)
+3567  jge [11]                       (000A 000B 000C)
+3570  js [14]                        (000D 000E 000F)
+3573  sub [0], [0]                   (0010 0000 0000)
+3576  nop                            (0000 0000 0000)
+3579  push [8]                       (0002 0008 0000) // ignore the disassembly here, this is just data
+3582  nop                            (0000 0000 0000)
+3585  nop                            (0000 0000 0000)
+3588  nop                            (0000 0000 0000)
+3591  nop                            (0000 0000 0000)
+3594  nop                            (0000 0000 0000)
+3597  nop                            (0000 0000 0006) // and what is this 6 doing here?
+
+-----------------------------------------------------
+Here is my recoding in assembly.
+-----------------------------------------------------
+
+info: RogueBot - This is the code stolen from the rogue bots in the arena
+
+call getmove
+
+main:
+        call checkfood
+        call pokeotherbot
+        call makemove
+        jmp main
+        // ^^^^^ excellent places to kill the bot.
+        // I used seed 1140774514 and bot "n", It starts right next to a rogue bot.
+        // I can reprogram it within 8 ticks, and I have had success replacing stuff
+        // in the main loop and the return in the checkfood loop. It disables the bot
+        // so that I may pervert it to my causes.
+
+getmove:
+        rand [dir], 4 // picks a random direction from 0-3
+        rand [length], 10 // picks a randomization factor for moves so that a bot won't continue in the same direction for too long
+        add [randomizer], 1 // makes the randomization factor non-zero
+        ret
+
+checkfood:
+        sense r2 // is there food?
+        jns leavecheckfood // nope, leave
+        energy r2 // loads energy level into r2
+        cmp r2, 10000 // if r2 is greater than 10000
+        jg leavecheckfood // don't eat the food
+        eat // but if it's equal or less, eat it
+leavecheckfood:
+        ret
+
+pokeotherbot:
+	mov r0, [dir] // puts the direction in r0
+	rand r1, 3576 // picks a random int that's less than where the direction data is stored
+	peek r0, r1 // checks to see if there is a bot in the r0 direction and returns whatever's at the r1'th spot
+	jns leavepokeotherbot // if there is no bot, return
+        cmp r0, [r1] // compares what is in the r1'th memory to r0
+	je leavepokeotherbot // if the two instructions match, then likely the same kind of bot, so return
+	rand r1, 3600 // generates a random number from 0-3599, a memory location
+	mov r0, [r1] // puts the number in r0 for the poke
+	poke [dir], r1 // puts whatever number was generated into that cell on the other bot
+leavepokeotherbot:
+	ret
+
+
+makemove:
+	cmp [randomizer], 0 // makes sure the length is greater than 0
+	je getnewmove // it is 0, so get a valid
+	travel [dir] // travels in direction
+	jns getnewmove // whoops, something didn't work, so grab a new move and try again
+	sub [randomizer], 1 // subtract one
+        ret
+
+getnewmove:
+        call getmove // gets a new move
+        jmp makemove // and goes back to the main move function

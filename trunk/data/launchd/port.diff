@@ -1,0 +1,107 @@
+diff -ru launchd-258.18/launchd/configure launchd-258.18+iPhone/launchd/configure
+--- launchd-258.18/launchd/configure	2008-01-28 18:20:19.000000000 +0000
++++ launchd-258.18+iPhone/launchd/configure	2008-11-24 10:24:21.000000000 +0000
+@@ -7863,13 +7863,8 @@
+   LIBS_ONLY_FALSE=
+ fi
+ 
+- if test $(tconf --test TARGET_OS_EMBEDDED) = YES; then
+   DO_EMBEDDED_MAGIC_TRUE=
+   DO_EMBEDDED_MAGIC_FALSE='#'
+-else
+-  DO_EMBEDDED_MAGIC_TRUE='#'
+-  DO_EMBEDDED_MAGIC_FALSE=
+-fi
+ 
+ 
+ 
+diff -ru launchd-258.18/launchd/src/launchctl.c launchd-258.18+iPhone/launchd/src/launchctl.c
+--- launchd-258.18/launchd/src/launchctl.c	2008-07-18 21:25:03.000000000 +0000
++++ launchd-258.18+iPhone/launchd/src/launchctl.c	2008-11-24 10:27:33.000000000 +0000
+@@ -20,6 +20,8 @@
+ 
+ static const char *const __rcs_file_version__ = "$Revision: 23642 $";
+ 
++#define PRIVATE
++
+ #include "liblaunch_public.h"
+ #include "liblaunch_private.h"
+ #include "libbootstrap_public.h"
+@@ -74,6 +76,9 @@
+ #include <sysexits.h>
+ #include <util.h>
+ 
++#include <sys/sockio.h>
++#include <mach/mach_error.h>
++#include <sys/ioctl.h>
+ 
+ #define LAUNCH_SECDIR "/tmp/launch-XXXXXX"
+ 
+diff -ru launchd-258.18/launchd/src/launchd_runtime.c launchd-258.18+iPhone/launchd/src/launchd_runtime.c
+--- launchd-258.18/launchd/src/launchd_runtime.c	2008-03-04 17:48:07.000000000 +0000
++++ launchd-258.18+iPhone/launchd/src/launchd_runtime.c	2008-11-24 10:37:16.000000000 +0000
+@@ -75,6 +75,8 @@
+ static mach_port_t launchd_internal_port;
+ static int mainkq;
+ 
++extern void mach_msg_destroy(mach_msg_header_t *mh);
++
+ #define BULK_KEV_MAX 100
+ static struct kevent *bulk_kev;
+ static int bulk_kev_i;
+diff -ru launchd-258.18/launchd/src/Makefile.am launchd-258.18+iPhone/launchd/src/Makefile.am
+--- launchd-258.18/launchd/src/Makefile.am	2008-01-28 18:20:19.000000000 +0000
++++ launchd-258.18+iPhone/launchd/src/Makefile.am	2008-11-24 10:32:27.000000000 +0000
+@@ -46,7 +46,7 @@
+ sysconf_DATA = hostconfig rc.common rc.netboot
+ 
+ launchctl_CFLAGS = $(AM_CFLAGS) -I$(SDKROOT)/System/Library/Frameworks/System.framework/PrivateHeaders
+-launchctl_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework IOKit $(LIBS_SECURITY) -weak_library /usr/lib/libedit.dylib
++launchctl_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework IOKit $(LIBS_SECURITY) -weak_library $(SDKROOT)/usr/lib/libedit.dylib
+ 
+ if DO_EMBEDDED_MAGIC
+ else
+@@ -64,11 +64,11 @@
+ 
+ launchproxy_LDFLAGS = $(AM_LDFLAGS) $(WEAKLIBS_SECURITY)
+ 
+-notifyServer.c notifyServer.h: /usr/include/mach/notify.defs
+-	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader notifyServer.h /usr/include/mach/notify.defs
++notifyServer.c notifyServer.h: $(SDKROOT)/usr/include/mach/notify.defs
++	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader notifyServer.h $(SDKROOT)/usr/include/mach/notify.defs
+ 
+-mach_excServer.c mach_excServer.h: /usr/include/mach/mach_exc.defs
+-	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader mach_excServer.h /usr/include/mach/mach_exc.defs
++mach_excServer.c mach_excServer.h: $(SDKROOT)/usr/include/mach/mach_exc.defs
++	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader mach_excServer.h $(SDKROOT)/usr/include/mach/mach_exc.defs
+ 
+ job_replyUser.c job_reply.h: $(srcdir)/protocol_job_reply.defs
+ 	mig $(MIGFLAGS) -sheader /dev/null -server /dev/null $(srcdir)/protocol_job_reply.defs
+diff -ru launchd-258.18/launchd/src/Makefile.in launchd-258.18+iPhone/launchd/src/Makefile.in
+--- launchd-258.18/launchd/src/Makefile.in	2008-01-28 18:20:19.000000000 +0000
++++ launchd-258.18+iPhone/launchd/src/Makefile.in	2008-11-24 10:32:41.000000000 +0000
+@@ -254,7 +254,7 @@
+ @LIBS_ONLY_TRUE@liblaunch_profile_a_SOURCES = liblaunch.c libvproc.c libbootstrap.c protocol_vprocUser.c __version.c
+ @LIBS_ONLY_FALSE@sysconf_DATA = hostconfig rc.common rc.netboot
+ @LIBS_ONLY_FALSE@launchctl_CFLAGS = $(AM_CFLAGS) -I$(SDKROOT)/System/Library/Frameworks/System.framework/PrivateHeaders
+-@LIBS_ONLY_FALSE@launchctl_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework IOKit $(LIBS_SECURITY) -weak_library /usr/lib/libedit.dylib
++@LIBS_ONLY_FALSE@launchctl_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework IOKit $(LIBS_SECURITY) -weak_library $(SDKROOT)/usr/lib/libedit.dylib
+ @DO_EMBEDDED_MAGIC_FALSE@@LIBS_ONLY_FALSE@SystemStarter_CFLAGS = -mdynamic-no-pic $(AM_CFLAGS)
+ @DO_EMBEDDED_MAGIC_FALSE@@LIBS_ONLY_FALSE@SystemStarter_LDFLAGS = $(AM_LDFLAGS) -framework CoreFoundation -framework IOKit
+ @DO_EMBEDDED_MAGIC_FALSE@@LIBS_ONLY_FALSE@SystemStarter_SOURCES = StartupItems.c IPC.c SystemStarter.c
+@@ -1174,11 +1174,11 @@
+ @LIBS_ONLY_FALSE@launchd_runtime.c:: notifyServer.h launchd_internal.h mach_excServer.h
+ @LIBS_ONLY_FALSE@launchd_core_logic.c:: protocol_vproc.h job_reply.h protocol_vprocServer.h
+ 
+-@LIBS_ONLY_FALSE@notifyServer.c notifyServer.h: /usr/include/mach/notify.defs
+-@LIBS_ONLY_FALSE@	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader notifyServer.h /usr/include/mach/notify.defs
++@LIBS_ONLY_FALSE@notifyServer.c notifyServer.h: $(SDKROOT)/usr/include/mach/notify.defs
++@LIBS_ONLY_FALSE@	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader notifyServer.h $(SDKROOT)/usr/include/mach/notify.defs
+ 
+-@LIBS_ONLY_FALSE@mach_excServer.c mach_excServer.h: /usr/include/mach/mach_exc.defs
+-@LIBS_ONLY_FALSE@	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader mach_excServer.h /usr/include/mach/mach_exc.defs
++@LIBS_ONLY_FALSE@mach_excServer.c mach_excServer.h: $(SDKROOT)/usr/include/mach/mach_exc.defs
++@LIBS_ONLY_FALSE@	mig $(MIGFLAGS) -header /dev/null -user /dev/null -sheader mach_excServer.h $(SDKROOT)/usr/include/mach/mach_exc.defs
+ 
+ @LIBS_ONLY_FALSE@job_replyUser.c job_reply.h: $(srcdir)/protocol_job_reply.defs
+ @LIBS_ONLY_FALSE@	mig $(MIGFLAGS) -sheader /dev/null -server /dev/null $(srcdir)/protocol_job_reply.defs

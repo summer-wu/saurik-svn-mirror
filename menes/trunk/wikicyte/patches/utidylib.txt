@@ -1,0 +1,6 @@
+https://bugzilla.redhat.com/show_bug.cgi?id=466069
+http://sourceforge.net/tracker/?func=detail&atid=390963&aid=2154022&group_id=27659
+https://bugzilla.redhat.com/show_bug.cgi?id=467246
+http://developer.berlios.de/bugs/?func=detailbug&bug_id=14691&group_id=1810
+http://labs.creativecommons.org/2008/08/02/64-bit-woes-almost-cleared-up/
+http://sourceforge.net/tracker/?func=detail&aid=2154022&group_id=27659&atid=390963

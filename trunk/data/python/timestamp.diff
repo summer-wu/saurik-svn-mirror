@@ -1,0 +1,24 @@
+diff -ru Python-2.5.1/Modules/getbuildinfo.c Python-2.5.1+iPhone/Modules/getbuildinfo.c
+--- Python-2.5.1/Modules/getbuildinfo.c	2006-01-18 09:13:51.000000000 +0000
++++ Python-2.5.1+iPhone/Modules/getbuildinfo.c	2008-06-19 08:00:45.000000000 +0000
+@@ -5,20 +5,12 @@
+ #endif
+ 
+ #ifndef DATE
+-#ifdef __DATE__
+-#define DATE __DATE__
+-#else
+ #define DATE "xx/xx/xx"
+ #endif
+-#endif
+ 
+ #ifndef TIME
+-#ifdef __TIME__
+-#define TIME __TIME__
+-#else
+ #define TIME "xx:xx:xx"
+ #endif
+-#endif
+ 
+ #ifdef SUBWCREV
+ #define SVNVERSION "$WCRANGE$$WCMODS?M:$"

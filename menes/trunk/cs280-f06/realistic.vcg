@@ -1,0 +1,36 @@
+struct Input_ {
+    float4 position_ : POSITION;
+    float3 normal_ : NORMAL;
+    float4 color_ : DIFFUSE;
+    float2 coord_ : TEXCOORD0;
+};
+
+struct Output_ {
+    float4 projected_ : POSITION;
+    float3 normal_ : TEXCOORD0;
+    float3 incident_ : TEXCOORD1;
+    float2 coord_ : TEXCOORD2;
+    float4 position_ : TEXCOORD3;
+};
+
+Output_ main(
+    in Input_ _in,
+    uniform float4x4 mvp,
+    uniform float4x4 mvi,
+    uniform float4x4 mv,
+    uniform float3 light/*,
+    uniform float4 camera*/
+) {
+    Output_ _out;
+
+    _out.projected_ = mul(mvp, _in.position_);
+    _out.position_ = _in.position_;
+
+    _out.incident_ = normalize(mul(mvi, float4(mul(mv, _in.position_).xyz, 0)));
+    //_out.incident_ = camera - _in.position_;
+
+    _out.normal_ = normalize(_in.normal_);
+    _out.coord_ = _in.coord_;
+
+    return _out;
+}

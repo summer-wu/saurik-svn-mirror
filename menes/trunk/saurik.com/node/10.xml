@@ -1,0 +1,335 @@
+<body title="Debian &amp; Android Together on G1" sidead="true">
+
+<inset>
+    <p>This does not <em>replace</em> Android. This <em>also</em> gives you access to the full plethora of programs available in Debian <em>and</em> let's you continue using your phone as it was intended to be: as an Android device with all the capabilities thereof.</p>
+    <p>Please note that this is not a "port": Debian already supports ARM EABI, which is the underlying architecture of Android.</p>
+    <p><strong>Update:</strong> A status update on this work can be found on <a href="http://www.telesphoreo.org/pipermail/g1-hackers/2008-November/000032.html">this post</a> from the G1-Hackers mailing list.</p>
+</inset>
+
+<p>Ok, so Android exists. We finally have hardware, we even have source code. What we <em>didn't</em> have was some game changing moment whereby we suddenly got control of our mobile phones. You know, the moment that Google has promised us for the last year.</p>
+
+<p>The reality of the situation is actually quite indicative of the attitudes in the cell phone world that even Google is powerless to affect. So, anyone who has actually gotten a G1 and has spent the time to try to do anything awesome with it have been utterly disappointed by the fact that we are just regular users on our own boxes: T-Mobile didn't give us root, being afraid of what we might do.</p>
+
+<!--inset>
+    <p>I will note here, that I actually must give Apple some props: they <em>did</em> effect a few drastic changes with their iPhone. Arguably, though, as they were designing hardware instead of software they had a much greater leverage to make that happen.</p>
+    <p>Here's an example of the type of thing I mean, noticed by my friend Max: the iPhone does not have any AT&amp;T branding on it. That <em>never</em> happens. Locked versions of phones from a specific carrier are always custom-branded for that reseller.</p>
+</inset-->
+
+<section title="Device Rooting/Jailbreaking">
+    <p>To me, this particular limitation turns this device into nothing more than a toy: as anyone who has been following my adventures into iPhoneLand knows, I think it is a crying shame to be carrying around a high-speed ARM CPU running a modern OS with a reasonably large screen and numerous input methods to just be a sub-par cell phone.</p>
+
+    <p>Luckily, this all changed a couple days ago when someone found a serious flaw in the Android firmware: all keypresses are routed to the Linux console, which was running a root terminal. This meant that just typing <syntax>&#xb6;telnetd&#xb6;</syntax> into <em>any program</em> provides a very simple remote root shell.</p>
+    
+    <p>Unfortunately, once there, it's actually a mite difficult to accomplish anything given Google's overly simplistic busybox replacement, toolbox. What we really need is a much more complete Unix userland. This device is powerful enough that we should be able to even develop directly on it.</p>
+</section>
+
+<section title="Installing Debian ARMEL">
+    <p>The main thing I've so far seen on this matter have been a few attempts to get busybox on there. I, however, think we can go a <em>lot</em> further: following the instructions in this article will end you up with a full distribution of Debian, one of the most highly respected Linux distributions, and the ability to install almost anything you want.</p>
+    
+    <p>To do this, we need to think through a few of the details of getting this sort of thing running on the G1. The first question: where do we put it? The device has some internal flash, but it isn't really enough: only 128MB to share with the OS and other applications.</p>
+    
+    <p>We therefore turn our attention to the much more reasonably sized microSD card, a format which lets us get up to 16GB of space. Unfortunately, for compatibility with all existing readers, these cards are formatted FAT, which makes them nearly useless to store Unix programs and data on.</p>
+    
+    <p>This is where we have to start getting tricky: we could put our Debian root inside of a filesystem image that we, in turn, store on the SD card as a single file on the FAT partition. To do this, we just need to mount the file over a loopback driver with a more reasonable filesystem.</p>
+    
+    <p>Checking /proc/filesystems, we find all kinds of filesystems we could choose from: vfat, yaffs, yaffs2... ok, or not. T-Mobile only installed the small handful of filesystem drivers that Google needs to make Android function. This means we need to load our own driver, which is finally where we get our break: the kernel is setup for modules.</p>
+
+    <inset>
+        <p>If there is any demand, I will write up a howto on compiling kernel modules for the G1. I encourage people who want to discuss this kind of G1 development/hacking to join <a href="http://www.telesphoreo.org/cgi-bin/mailman/listinfo/g1-hackers">the G1-Hackers mailing list</a> which I'm hosting at Telesphoreo.</p>
+        <p>I'm also hanging out on irc.saurik.com (the same server we have various iPhone-related channels) in #android, along with a few other people interested in this.</p>
+    </inset>
+</section>
+
+<section title="Building the Debian Image">
+    <p>Ok, enough talking, let's start doing things! What we need first is a Debian filesystem image to transfer to the device. To build this, we can use any existing Debian system to cross-debootstrap our installation. Thankfully, Debian already <a href="http://wiki.debian.org/ArmEabiPort">fully supports ARM EABI</a> and even has <a href="http://wiki.debian.org/ArmEabiHowto">a helpful guide</a> on doing this installation.</p>
+
+    <p>For people who would prefer to just use a ready-made image, I constructed this filesystem image for a 750MB root and have uploaded the <a href="http://rapidshare.com/files/161776007/debian-armel-750.img.bz2">final image file</a> to RapidShare. This file has been bzip2 compressed down to about 85MB.</p>
+
+    <inset><p>As RapidShare is rather slow, <a href="http://modmygphone.com/">modmyGphone.com</a> has graciously mirrored the image on their servers at a few different URLs. Details to be found at <a href="http://modmygphone.com/forums/showthread.php?t=5191">their summary of this article</a>.</p></inset>
+
+    <p>If you would rather make this image yourself (maybe you would like a different size than 750MB, or just want more control over the process), here is the set of commands used to construct it, consolidated into one place. Note the 749999999, dd is irritating.</p>
+
+    <blockquote><syntax><![CDATA[
+apt-get install debootstrap
+dd if=/dev/zero of=debian.img seek=749999999 bs=1 count=1
+mke2fs -F debian.img
+mkdir debian
+mount -o loop debian.img debian
+debootstrap --verbose --arch armel --foreign lenny debian http://ftp.de.debian.org/debian
+umount debian
+]]></syntax></blockquote>
+
+    <!--blockquote><syntax><![CDATA[
+I: Retrieving Release
+I: Retrieving Packages
+I: Validating Packages
+I: Resolving dependencies of required packages...
+I: Resolving dependencies of base packages...
+I: Found additional required dependencies: lzma
+I: Found additional base dependencies: libept0 libxapian15
+I: Checking component main on http://ftp.de.debian.org/debian...
+I: Retrieving *
+I: Validating *
+I: Extracting *...
+]]></syntax></blockquote-->
+</section>
+
+<section title="Building our Debian &quot;Kit&quot;">
+    <inset>
+        <p>Please note that the initial version of these instructions didn't take into account that I was still using a relatively rare firmware version: RC19. I have added variants of these modules for different firmwares.</p>
+        <p>If you are using a version newer than RC30, then you should be able to find the required kernel modules already on your filesystem: they come with JF and Haykuro's firmware images.</p>
+    </inset>
+
+    <p>Once we have our image, we need to transfer it to our microSD card. At the same time we should also grab a few other files we need. One important aspect of this is that these steps require different kernel modules depending on what version of the firmware you are using (as the configuration slightly changes over time).</p>
+
+    <ul>
+        <li>ext2.ko (<a href="http://cache.saurik.com/android/2.6.25-01828-g18ac882/fs/ext2/ext2.ko">RC19</a>) (<a href="http://cache.saurik.com/android/2.6.25-01843-gfea26b0/fs/ext2/ext2.ko">RC29/30</a>) - the standard Linux filesystem driver</li>
+        <li>unionfs.ko (<a href="http://cache.saurik.com/android/2.6.25-01828-g18ac882/fs/unionfs/unionfs.ko">RC19</a>) (<a href="http://cache.saurik.com/android/2.6.25-01843-gfea26b0/fs/unionfs/unionfs.ko">RC29/30</a>) - lets us merge folders together (advanced)</li>
+        <li><a href="http://cache.saurik.com/android/armel/busybox">busybox</a> - for a few key tools we need working variants of</li>
+    </ul>
+
+    <p>Put all of these (and debian.img) together in a folder on the microSD card (I do this using the USB connection, which I find simple and fast to use). Note that if you downloaded a premade image you might want to rename it to debian.img to make these instructions simpler/work.</p>
+</section>
+
+<section title="Setting up the Mount">
+    <p>Now for some more decisions: where do we, and where did we, put things? I placed the kit in a folder under the root directory of the microSD card and put everything else in /data/local (the one useful folder you can normally write to).</p>
+
+    <p>To make the remaining instructions simpler, I am going to export these paths as environment variables so they are easy to use later without having to retype them. It also makes the remaining instructions semantically much more simple to read.</p>
+
+    <blockquote><syntax><![CDATA[
+export kit=/sdcard/kit
+export bin=/data/local/bin
+export mnt=/data/local/mnt
+]]></syntax></blockquote>
+
+    <p>Next, there are a few environment variables we really need to setup lest we, or some of the software we try to use, goes insane. We will also take this time to quickly load the ext2 filesystem driver so we have it available in later steps. Note that these might look weird (HOME in particular), but ignoring these environment variables can cause major problems later.</p>
+
+    <blockquote><syntax><![CDATA[
+export PATH=$bin:/usr/bin:/usr/sbin:/bin:$PATH
+export TERM=linux
+export HOME=/root
+
+insmod $kit/ext2.ko
+]]></syntax></blockquote>
+
+    <p>Our next order of business is to copy busybox to somewhere it can be executed. As the G1 doesn't come with a cp command, we have to use cat to do this. Note that the mkdir command I have there cannot have a -p (as toolbox doesn't support it), so if you chose a crazy deep folder (or one that exists) you may have to do ignore some errors or do something more intelligent.</p>
+
+    <blockquote><syntax><![CDATA[
+mkdir $bin #-p
+cat $kit/busybox >$bin/busybox
+chmod 755 $bin/busybox
+]]></syntax></blockquote>
+
+    <p>Now that we have busybox, we can use it to create a device node for a loopback driver. We need busybox for this as the G1 does not come with mknod, which is needed to do this. We will also alias busybox to something shorter, making it easier to type. (Often you would have busybox construct a set of symlinks for its subcommands, but I think that's overkill for our temporary usage.)</p>
+
+    <blockquote><syntax><![CDATA[
+alias _=busybox
+_ mknod /dev/loop0 b 7 0
+]]></syntax></blockquote>
+
+    <inset>
+        <p>If you get an error while running _ that it isn't found, try just resetting it.</p>
+        
+        <blockquote><syntax><![CDATA[
+unalias _
+alias _=busybox
+]]></syntax></blockquote>
+    </inset>
+
+    <p>Finally, we get to mount the image! Note to use the filename you used for it. We will mount this "noatime" in order to minimize unneccessary writing to the flash memory part (which is both slow and will decrease its lifetime). Thanks goes to <a href="http://lauren.vortex.com/">Lauren Weinstein</a> for reminding me of that flag!</p>
+
+    <blockquote><syntax><![CDATA[
+_ mkdir -p $mnt
+_ mount -o loop,noatime $kit/debian.img $mnt
+]]></syntax></blockquote>
+
+    <inset><p>There are a few common error cases here: if you get a complaint about /etc/fstab then $kit/debian.img probably does not exist, and if you get a usage dump then $mnt is likely unset.</p></inset>
+</section>
+
+<section title="Finalizing the Installation">
+    <p>At this point, we have to go back and finish some of the work that debootstrap isn't able to handle. First, we have to run some package scripts and fix the URL of the main Debian repository (debootstrap messes this up for some unknown reason). If you downloaded the prebuilt image, these two commands don't need to run.</p>
+
+    <blockquote><syntax><![CDATA[
+_ chroot $mnt /debootstrap/debootstrap --second-stage
+echo 'deb http://ftp.de.debian.org/debian lenny main' >$mnt/etc/apt/sources.list
+]]></syntax></blockquote>
+
+    <!--blockquote><syntax><![CDATA[
+I: Validating Packages
+I: Resolving dependencies of required packages...
+I: Resolving dependencies of base packages...
+I: Found additional required dependencies: lzma
+I: Found additional base dependencies: libept0 libxapian15
+I: Installing core packages...
+I: Unpacking required packages...
+I: Unpacking *...
+I: Configuring required packages...
+I: Configuring *...
+I: Unpacking the base system...
+I: Unpacking *...
+I: Configuring the base system...
+I: Configuring *...
+I: Base system installed successfully.
+]]></syntax></blockquote-->
+
+    <p>To make certain that networking works fully (specifically DNS resolution) we have to verify the nameserver listed in /etc/resolv.conf. One easy way to do this for a HOWTO is to just set this DNS server to a known working value. I have already done this in the pre-made image file. You might want to do something more intelligent here.</p>
+
+    <blockquote><syntax><![CDATA[
+echo 'nameserver 4.2.2.2' >$mnt/etc/resolv.conf
+]]></syntax></blockquote>
+
+    <p>Now that that's over (which probably took almost ten minutes), we can enter the Debian environment using chroot. This will give us a shell that is locked into Debian land, and capable of running all the advanced/awesome things we can do there. You should continue from here even if you have a premade image.</p>
+
+    <blockquote><syntax><![CDATA[
+_ chroot $mnt /bin/bash
+]]></syntax></blockquote>
+
+    <p>Once in, we need to do a quick few mounts to make things fully functional.</p>
+
+    <blockquote><syntax><![CDATA[
+mount -t devpts devpts /dev/pts
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+]]></syntax></blockquote>
+
+    <p>Next we have a simple change that I should have done in the preconstructed image, but did not realize I needed to do, and now I've already distributed it, so maybe next time I make an image it will already be done.</p>
+
+    <blockquote><syntax><![CDATA[
+rm -f /etc/mtab
+ln -s /proc/mounts /etc/mtab
+]]></syntax></blockquote>
+
+    <p>We should also set a password for the root account so we can remotely log into it later.</p>
+
+    <blockquote><syntax><![CDATA[
+passwd root
+]]></syntax></blockquote>
+</section>
+
+<section title="Setting up OpenSSH">
+    <p>Here is where the true power of Debian comes through: getting more advanced software rapidly onto the phone. Let's start by getting SSH up so we can get a fully functional terminal (it might be hard to notice, but there are definitly a few issues running through the telnetd into the chroot).</p>
+
+    <p>To start, we use APT (Debian's package tool) to first update its catalog and then install the server. The second command will also automatically start the server.</p>
+
+    <blockquote><syntax><![CDATA[
+apt-get update
+apt-get install openssh-server
+]]></syntax></blockquote>
+
+    <!--blockquote><syntax><![CDATA[
+Get:1 http://ftp.de.debian.org lenny Release.gpg [189B]
+Get:2 http://ftp.de.debian.org lenny Release [74.5kB]
+Get:3 http://ftp.de.debian.org lenny/main Packages [6764kB]
+Fetched 6839kB in 44s (154kB/s)
+Reading package lists... Done
+]]></syntax></blockquote-->
+
+    <p>If you come back later and would like to start OpenSSH again (as we aren't doing the normal Debian bootup process), you can use the following command (optionally using "restart" instead of "start").</p>
+
+    <blockquote><syntax><![CDATA[
+/etc/init.d/ssh start
+]]></syntax></blockquote>
+</section>
+
+<section title="Ok, Now What?">
+    <p>Now you have fun! The first things I got on there were subversion, gcc, and vim so I could start developing for it. Again, people who want to get deep into the internals of Android (kernel drivers, hardware access, flashing) should join <a href="http://www.telesphoreo.org/cgi-bin/mailman/listinfo/g1-hackers">the G1-Hackers mailing list</a>.</p>
+
+    <p>If you later reboot your device, you will need to run some, but not all, of these commands again. A careful read-through will make this clear, but if you happened to use the same paths that I did in my example you can use <a href="http://cache.saurik.com/android/script/remount.sh">this script</a> to re-setup the mounts.</p>
+
+    <inset>
+        <p>It should be noted that, while all of this is operational, Android will be unable to mount over the USB cable as we are using the microSD card to run Debian. To fix this, you have to shut down the mounts we setup.</p>
+
+        <blockquote><syntax><![CDATA[
+umount $mnt/dev/pts $mnt/proc $mnt/sys $mnt
+_ losetup -d /dev/loop0
+]]></syntax></blockquote>
+
+        <p>Note the losetup! Skipping this step will leave the loopback device we created allocated, which will in turn continue to block Android's ability to reuse the microSD card for mounting over USB.</p>
+        <blockquote><syntax><![CDATA[
+]]></syntax></blockquote>
+    </inset>
+</section>
+
+<section title="Running Debian Code at /">
+    <p>Ok, so one thing that was unfortunate about all of this is that we pretty much have to make a choice: in Debian, or in Android. This is the kind of choice we really shouldn't <em>have</em> to make, especially given that the two systems pretty much don't overlap. This is where unionfs comes in.</p>
+
+    <inset>
+        <p>Note that all commands from here on are being executed <em>outside</em> of the Debian chroot we entered earlier, so still over telnet. You can exit with <syntax>exit</syntax> or just open a new telnet session. You can then download these commands as a <a href="http://cache.saurik.com/android/script/unionfs.sh">ready-made script</a>.</p>
+        <p>To run this ready-made script you should already have exported your standard environment variables. If you have the script in your $kit, then you can run it as so with . (so you can avoid issues regarding noexec on /sdcard).</p>
+
+        <blockquote><syntax><![CDATA[
+. $kit/unionfs.sh
+]]></syntax></blockquote>
+
+        <p>As you are likely already deep into these instructions by now and no longer wish to disconnect everything to install that file, note that you can just wget it with your Debian environment.</p>
+
+        <blockquote><syntax><![CDATA[
+_ chroot $mnt wget -O /tmp/unionfs.sh http://cache.saurik.com/android/script/unionfs.sh
+cat $mnt/tmp/unionfs.sh >$kit/unionfs.sh
+rm $mnt/tmp/unionfs.sh
+]]></syntax></blockquote>
+    </inset>
+
+    <blockquote><syntax><![CDATA[
+insmod $kit/unionfs.ko
+mount -t unionfs -o dirs=$mnt/etc=rw:/etc=ro unionfs /etc
+]]></syntax></blockquote>
+
+    <p>What this does is make /etc contain <em>both</em> the files from Android <em>and</em> the files from Debian. It also sets the system up so that if we modify any files in /etc (or create any new ones) these modifications will get stored in our Debian partition: a feature that now gives us a fully working /etc!</p>
+
+    <p>The next problem is that Android and Linux use different naming conventions for their dynamic linker. On Android we have /system/bin/linker, whereas on Linux we have /lib/ld-linux.so.3. This means we get file not found errors just from running valid software. This is easy enough to fix with a symlink.</p>
+
+    <blockquote><syntax><![CDATA[
+_ mount -o remount,rw /
+_ ln -s $mnt/lib /
+]]></syntax></blockquote>
+
+    <p>At first glance this might seem dangerous, but it isn't. While we are modifying the root filesystem of the device (something we aren't supposed to be able to do), it happens to be "rootfs": a special instance of the Linux ramfs filesystem. This means that any changes we make to it are undone by a simple reboot.</p>
+
+    <p>At this point we should be able to run most Debian programs without entering a chroot by just running the program from $mnt. Unfortunately, not everything is going to work as most of the files are in the "wrong" place. Let's fix that with some more symlinks.</p>
+
+    <blockquote><syntax><![CDATA[
+for x in \
+    bin boot home media mnt \
+    opt selinux srv usr var
+do
+    _ ln -s $mnt/$x /
+done
+]]></syntax></blockquote>
+
+    <p>This leaves only a few folders that we need to deal with. The first one is trivial: /root is empty, so we can just get rid of it and replace it with another symlink. Also, as we are now done modifying the filesystem on /, I <em>highly</em> recommend reprotecting this mount as files that end up here directly take up RAM (not flash) and do not get sync'd back to the Debian environment (which is confusing/wrong).</p>
+
+    <blockquote><syntax><![CDATA[
+rmdir /root
+_ ln -s $mnt/root /
+_ mount -o remount,ro /
+]]></syntax></blockquote>
+
+    <p>This leaves /sbin and /dev. The former can be handled by a simple unionfs, but the situation with /dev is actually pretty evil. It has a mount underneath it, /dev/pts, that you seemingly can't layer under a unionfs for whatever reason and expect it to still work. The fix for this is to remount it back on top after the union.</p>
+
+    <blockquote><syntax><![CDATA[
+mount -t unionfs -o dirs=$mnt/sbin=rw:/sbin=ro unionfs /sbin
+mount -t unionfs -o dirs=$mnt/dev=rw:/dev=rw unionfs /dev
+mount -t devpts devpts /dev/pts
+]]></syntax></blockquote>
+
+    <p>At this point we have everything setup well enough that even things like OpenSSH should work, so let's restart it in this environment.</p>
+
+    <blockquote><syntax><![CDATA[
+/etc/init.d/ssh restart
+]]></syntax></blockquote>
+</section>
+
+<section title="Cavaets and Open Issues">
+    <p>While this all looks great, there are a <em>few</em> issues worth mentioning:</p>
+
+    <p>The first is that I am not certain where usernames and other authentication details are coming from, but wherever it is Debian is going to need to be taught how to get access to that same information through PAM or some other architecture. If you use Debian's ls to look at files you will note that it doesn't know anyone's username.</p>
+
+    <p>Secondly, using a symlink tree for / rather than pivoting it to the mounted image (which I couldn't come up with a clean way to do given that the system has already booted and I'm no longer init) means that any package that tries to add a folder to / is going to fail to install: you might want to use apt-get mostly from within the chroot.</p>
+
+    <p>Finally, this is seriously going to be very temporary. Updates for RC30 are already going out which fix the console bug that let us do all this in the first place (as you need root access to get files into places where you can run them). I therefore highly recommend playing with it while you still can.</p>
+    
+    <p>(Frowny <em>pants</em> on that, by the way :(. I wish I understood why cell phone companies are so keen on selling us devices that are purposely dumbed down. Is it actually good for their business?)</p>
+</section>
+
+</body>

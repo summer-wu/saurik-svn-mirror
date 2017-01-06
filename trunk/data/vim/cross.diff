@@ -1,0 +1,328 @@
+diff -ur vim71/src/configure.in vim71+ip/src/configure.in
+--- vim71/src/configure.in	2007-05-12 09:19:27.000000000 +0000
++++ vim71+ip/src/configure.in	2007-11-30 06:21:58.000000000 +0000
+@@ -47,13 +47,6 @@
+   fi
+ fi
+ 
+-dnl If configure thinks we are cross compiling, there is probably something
+-dnl wrong with the CC or CFLAGS settings, give an understandable error message
+-if test "$cross_compiling" = yes; then
+-  AC_MSG_ERROR([cannot compile a simple program, check CC and CFLAGS
+-  (cross compiling doesn't work)])
+-fi
+-
+ dnl gcc-cpp has the wonderful -MM option to produce nicer dependencies.
+ dnl But gcc 3.1 changed the meaning!  See near the end.
+ test "$GCC" = yes && CPP_MM=M; AC_SUBST(CPP_MM)
+@@ -1986,11 +1979,24 @@
+ 
+ dnl Checks for libraries and include files.
+ 
+-AC_MSG_CHECKING(quality of toupper)
+-AC_TRY_RUN([#include <ctype.h>
+-main() { exit(toupper('A') == 'A' && tolower('z') == 'z'); }],
+-	AC_DEFINE(BROKEN_TOUPPER) AC_MSG_RESULT(bad),
+-	AC_MSG_RESULT(good), AC_MSG_ERROR(failed to compile test program))
++AC_CACHE_CHECK([toupper is broken],[vim_cv_toupper_broken],
++  [
++    AC_RUN_IFELSE([
++#include <ctype.h>
++main() { exit(toupper('A') == 'A' && tolower('z') == 'z'); }
++  ],[
++    vim_cv_toupper_broken=yes
++    AC_MSG_RESULT(yes)
++  ],[
++    vim_cv_toupper_broken=no
++    AC_MSG_RESULT(no)
++  ],[
++    AC_MSG_ERROR(cross-compiling: please set 'vim_cv_toupper_broken')
++  ])])
++
++if test "x$vim_cv_toupper_broken" = "xyes" ; then
++  AC_DEFINE(BROKEN_TOUPPER)
++fi
+ 
+ AC_MSG_CHECKING(whether __DATE__ and __TIME__ work)
+ AC_TRY_COMPILE(, [printf("(" __DATE__ " " __TIME__ ")");],
+@@ -2202,28 +2208,52 @@
+       Or specify the name of the library with --with-tlib.]))
+ fi
+ 
+-AC_MSG_CHECKING(whether we talk terminfo)
+-AC_TRY_RUN([
++AC_CACHE_CHECK([whether we talk terminfo], [vim_cv_terminfo],
++  [
++    AC_RUN_IFELSE([
+ #ifdef HAVE_TERMCAP_H
+ # include <termcap.h>
+ #endif
+ main()
+-{char *s; s=(char *)tgoto("%p1%d", 0, 1); exit(!strcmp(s==0 ? "" : s, "1")); }],
+-	  AC_MSG_RESULT([no -- we are in termcap land]),
+-	  AC_MSG_RESULT([yes -- terminfo spoken here]); AC_DEFINE(TERMINFO),
+-	  AC_MSG_ERROR(failed to compile test program.))
++{char *s; s=(char *)tgoto("%p1%d", 0, 1); exit(!strcmp(s==0 ? "" : s, "1")); }
++    ],[
++      vim_cv_terminfo=no
++      AC_MSG_RESULT([no -- we are in termcap land])
++    ],[
++      vim_cv_terminfo=yes
++      AC_MSG_RESULT([yes -- terminfo spoken here])
++    ],[
++      AC_MSG_ERROR(cross-compiling: please set 'vim_cv_terminfo')
++    ])
++  ])
++
++if test "x$vim_cv_terminfo" = "xyes" ; then
++  AC_DEFINE(TERMINFO)
++fi
+ 
+ if test "x$olibs" != "x$LIBS"; then
+-  AC_MSG_CHECKING(what tgetent() returns for an unknown terminal)
+-  AC_TRY_RUN([
++  AC_CACHE_CHECK([what tgetent() returns for an unknown terminal], [vim_cv_tgent],
++    [
++      AC_RUN_IFELSE([
+ #ifdef HAVE_TERMCAP_H
+ # include <termcap.h>
+ #endif
+ main()
+-{char s[10000]; int res = tgetent(s, "thisterminaldoesnotexist"); exit(res != 0); }],
+-	  AC_MSG_RESULT(zero); AC_DEFINE(TGETENT_ZERO_ERR, 0),
+-	  AC_MSG_RESULT(non-zero),
+-	  AC_MSG_ERROR(failed to compile test program.))
++{char s[10000]; int res = tgetent(s, "thisterminaldoesnotexist"); exit(res != 0); }
++      ],[
++       vim_cv_tgent=zero
++       AC_MSG_RESULT(zero)
++      ],[
++       vim_cv_tgent=non-zero
++       AC_MSG_RESULT(non-zero)
++      ],[
++       AC_MSG_ERROR(failed to compile test program.)
++      ])
++    ])
++  
++  if test "x$vim_cv_tgent" = "xzero" ; then
++    AC_DEFINE(TGETENT_ZERO_ERR, 0)
++  fi
+ fi
+ 
+ AC_MSG_CHECKING(whether termcap.h contains ospeed)
+@@ -2333,9 +2363,10 @@
+ dnl    ****  pty mode/group handling ****
+ dnl
+ dnl support provided by Luke Mewburn <lm@rmit.edu.au>, 931222
+-AC_MSG_CHECKING(default tty permissions/group)
+ rm -f conftest_grp
+-AC_TRY_RUN([
++ AC_CACHE_CHECK([default tty permissions/group], [vim_cv_tty_group],
++   [
++     AC_RUN_IFELSE([
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <stdio.h>
+@@ -2363,20 +2394,35 @@
+   fclose(fp);
+   exit(0);
+ }
+-],[
+-    if test -f conftest_grp; then
+-	ptygrp=`cat conftest_grp`
+-	AC_MSG_RESULT([pty mode: 0620, group: $ptygrp])
+-	AC_DEFINE(PTYMODE, 0620)
+-	AC_DEFINE_UNQUOTED(PTYGROUP,$ptygrp)
+-    else
++    ],[
++      if test -f conftest_grp; then
++       vim_cv_tty_group=`cat conftest_grp`
++       if test "x$vim_cv_tty_mode" = "x" ; then
++         vim_cv_tty_mode=0620
++       fi
++       AC_MSG_RESULT([pty mode: $vim_cv_tty_mode, group: $vim_cv_tty_group])
++      else
++       vim_cv_tty_group=world
+ 	AC_MSG_RESULT([ptys are world accessable])
+-    fi
+-],
+-    AC_MSG_RESULT([can't determine - assume ptys are world accessable]),
+-    AC_MSG_ERROR(failed to compile test program))
++      fi
++    ],[
++      vim_cv_tty_group=world
++      AC_MSG_RESULT([can't determine - assume ptys are world accessable])
++    ],[
++      AC_MSG_ERROR(cross-compiling: please set 'vim_cv_tty_group' and 'vim_cv_tty_mode')
++    ])
++  ])
+ rm -f conftest_grp
+ 
++if test "x$vim_cv_tty_group" != "xworld" ; then
++  AC_DEFINE_UNQUOTED(PTYGROUP,$vim_cv_tty_group)
++  if test "x$vim_cv_tty_mode" = "x" ; then
++    AC_MSG_ERROR([It seems you're cross compiling and have 'vim_cv_tty_group' set, please also set the environment variable 'vim_cv_tty_mode' to the correct mode (propably 0620)])
++  else
++    AC_DEFINE(PTYMODE, 0620)
++  fi
++fi
++
+ dnl Checks for library functions. ===================================
+ 
+ AC_TYPE_SIGNAL
+@@ -2404,8 +2450,9 @@
+ 
+ dnl tricky stuff: try to find out if getcwd() is implemented with
+ dnl system("sh -c pwd")
+-AC_MSG_CHECKING(getcwd implementation)
+-AC_TRY_RUN([
++AC_CACHE_CHECK([getcwd implementation is broken], [vim_cv_getcwd_broken],
++  [
++    AC_RUN_IFELSE([
+ char *dagger[] = { "IFS=pwd", 0 };
+ main()
+ {
+@@ -2413,11 +2460,21 @@
+   extern char **environ;
+   environ = dagger;
+   return getcwd(buffer, 500) ? 0 : 1;
+-}],
+-	AC_MSG_RESULT(it is usable),
+-	AC_MSG_RESULT(it stinks)
+-		AC_DEFINE(BAD_GETCWD),
+-	AC_MSG_ERROR(failed to compile test program))
++}
++    ],[
++      vim_cv_getcwd_broken=no
++      AC_MSG_RESULT(no)
++    ],[
++      vim_cv_getcwd_broken=yes
++      AC_MSG_RESULT(yes)
++    ],[
++      AC_MSG_ERROR(cross-compiling: please set 'vim_cv_getcwd_broken')
++    ])
++  ])
++
++if test "x$vim_cv_getcwd_broken" = "xyes" ; then
++  AC_DEFINE(BAD_GETCWD)
++fi
+ 
+ dnl Check for functions in one big call, to reduce the size of configure
+ AC_CHECK_FUNCS(bcmp fchdir fchown fseeko fsync ftello getcwd getpseudotty \
+@@ -2441,14 +2498,27 @@
+ 	AC_MSG_RESULT(yes); AC_DEFINE(HAVE_ST_BLKSIZE),
+ 	AC_MSG_RESULT(no))
+ 
+-AC_MSG_CHECKING(whether stat() ignores a trailing slash)
+-AC_TRY_RUN(
++AC_CACHE_CHECK([whether stat() ignores a trailing slash], [vim_cv_stat_ignores_slash],
++  [
++    AC_RUN_IFELSE(
+ [#include <sys/types.h>
+ #include <sys/stat.h>
+-main() {struct stat st;  exit(stat("configure/", &st) != 0); }],
+-	AC_MSG_RESULT(yes); AC_DEFINE(STAT_IGNORES_SLASH),
+-	AC_MSG_RESULT(no), AC_MSG_ERROR(failed to compile test program))
++main() {struct stat st;  exit(stat("configure/", &st) != 0); }
++    ],[
++      vim_cv_stat_ignores_slash=yes
++      AC_MSG_RESULT(yes)
++    ],[
++      vim_cv_stat_ignores_slash=no
++      AC_MSG_RESULT(no)
++    ],[
++      AC_MSG_ERROR(cross-compiling: please set 'vim_cv_stat_ignores_slash')
++    ])
++  ])
+ 
++if test "x$vim_cv_stat_ignores_slash" = "xyes" ; then
++  AC_DEFINE(STAT_IGNORES_SLASH)
++fi
++  
+ dnl Link with iconv for charset translation, if not found without library.
+ dnl check for iconv() requires including iconv.h
+ dnl Add "-liconv" when possible; Solaris has iconv but use GNU iconv when it
+@@ -2641,7 +2711,10 @@
+ AC_MSG_RESULT($ac_cv_sizeof_int)
+ AC_DEFINE_UNQUOTED(SIZEOF_INT, $ac_cv_sizeof_int)
+ 
+-AC_MSG_CHECKING(whether memmove/bcopy/memcpy handle overlaps)
++
++dnl Check for memmove() before bcopy(), makes memmove() be used when both are
++dnl present, fixes problem with incompatibility between Solaris 2.4 and 2.5.
++
+ [bcopy_test_prog='
+ main() {
+   char buf[10];
+@@ -2656,18 +2729,60 @@
+   exit(0); /* libc version works properly.  */
+ }']
+ 
+-dnl Check for memmove() before bcopy(), makes memmove() be used when both are
+-dnl present, fixes problem with incompatibility between Solaris 2.4 and 2.5.
++AC_CACHE_CHECK([whether memmove handles overlaps],[vim_cv_memmove_handles_overlap],
++  [
++    AC_RUN_IFELSE([#define mch_memmove(s,d,l) memmove(d,s,l) $bcopy_test_prog],
++      [
++       vim_cv_memmove_handles_overlap=yes
++       AC_MSG_RESULT(yes)
++      ],[
++       vim_cv_memmove_handles_overlap=no
++       AC_MSG_RESULT(no)
++      ],[
++       AC_MSG_ERROR(cross-compiling: please set 'vim_cv_memmove_handles_overlap')
++      ])
++  ])
++
++if test "x$vim_cv_memmove_handles_overlap" = "xyes" ; then
++  AC_DEFINE(USEMEMMOVE)
++else
++  AC_CACHE_CHECK([whether bcopy handles overlaps],[vim_cv_bcopy_handles_overlap],
++    [
++      AC_RUN_IFELSE([#define mch_bcopy(s,d,l) bcopy(d,s,l) $bcopy_test_prog],
++      [
++       vim_cv_bcopy_handles_overlap=yes
++       AC_MSG_RESULT(yes)
++      ],[
++       vim_cv_bcopy_handles_overlap=no
++       AC_MSG_RESULT(no)
++      ],[
++       AC_MSG_ERROR(cross-compiling: please set 'vim_cv_bcopy_handles_overlap')
++      ])
++    ])
++
++  if test "x$vim_cv_bcopy_handles_overlap" = "xyes" ; then
++    AC_DEFINE(USEBCOPY)
++  else
++    AC_CACHE_CHECK([whether memcpy handles overlaps],[vim_cv_memcpy_handles_overlap],
++      [
++       AC_RUN_IFELSE([#define mch_memcpy(s,d,l) memcpy(d,s,l) $bcopy_test_prog],
++         [
++           vim_cv_memcpy_handles_overlap=yes
++           AC_MSG_RESULT(yes)
++         ],[
++           vim_cv_memcpy_handles_overlap=no
++           AC_MSG_RESULT(no)
++         ],[
++           AC_MSG_ERROR(cross-compiling: please set 'vim_cv_memcpy_handles_overlap')
++         ])
++      ])
++
++    if test "x$vim_cv_memcpy_handles_overlap" = "xyes" ; then
++      AC_DEFINE(USEMEMCPY)
++    fi
++  fi
++fi
+ 
+-AC_TRY_RUN([#define mch_memmove(s,d,l) memmove(d,s,l) $bcopy_test_prog],
+-    AC_DEFINE(USEMEMMOVE) AC_MSG_RESULT(memmove does),
+-    AC_TRY_RUN([#define mch_memmove(s,d,l) bcopy(d,s,l) $bcopy_test_prog],
+-	AC_DEFINE(USEBCOPY) AC_MSG_RESULT(bcopy does),
+-	AC_TRY_RUN([#define mch_memmove(s,d,l) memcpy(d,s,l) $bcopy_test_prog],
+-	    AC_DEFINE(USEMEMCPY) AC_MSG_RESULT(memcpy does), AC_MSG_RESULT(no),
+-	    AC_MSG_ERROR(failed to compile test program)),
+-	AC_MSG_ERROR(failed to compile test program)),
+-    AC_MSG_ERROR(failed to compile test program))
+ 
+ dnl Check for multibyte locale functions
+ dnl Find out if _Xsetlocale() is supported by libX11.

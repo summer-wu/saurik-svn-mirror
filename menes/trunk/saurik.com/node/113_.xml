@@ -1,0 +1,9 @@
+<body title="JocStrapping Java to Objective-C" sidead="true">
+
+<p>By far the most portable language for doing mobile development today is Java: while the platform doesn't always solve issues related to per-handset interfaces (a daunting task that is likely unsolvable), there is no reason that (time un-critical) backend logic can't be perfectly shared.</p>
+
+<p>With an implementation of J2ME on virtually every handset that has been produced in recent years (often as the <em>only</em> supported means of installing third-party software), Google's Android being designed entirely alround Dalvik (a customized JVM), and implementations of Java even ending up on M2M modules, there is almost no device where this code <em>can't</em> go.</p>
+
+<p>In fact, I know of only one handset in current distribution that does <em>not</em> support Java: Apple's iPhone. Until now.</p>
+
+</body>

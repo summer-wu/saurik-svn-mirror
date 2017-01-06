@@ -1,0 +1,12 @@
+Package: com.saurik.iphone.fid
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.3381-1
+Description: fits even more stuff right down there
+Name: Five Icon Dock
+Depends: mobilesubstrate (>= 0.9.3005-1), firmware (>= 2.2), firmware (<< 3.0) | com.chpwn.iconsupport (>= 1.7.3-1)
+Conflicts: gsc.wildcat
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.iphone.fid/

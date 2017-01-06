@@ -1,0 +1,84 @@
+<body title="Bypassing iPhone Code Signatures">
+
+<inset>
+    <p>Due to popular demand, I am putting some of the content I have written for the Cydia information portal here on my website so people an link to it directly. Given the original distribution medium, the material is therefore quite condensed. If I have time I may flesh out more details.</p>
+</inset>
+
+<p>Starting with the recent beta releases of the iPhoneOS, Apple has started requiring that all code on the device is signed. This is mostly to make it impossible for programs running through Apple's AppStore to download more software and run it (so no competition for AppStore).</p>
+
+<p>In order to get around this (and thereby to install our own code onto the device) the iPhone Dev Team has patched the signature verification out of the kernel. However, another half of the codesign problem is that the binary contains a number of SHA1 verification hashes that are checked in numerous locations throughout the kernel. Patching this out is A) difficult (especially to track as Apple makes changes) and B) of marginal benefit as adding these hashes is easy. This means you <em>do</em> still have to at least pay lipservice to the code signature process. There are currently three viable options.</p>
+
+<section title="Option #1: Self-Signing">
+    <p>This method is the simplest to understand: using Apple's codesign tool to sign the binary. Because the signature verification checks have been hacked out of the kernel, you can use <em>any</em> signature to do this, not just ones that are approved by Apple's developer program. For instructions on how to make a self-signing certificate you can read this article from Apple's website: <a href="http://developer.apple.com/documentation/Security/Conceptual/CodeSigningGuide/Procedures/chapter_3_section_2.html">Obtaining a Signing Identity</a>.</p>
+
+<blockquote><syntax><![CDATA[
+mac$ platform=/Developer/Platforms/iPhoneOS.platform
+mac$ allocate=${platform}/Developer/usr/bin/codesign_allocate
+mac$ export CODESIGN_ALLOCATE=${allocate}
+
+mac$ codesign -fs "Name" Program
+
+mac$ scp Program mobile@iphone:
+]]></syntax></blockquote>
+</section>
+
+<section title="Option #2: Pseudo-Signing">
+    <p>For me, the previous option just doesn't work. I do not use Macs to do my development and the entire codesign path requires not only a Mac but <em>console</em> access because codesign is, at some level, a graphical utility (the way it uses Keychain to get the signatures may prompt, with dialogs, for passwords). To get around this, I wrote a tool called ldid that, among other things, can generate the SHA1 hashes that are checked by Apple's iPhoneOS kernel. This tool is easily installed on the iPhone using Cydia or APT.</p>
+
+<blockquote><syntax><![CDATA[
+iphone# apt-get install ldid
+iphone$ scp user@desktop:Program .
+iphone$ ldid -S Program
+]]></syntax></blockquote>
+</section>
+
+<inset>
+    <p>Supposedly you actually <em>can</em> run codesign over SSH by first running <syntax>security unlock-keychain</syntax>. Thanks goes to Sam Clegg for pointing this out! (I will be honest and say I haven't tested this yet.</p>
+</inset>
+
+<section title="Option #3: Disable Checks">
+    <p>Finally, an option that is really convenient for development purposes is just to disable the check. Now, technically, this disables a <em>lot more</em> than just the codesign check, and its also more disabling the penalty than the check itself. I have run my phone for a <em>while</em> in this state, but I have heard that in some (many?) configurations it causes problems: being unable to connect to insecure WiFi networks being the largest. This is done by using sysctl to deactivate the enforcement and can be undone either by resetting the variables back on or by rebooting the phone.</p>
+
+<blockquote><syntax><![CDATA[
+sysctl -w security.mac.proc_enforce=0
+sysctl -w security.mac.vnode_enforce=0
+]]></syntax></blockquote>
+
+    <p>As this <em>does</em> seem to cause some problems, I'll make a note about how to undo this (as it's really simple). You just need to reset the variables back to 1 or reboot the device (every time the phone starts these default back to on).</p>
+
+<blockquote><syntax><![CDATA[
+sysctl -w security.mac.proc_enforce=1
+sysctl -w security.mac.vnode_enforce=1
+]]></syntax></blockquote>
+</section>
+
+<section title="Entitlements">
+    <p>Every executable also has an XML file (specifically an Objective-C Property List) that is signed into it that is its block of "entitlements". This area is read (I'm not certain by who, but I'd guess the kernel) to determine what seatbelt profile to apply to that process and what extra abilities it gets.</p>
+
+    <p>To dump or set the entitlements of a binary we can use ldid. Dumping uses <syntax>-e</syntax> and setting involves passing an argument to <syntax>-S</syntax> as you sign the file. You can also pass <syntax>--entitlements</syntax> to codesign.</p>
+
+<blockquote><syntax><![CDATA[
+iphone$ ldid -e Program
+iphone$ ldid -Sblock.xml Program
+mac$ codesign -fs "Name" --entitlements block.xml Program
+]]></syntax></blockquote>
+
+    <p>As an example of where this comes up, programs that wish to use <syntax>[UIApplication launchApplicationWithIdentifier:suspended:]</syntax>, as of iPhoneOS 2.1, get the error message <syntax>Entitlement com.apple.springboard.launchapplications required to use _SBXXLaunchApplication</syntax>. To fix this, we can sign our program with the following entitlement block.</p>
+
+<blockquote><syntax><![CDATA[
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.springboard.launchapplications</key>
+    <true/>
+</dict>
+</plist>
+]]></syntax></blockquote>
+
+</section>
+
+<inset>
+    <p>Have more questions about code signatures? Send them to me and I might put up more information (if I have it) here. One thing I <em>do</em> intend to discuss more is entitlements.</p>
+</inset>
+
+</body>

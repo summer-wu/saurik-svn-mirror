@@ -1,0 +1,69 @@
+Index: compile.sh
+===================================================================
+--- compile.sh	(revision 47137)
++++ compile.sh	(working copy)
+@@ -1,4 +1,4 @@
+ #! /bin/sh
+-swig -php4 -c++ wikidiff2.i
+-g++ -O2 `php-config --includes` -shared -o php_wikidiff2.so wikidiff2.cpp wikidiff2_wrap.cpp
++swig -python -c++ wikidiff2.i
++g++ -O2 `python-config --includes` -shared -o _wikidiff2.so wikidiff2.cpp wikidiff2_wrap.cxx
+ 
+Index: Makefile
+===================================================================
+--- Makefile	(revision 47137)
++++ Makefile	(working copy)
+@@ -9,7 +9,7 @@
+ # For Mac OS X
+ # SHARED = -bundle
+ 
+-OUTPUT=php_$(PRODUCT).so
++OUTPUT=_$(PRODUCT).so
+ STANDALONE=$(PRODUCT)
+ #LIBDIRS=-L/usr/local/lib
+ #LIBS=-lJudy
+@@ -23,7 +23,7 @@
+   DiffEngine.h JudyHS.h Word.h wikidiff2.h \
+   judy_test.cpp standalone.cpp \
+   $(PRODUCT).cpp $(PRODUCT).i \
+-  $(PRODUCT)_wrap.cpp php_$(PRODUCT).h wikidiff2.php \
++  $(PRODUCT)_wrap.cxx php_$(PRODUCT).h wikidiff2.php \
+   test/chinese-reverse.zip \
+   test/test-a.diff \
+   test/test-a1 \
+@@ -37,20 +37,20 @@
+   debian/copyright \
+   debian/rules
+ 
+-$(OUTPUT) : $(PRODUCT).cpp $(PRODUCT)_wrap.cpp
+-	$(CXX) -O2 `php-config --includes` $(SHARED) -o $@ $(PRODUCT).cpp $(PRODUCT)_wrap.cpp
++$(OUTPUT) : $(PRODUCT).cpp $(PRODUCT)_wrap.cxx
++	$(CXX) -O2 `python-config --includes` $(SHARED) -o $@ $(PRODUCT).cpp $(PRODUCT)_wrap.cxx
+ 
+ .PHONY: standalone
+ standalone:
+ 	$(CXX) -o $(STANDALONE) -O3 $(PRODUCT).cpp standalone.cpp $(LIBS) $(LIBDIRS)
+ 
+ # The below _almost_ works. It gets unresolved symbol errors on load looking for _compiler_globals.
+-#	MACOSX_DEPLOYMENT_TARGET=10.3 g++ -O2 `php-config --includes` $(SHARED) -o php_wikidiff2.so wikidiff2.cpp wikidiff2_wrap.cpp -undefined dynamic_lookup
++#	MACOSX_DEPLOYMENT_TARGET=10.3 g++ -O2 `php-config --includes` $(SHARED) -o php_wikidiff2.so wikidiff2.cpp wikidiff2_wrap.cxx -undefined dynamic_lookup
+ 
+-test.php : $(PRODUCT)_wrap.cpp
++test.php : $(PRODUCT)_wrap.cxx
+ 
+-$(PRODUCT)_wrap.cpp : $(PRODUCT).i
+-	swig -php4 -c++ $(PRODUCT).i
++$(PRODUCT)_wrap.cxx : $(PRODUCT).i
++	swig -python -c++ $(PRODUCT).i
+ 
+ install : $(OUTPUT)
+ 	install -d "$(INSTALL_TARGET)$(PHP_EXT_DIR)"
+@@ -61,7 +61,7 @@
+ 
+ clean :
+ 	rm -f $(OUTPUT)
+-	rm -f $(PRODUCT)_wrap.cpp
++	rm -f $(PRODUCT)_wrap.cxx
+ 	rm -f $(PRODUCT).php
+ 
+ test : $(OUTPUT)

@@ -1,0 +1,11 @@
+Package: com.saurik.iphone.gsel
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.2970-1
+Description: logs GSEventRefs for debugging Veency
+Name: GSEvent Logger
+Depends: mobilesubstrate (>= 0.9.2670-1)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.iphone.gsel/

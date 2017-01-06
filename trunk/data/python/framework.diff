@@ -1,0 +1,28 @@
+diff -r -u Python-2.5.1/Mac/Makefile.in Python-2.5.1+iPhone/Mac/Makefile.in
+--- Python-2.5.1/Mac/Makefile.in	2006-06-11 20:23:29.000000000 +0000
++++ Python-2.5.1+iPhone/Mac/Makefile.in	2008-01-09 11:32:54.000000000 +0000
+@@ -223,7 +223,6 @@
+ 	done
+ 
+ 
+-	$(RUNSHARED) $(BUILDPYTHON) $(CACHERSRC) -v $(DESTDIR)$(MACLIBDEST) $(DESTDIR)$(MACTOOLSDEST)
+ 	$(RUNSHARED) $(BUILDPYTHON) -Wi -tt $(compileall) -d $(MACTOOLSDEST) -x badsyntax $(DESTDIR)$(MACTOOLSDEST)
+ 	$(RUNSHARED) $(BUILDPYTHON) -O -Wi -tt $(compileall) -d $(MACTOOLSDEST) -x badsyntax $(DESTDIR)$(MACTOOLSDEST)
+ 
+diff -r -u Python-2.5.1/Makefile.pre.in Python-2.5.1+iPhone/Makefile.pre.in
+--- Python-2.5.1/Makefile.pre.in	2006-12-08 20:46:13.000000000 +0000
++++ Python-2.5.1+iPhone/Makefile.pre.in	2008-01-09 11:34:00.000000000 +0000
+@@ -391,8 +391,11 @@
+ 			-compatibility_version $(VERSION) \
+ 			-current_version $(VERSION); \
+         else \
+-		libtool -o $(LDLIBRARY) -dynamic $(OTHER_LIBTOOL_OPT) $(LIBRARY) \
+-			@LIBTOOL_CRUFT@ ;\
++		$(CC) -o $(LDLIBRARY) -arch_only arm -dynamiclib \
++			-all_load $(LIBRARY) -Wl,-single_module \
++			-install_name $(PYTHONFRAMEWORKINSTALLDIR)/Versions/$(VERSION)/$(PYTHONFRAMEWORK) \
++			-compatibility_version $(VERSION) \
++			-current_version $(VERSION); \
+ 	fi
+ 	$(INSTALL) -d -m $(DIRMODE)  \
+ 		$(PYTHONFRAMEWORKDIR)/Versions/$(VERSION)/Resources/English.lproj

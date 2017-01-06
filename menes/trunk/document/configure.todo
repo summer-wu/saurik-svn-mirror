@@ -1,0 +1,2 @@
+mysql --include --libs
+pcre/pcre.h

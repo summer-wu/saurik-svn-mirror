@@ -1,0 +1,13 @@
+diff -ru inetutils-1.5/configure.ac inetutils-1.5+iPhone/configure.ac
+--- inetutils-1.5/configure.ac	2007-06-28 22:58:23.000000000 +0000
++++ inetutils-1.5+iPhone/configure.ac	2008-03-24 13:47:26.000000000 +0000
+@@ -470,7 +470,8 @@
+               [AC_DEFINE(HAVE_OSOCKADDR_H, 1,
+                          [Define to one if you have <osockaddr.h>.])],
+ 	      [#include <sys/types.h>
+-               #include <sys/socket.h> ])
++               #include <sys/socket.h>
++               #include <protocols/talkd.h> ])
+ 
+ AC_CHECK_TYPES(struct if_nameindex, , ,
+   [#include <sys/types.h>

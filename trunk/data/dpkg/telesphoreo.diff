@@ -1,0 +1,11 @@
+diff -ru dpkg-1.18.10/triplettable dpkg-1.18.10+iPhone/triplettable
+--- dpkg-1.18.10/triplettable	2016-07-05 01:55:14.000000000 +0000
++++ dpkg-1.18.10+iPhone/triplettable	2016-08-15 23:48:36.000000000 +0000
+@@ -30,6 +30,7 @@
+ bsd-openbsd-<cpu>	openbsd-<cpu>
+ bsd-netbsd-<cpu>	netbsd-<cpu>
+ bsd-darwin-<cpu>	darwin-<cpu>
++bsd-darwin-arm		iphoneos-arm
+ sysv-solaris-<cpu>	solaris-<cpu>
+ uclibceabi-uclinux-arm	uclinux-armel
+ uclibc-uclinux-<cpu>	uclinux-<cpu>

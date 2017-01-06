@@ -1,0 +1,19 @@
+struct Input_ {
+    float2 texcoord_ : TEXCOORD0;
+};
+
+struct Output_ {
+    half4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform samplerRECT bottom,
+    uniform float width,
+    uniform float height
+) {
+    Output_ output;
+    output.color_ = texRECT(bottom, input.texcoord_ * float2(width, height));
+    //output.color_ = float4(input.texcoord_, 0, 1);
+    return output;
+}

@@ -1,0 +1,12 @@
+diff -ru tcsh-6.15.00/Makefile.in tcsh-6.15.00+iPhone/Makefile.in
+--- tcsh-6.15.00/Makefile.in	2006-08-24 20:56:31.000000000 +0000
++++ tcsh-6.15.00+iPhone/Makefile.in	2008-03-03 13:07:58.000000000 +0000
+@@ -365,7 +365,7 @@
+ 
+ gethost:  gethost.c sh.err.h tc.const.h sh.h
+ 	rm -f gethost
+-	${CC} -o gethost ${LDFLAGS} ${CFLAGS} ${CPPFLAGS} ${DFLAGS} $(srcdir)/gethost.c ${LIBES} ${EXTRALIBS}
++	gcc -o gethost ${LDFLAGS} ${CFLAGS} ${CPPFLAGS} ${DFLAGS} $(srcdir)/gethost.c ${LIBES}
+ 
+ tc.defs.c:	gethost host.defs
+ 	@rm -f $@.tmp

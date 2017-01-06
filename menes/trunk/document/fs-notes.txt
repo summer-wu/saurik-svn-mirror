@@ -1,0 +1,3 @@
+transactions should be supported; a process should be able to get multi-version concurrency for it and it's children
+http://sourceforge.net/projects/avf
+every node should support metadata, but different nodes will obviously have different kinds of metadata; so just because a file has permissions, that doesn't mean that permissions have permissions

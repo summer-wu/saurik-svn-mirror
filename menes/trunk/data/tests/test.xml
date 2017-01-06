@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<?instruction a="word"?>
+<dude>
+    <a b="word"/>
+    <b b="ack"/>
+    <!-- comment -->
+    <arf>ack</arf>
+	<test ack="now">
+		<word/>
+	</test>
+</dude>

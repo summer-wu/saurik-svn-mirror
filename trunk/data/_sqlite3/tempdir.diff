@@ -1,0 +1,54 @@
+diff -ru sqlite-3.5.9/src/os_unix.c sqlite-3.5.9+iPhone/src/os_unix.c
+--- sqlite-3.5.9/src/os_unix.c	2008-05-13 12:51:29.000000000 +0000
++++ sqlite-3.5.9+iPhone/src/os_unix.c	2008-08-01 08:18:14.000000000 +0000
+@@ -75,6 +75,10 @@
+ */
+ #define MAX_PATHNAME 512
+ 
++#ifdef __APPLE__
++#import <CoreServices/CoreServices.h>
++#endif
++
+ 
+ /*
+ ** The unixFile structure is subclass of sqlite3_file specific for the unix
+@@ -2497,6 +2501,7 @@
+ static int unixGetTempname(sqlite3_vfs *pVfs, int nBuf, char *zBuf){
+   static const char *azDirs[] = {
+      0,
++     0,
+      "/var/tmp",
+      "/usr/tmp",
+      "/tmp",
+@@ -2509,6 +2514,12 @@
+   int i, j;
+   struct stat buf;
+   const char *zDir = ".";
++#ifdef __APPLE__
++  void *pool;
++  CFStringRef cfstr;
++  CFIndex maxsize;
++  char *cstr;
++#endif
+ 
+   /* It's odd to simulate an io-error here, but really this is just
+   ** using the io-error infrastructure to test that SQLite handles this
+@@ -2516,6 +2526,18 @@
+   */
+   SimulateIOError( return SQLITE_ERROR );
+ 
++#ifdef __APPLE__
++  if (azDirs[1] == NULL) {
++    pool = NSPushAutoreleasePool(0);
++    cfstr = (CFStringRef) NSTemporaryDirectory();
++    maxsize = CFStringGetMaximumSizeForEncoding(CFStringGetLength(cfstr), kCFStringEncodingUTF8) + 1;
++    cstr = malloc(maxsize);
++    CFStringGetCString(cfstr, cstr, maxsize, kCFStringEncodingUTF8);
++    azDirs[1] = cstr;
++    NSPopAutoreleasePool(pool);
++  }
++#endif
++
+   azDirs[0] = sqlite3_temp_directory;
+   for(i=0; i<sizeof(azDirs)/sizeof(azDirs[0]); i++){
+     if( azDirs[i]==0 ) continue;

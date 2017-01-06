@@ -1,0 +1,31 @@
+diff -ru db-4.6.21/dist/aclocal/mutex.m4 db-4.6.21+iPhone/dist/aclocal/mutex.m4
+--- db-4.6.21/dist/aclocal/mutex.m4	2007-05-18 15:08:50.000000000 +0000
++++ db-4.6.21+iPhone/dist/aclocal/mutex.m4	2008-08-22 07:58:41.000000000 +0000
+@@ -534,21 +534,21 @@
+ # Configure a pthreads-style mutex implementation.
+ hybrid=pthread
+ case "$db_cv_mutex" in
+-POSIX/pthreads*)	ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
+-			AC_DEFINE(HAVE_MUTEX_PTHREADS)
+-			AH_TEMPLATE(HAVE_MUTEX_PTHREADS,
+-			    [Define to 1 to use POSIX 1003.1 pthread_XXX mutexes.]);;
+ POSIX/pthreads/private*)ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
+ 			AC_DEFINE(HAVE_MUTEX_PTHREADS)
+ 			AC_DEFINE(HAVE_MUTEX_THREAD_ONLY)
+ 			AH_TEMPLATE(HAVE_MUTEX_THREAD_ONLY,
+ 			    [Define to 1 to configure mutexes intra-process only.]);;
+-POSIX/pthreads/library*)ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
+-			AC_DEFINE(HAVE_MUTEX_PTHREADS);;
+ POSIX/pthreads/library/private*)
+ 			ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
+ 			AC_DEFINE(HAVE_MUTEX_PTHREADS)
+ 			AC_DEFINE(HAVE_MUTEX_THREAD_ONLY);;
++POSIX/pthreads/library*)ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
++			AC_DEFINE(HAVE_MUTEX_PTHREADS);;
++POSIX/pthreads*)	ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
++			AC_DEFINE(HAVE_MUTEX_PTHREADS)
++			AH_TEMPLATE(HAVE_MUTEX_PTHREADS,
++			    [Define to 1 to use POSIX 1003.1 pthread_XXX mutexes.]);;
+ Solaris/lwp*)		ADDITIONAL_OBJS="mut_pthread${o} $ADDITIONAL_OBJS"
+ 			AC_DEFINE(HAVE_MUTEX_SOLARIS_LWP)
+ 			AH_TEMPLATE(HAVE_MUTEX_SOLARIS_LWP,

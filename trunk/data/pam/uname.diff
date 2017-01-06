@@ -1,0 +1,12 @@
+diff -ru pam-32.1/pam/configure.in pam-32.1+iPhone/pam/configure.in
+--- pam-32.1/pam/configure.in	2006-07-11 03:24:07.000000000 +0000
++++ pam-32.1+iPhone/pam/configure.in	2009-04-08 08:28:52.000000000 +0000
+@@ -28,7 +28,7 @@
+ dnl Useful info (believed to be portable)
+ dnl
+ LOCALSRCDIR=`/bin/pwd`         ; AC_SUBST(LOCALSRCDIR)
+-OS=`uname|sed -e 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/'`
++OS=darwin
+ AC_SUBST(OS)
+ 
+ dnl

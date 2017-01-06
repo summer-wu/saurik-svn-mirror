@@ -1,0 +1,21 @@
+diff -ru pam-32.1/ar.sh pam-32.1+iPhone/ar.sh
+--- pam-32.1/ar.sh	2005-08-18 18:02:08.000000000 +0000
++++ pam-32.1+iPhone/ar.sh	2009-04-08 08:33:50.000000000 +0000
+@@ -47,7 +47,7 @@
+ 	    local archdir="${dir}/${arch}";
+ 	    mkdir -p "${archdir}";
+ 
+-	    lipo -thin "${arch}" "${archive}" -o "${archdir}/${name}";
++	    "${PKG_TARG}-lipo" -thin "${arch}" "${archive}" -o "${archdir}/${name}";
+ 
+ 	    ( cd "${archdir}" && ar -xo "./${name}"; );
+ 
+@@ -62,7 +62,7 @@
+ 
+ 	local ofile;
+ 	for ofile in ${ofiles}; do
+-	    lipo -create $(find "${dir}" -name "${ofile}" -print) -o "${dir}/${ofile}";
++	    "${PKG_TARG}-lipo" -create $(find "${dir}" -name "${ofile}" -print) -o "${dir}/${ofile}";
+ 	done
+ 
+ 	( cd "${dir}" && ar -cr "${name}" ${ofiles}; );

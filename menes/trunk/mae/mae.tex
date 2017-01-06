@@ -1,0 +1,165 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage[dvips]{graphicx}
+\usepackage[dvips]{color}
+\usepackage{epsfig}
+
+\setlength{\textheight}{8.5in}
+\setlength{\topmargin}{0in}
+\setlength{\textwidth}{7.0in}
+\setlength{\evensidemargin}{-.3in}
+\setlength{\oddsidemargin}{-.3in}
+
+\begin{document}
+
+\date{}
+
+\title{After The Fact: \\ Program Modification, Post Compile-Time}
+
+\author{Jay Freeman
+    \\ Department of Computer Science
+    \\ University of California, Santa Barbara
+    \\ Santa Barbara, CA, USA 93106
+    \\ email: {\tt saurik@saurik.com} % \\
+}
+
+\maketitle %\thispagestyle{empty}
+
+%\tableofcontents
+
+\begin{abstract}
+In the year 2100, Scott Jacobs is a man with a tight connection to the past and a firm grip on our future: he's what is known as a "monkey patcher". Over the generations since the political demise of the open Internet, more and more technology has been developed in isolation.
+
+New software is now carved out of the dead entrails of old machines, sometimes with little understanding of the consequences. This morning, in this post-compile-time Los Angelos, Mary Jennings, an analyst from Data Universal, Inc., will uncover a decades old bug; one that threatens the very future of our nation: a bug that only Scott can fix.
+
+After The Fact: Coming Soon to Theaters
+\end{abstract}
+
+\section{Introduction}
+
+What is the problem? Why is it interesting? ...
+
+\section{Stages of the Software Life Cycle}
+
+\begin{quote}
+\begin{small}
+    ``Make it so."
+\emph{Captain Jean Luc Picard, USS Enterprise D}
+\end{small}
+\end{quote}
+
+Contrary to the expectations of most {\em end} users, software is not developed by having a simple conversation with {\em The Computer}. Nor, however, is most modern software developed by a simple matter of description followed by execution.
+
+This paper will be focusing on the story of compiled languages, which I will define as ones where the execution format of the language is separate and different from that in which the program was first written. Other work has been done with dynamic languages, for which the solutions are typically much simpler.
+
+\section{Source Code}
+
+Initially, most programs begin their journey as {\em source code}: instructions and statements written to the computer in a special language designed to remove any ambiguities as to the meanings of statements.
+
+Discussions at this level will be restricted to mechanisms that work entirely off of the textual nature of source code, with ignorance of the semantic nature of the language.
+
+\subsection{Regular Expressions (Theory)}
+
+\subsection{Regular Expressions (Practice)}
+
+\section{Parse Trees}
+
+When we are satisfied with our source code, we continue on our journey by running it through our compiler. As it reads our program (given its knowledge of the language), it generates a "parse tree": an in-memory representation of our source code, encoded into useful data structures.
+
+Once we have reached this stage the kinds of transformations we can make are much more powerful as we now can work with the language, rather than against it.
+
+\subsection{OpenC++}
+
+OpenC++ is a compiler frontend in the form of a library and a source-to-source translator. The interface for its usage is a set of "metaobject"s that, in essence, represent the parse tree. Plug-ins can then be written for it that manipulate these trees, at which point you can ask it to generate output in the form of replaced source code.
+
+\section{Intermediate Language}
+
+On the road to machine language, most compilers stop at an "intermediate language". Here the syntax of the language is entirely removed (most intermediate languages are quite like machine languages), but the semantics of the execution environment are normally preserved: one still has access to symbol names and the code still lines up rather well with the original source.
+
+\subsection{Low-Level Virtual Machine}
+
+The LLVM project's original goal was to provide many of the benefits of dynamic languages (such as just-in-time compilation with profile-guided optimizations) without taking on some of the more costly features that are typically bundled into them (such as garbage collection and type safety). It therefore features an intermediate language that is rather low-level, but is designed to be simple and fast to optimize.
+
+Since its conception, the project has moved on to providing a full compiler infrastructure by way of integration with GCC. Rather than using GCC's internal intermediate language representations (RTL and GIMPLE), LLVM's optimizer uses its own LLVM bytecode format. It has also been designed with pipelines in mind: it can generate bytecode output, allowing third party transformation algorithms to be executed on it,
+
+\subsection{TenDRA / ANDF}
+
+TenDRA is a C/C++ compiler developed by the Defense Evaluation and Research Agency (a UK organization). One of its goals was to produce platform-abstract output in the form of Ten15 Distribution Format (TDF). TDF was later selected by the Open Software Foundation to search as their standardized Architecture Neutral Distribution Format (ANDF),
+
+Additionally, TenDRA allows us to insert optimizations into the pipeline. It does this by making all of the major optimizations be entirely separable components that interact with each other only through its intermediate language.
+
+\section{Optimized Intermediate Language}
+
+One of the major steps of processing the intermediate language is to optimize it. At this point registers are allocated, control flow is disrupted, and functions may become inlined. Often, important information has been lost.
+
+\section{Assembly Code}
+
+The final goal of intermediate language is to serialize it to assembly. At this point what we have is really just another programming language: a text file, in memory and later on disk. It is the argument of the author that we learn nothing new, from an academic perspective, by analysis of this stage as we an treat it equivalent to a "wash/rinse/repeat" of earlier steps.
+
+\section{Binary Translation Unit}
+
+Once the compilation proper is complete, you have an "object file": a unit of machine code that represents the code and data present in the specific file that was compiled.
+
+\subsection{OM / ATOM}
+
+In order to allow one to turn back the clock, as it were, OM~\cite{om} (which does not stand for Object Manipulator) was developed to convert these files into a more abstract representation which could then be edited and recompiled back to machine language.
+
+A later offshoot of that work, ATOM~\cite{atom}, provides a framework and a language for making such modifications easier for the developer.
+
+\section{Linked Executable}
+
+Once we have all of our compiled object files the linker comes into play, taking all of the names (both defined and required) from each file and connecting them together to form a single executable that is suitable for being executed.
+
+\subsection{EEL}
+
+EEL~\cite{eel}, the Executable Editing Library, allows one to open a SPARC binary, change its behavior, and re-save it in the form of an update executable.
+
+\section{Stripped Executable}
+
+Often, after compilation, distributions and even developers will "strip" the binaries of their debugging information with the goal of making them much smaller (and thereby often load much faster). After you've done this, many of the opportunities for doing binary analysis are lost: what once had meaning is now a morass of machine code.
+
+\subsection{LEEL}
+
+The purpose of LEEL~\cite{leel} was simply to support EEL on Linux for the IA32 architecture. While that is not noteworthy for this discussion, it also happens to have another benefit: it operates on stripped binaries. More work was later done to explore how this might be better utilized~\cite{stripped}.
+
+\subsection{"Friendly Guy"}
+
+There was this really friendly guy that I met at a conference I went to (ETAPS), who was doing work on separating code from data using some kind of instruction marking analysis. He had a 99\% success rate, and I feel like I should cite him as he was awesome sauce.
+
+\section{Loaded Binary}
+
+When the binary has been loaded into memory one might be able to modify it by changing the behavior of the dynamic linker itself. I do not know of any instances of this being done, but haven't looked well yet, so the reader should just assume I am stupid.
+
+\section{Dynamically Linked Program}
+
+Once the binary is loaded, the "dynamic linker" attacks it, loading any other libraries the program needs and resolving any symbols that have been left undefined to this point.
+
+\subsection{mach\_inject}
+
+In its usage as a library, mach\_inject allows developers to modify existing function calls in Mac OS X programs.
+
+\section{Program Counter at Instruction}
+
+During execution, the program counter marks where you currently are in code space. This value slowly moves forward, interrupted only by jumps and branches.
+
+\subsection{Valgrind}
+
+Valgrind~\cite{valgrind} attempts to provide both JIT and other dynamic capabilities to IA32 binaries. It can do this by protecting memory pages that cause the CPU to trap into the operating system, which in turn sends signals back to Valgrind. The instructions that were trapped can then be simulated or the entire block of code can be recompiled and relocated.
+
+\section{Filled Instruction Register}
+
+Once the instruction is loaded, the CPU executes it. At this point options are available at the CPU level for modifying behavior.
+
+\subsection{"Patch Panel Microcode"}
+
+There is an awesome story I vaguely remember of some guy going in with a set of alligator clips and reprogramming the CPU on some micro-computer to fix a bug in an instruction.
+
+\subsection{Bochs}
+
+Bochs~\cite{bochs} is a portable virtual machine, an IA32 emulator. It could be used by modifying "the CPU", as it were, to do something different.
+
+\bibliographystyle{abbrv}
+\bibliography{mae}
+
+\end{document}

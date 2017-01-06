@@ -1,0 +1,12 @@
+diff -ru ffmpeg-export-2008-05-20/libavcodec/armv4l/mpegvideo_armv5te.c ffmpeg-export-2008-05-20+iPhone/libavcodec/armv4l/mpegvideo_armv5te.c
+--- ffmpeg-export-2008-05-20/libavcodec/armv4l/mpegvideo_armv5te.c	2008-05-09 11:56:36.000000000 +0000
++++ ffmpeg-export-2008-05-20+iPhone/libavcodec/armv4l/mpegvideo_armv5te.c	2008-05-21 08:43:52.000000000 +0000
+@@ -201,7 +201,7 @@
+ void MPV_common_init_armv5te(MpegEncContext *s)
+ {
+ #ifdef HAVE_DCT_UNQUANTIZE_H263_ARMV5TE_OPTIMIZED
+-    s->dct_unquantize_h263_intra = dct_unquantize_h263_intra_armv5te;
++    //s->dct_unquantize_h263_intra = dct_unquantize_h263_intra_armv5te;
+     s->dct_unquantize_h263_inter = dct_unquantize_h263_inter_armv5te;
+ #endif
+ }

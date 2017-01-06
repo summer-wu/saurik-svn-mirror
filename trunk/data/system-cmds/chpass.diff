@@ -1,0 +1,47 @@
+diff -ru system_cmds-431/chpass.tproj/chpass.c system_cmds-431+iPhone/chpass.tproj/chpass.c
+--- system_cmds-431/chpass.tproj/chpass.c	2007-01-17 03:04:42.000000000 +0000
++++ system_cmds-431+iPhone/chpass.tproj/chpass.c	2008-09-24 00:22:49.000000000 +0000
+@@ -94,7 +94,6 @@
+ #endif
+ 
+ #ifndef OPEN_DIRECTORY
+-#include <pw_scan.h>
+ #include <libutil.h>
+ #endif
+ 
+@@ -312,7 +311,7 @@
+ #else
+ 		pw = &lpw;
+ 		old_pw = NULL;
+-		if (!__pw_scan(arg, pw, _PWSCAN_WARN|_PWSCAN_MASTER))
++		if (!__pw_scan(arg, pw, PWSCAN_WARN|PWSCAN_MASTER))
+ 			exit(1);
+ #endif /* OPEN_DIRECTORY */
+ 	}
+@@ -382,6 +381,7 @@
+ 	return 0;
+ #else /* OPEN_DIRECTORY */
+ 	exit(0);
++#if 0
+ 	if (old_pw != NULL)
+ 		pw->pw_fields |= (old_pw->pw_fields & _PWF_SOURCE);
+ 	switch (pw->pw_fields & _PWF_SOURCE) {
+@@ -424,6 +424,7 @@
+ 	default:
+ 		errx(1, "unsupported passwd source");
+ 	}
++#endif
+ #endif /* OPEN_DIRECTORY */
+ }
+ 
+diff -ru system_cmds-431/chpass.tproj/edit.c system_cmds-431+iPhone/chpass.tproj/edit.c
+--- system_cmds-431/chpass.tproj/edit.c	2006-12-18 02:56:48.000000000 +0000
++++ system_cmds-431+iPhone/chpass.tproj/edit.c	2008-09-24 00:23:00.000000000 +0000
+@@ -85,7 +85,6 @@
+ #include <unistd.h>
+ 
+ #ifndef OPEN_DIRECTORY
+-#include <pw_scan.h>
+ #include <libutil.h>
+ #endif
+ 

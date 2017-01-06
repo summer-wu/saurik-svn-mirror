@@ -1,0 +1,26 @@
+diff -ru cwidget-0.5.8/src/cwidget/curses++.h cwidget-0.5.8+iPhone/src/cwidget/curses++.h
+--- cwidget-0.5.8/src/cwidget/curses++.h	2008-01-20 17:37:06.000000000 +0000
++++ cwidget-0.5.8+iPhone/src/cwidget/curses++.h	2009-07-07 07:28:31.000000000 +0000
+@@ -22,6 +22,9 @@
+ #ifndef CURSES_PLUSPLUS_H
+ #define CURSES_PLUSPLUS_H
+ 
++#define _XOPEN_SOURCE
++#define _XOPEN_SOURCE_EXTENDED 1
++
+ #include <string>
+ #include <ncursesw/curses.h>
+ 
+diff -ru cwidget-0.5.8/src/cwidget/style.h cwidget-0.5.8+iPhone/src/cwidget/style.h
+--- cwidget-0.5.8/src/cwidget/style.h	2008-01-20 17:37:06.000000000 +0000
++++ cwidget-0.5.8+iPhone/src/cwidget/style.h	2009-07-07 07:28:42.000000000 +0000
+@@ -20,6 +20,9 @@
+ #ifndef STYLE_H
+ #define STYLE_H
+ 
++#define _XOPEN_SOURCE
++#define _XOPEN_SOURCE_EXTENDED 1
++
+ #include <ncursesw/curses.h>
+ 
+ #include <cwidget/curses++.h>

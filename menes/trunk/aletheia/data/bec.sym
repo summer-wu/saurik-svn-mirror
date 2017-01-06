@@ -1,0 +1,128 @@
+0x18000000 EntryPoint
+0x18000040 EntryPoint_
+0x180000ec Halt()
+0x18000120 cpsr = ReadCpsr()
+0x18000378 mask = ClearIrqMask()
+0x1800038c mask = SetIrqMask()
+0x180003a0 mask = SetIrqMask(mask)
+0x180003bc ClearFastIrqMask()
+0x180003cc SetFastIrqMask()
+0x1800040c Halt()
+0x18000420 Command:setcorevoltage
+0x18000474 Return()
+0x18000620 Command:radio:on
+0x1800067c Command:radio:off
+0x180006b8 Return()
+0x180006ba Return()
+0x18000cc0 Command:radio
+0x18001020 ?()
+0x180013d0 ? = ?(data, size, ?)
+0x18001dc8 Reboot()
+0x18001de6 Command:setbusclock
+0x18001f00 Set?Bit(?:bit, on)
+0x180022c0 Command:iic
+0x18003280 setup_timer_clk
+0x18003304 start_stop_timer(timer, start)
+0x18003ba8 Task:uart reader
+0x18003bb0 ? = uart_write(uart, data, size)
+0x18003c5c 0 = uart_write(uart, string)
+0x18003eec unmask_int(vector)
+0x18003f44 0 = install_int_handler(vector, handler, ?)
+0x18004140 Handle:0x13/0x27/0x28
+0x180042e0 vrom_late_init()
+0x180045a0 Halt()
+0x180045a4 Halt()
+0x180045e0 PrintException
+0x18004644 arm_data_abort
+0x18004684 arm_prefetch_abort
+0x18004700 arm_undefined
+0x18004728 arm_syscall
+0x180048ec ? = boot_flash(name, ?)
+0x180049b0 Command:bootx
+0x18004a50 Command:tsys
+0x18004a68 Command:diags
+0x18004d00 Command:md
+0x18004e24 Command:mw
+0x18004f0c Command:go
+0x18004fbc Command:script
+0x18005030 Command:run
+0x18005120 panic(function, format, args...)
+0x18005158 Command:halt
+0x18005240 Main
+0x1800527c Task:main
+0x1800543c Task:poweroff
+0x180056c6 ClearWord(address)
+0x18005748 ? = PreCreateTask(name, task, ?, ?)
+0x180058fe PostCreateTask()
+0x180059e6 task_exit(status)
+0x18005ba0 Task:command
+0x180060d4 Task:idleoff
+0x18006154 Command:help
+0x180061c4 Command:argtest
+0x18006208 Command:reboot
+0x18006212 Command:poweroff
+0x1800621a Command:CATALOG
+0x18006238 Command:eload
+0x180062a0 Command:echo
+0x180062d0 Command:bgcolor
+0x18006310 Command:setpicture
+0x18006b40 Command:bdev
+0x18006fc0 crc = Crc(crc, data, size)
+0x180070c0 Command:crc
+0x180071bc Command:printenv
+0x18007498 Command:clearenv
+0x180074f4 SetString(name, default, ?)
+0x18007580 Command:setenv
+0x180076d6 SetInteger(name, default, ?)
+0x180077f4 data = malloc(size)
+0x180079bc free(data)
+0x18007acc heap_add_chunk
+0x18007c36 ? = LoadImage(name, ?)
+0x18007c80 ? = LoadImage_(name, ?)
+0x18007c40 ? = ?(?, ?, ?)
+0x18007d38 ? = DecodeImg2(?, ?, ?, ?)
+0x18007e56 :ReturnNull
+0x18007e58 :Return
+0x18007e80 ? = ?(?, ?, size)
+0x18007f64 :No8900Header
+0x18008012 :FreeReturnNull
+0x18008028 :ReturnNull
+0x1800802a :Return
+0x18008360 Command:image
+0x18008440 nvram_save
+0x180086a8 Command:saveenv
+0x180086b6 load_bank_partitions
+0x180096a8 Command:charge
+0x18009800 Command:powernvram
+0x1800a698 display_init
+0x1800b04c Handle:0x10/0x11
+0x1800b160 Handle:0x2e/0x2f/0x30
+0x1800b1d4 iis_init()
+0x1800c1f0 Command:devicetree
+0x1800c644 LoadKernelCache
+0x1800da74 Command:syscfg
+0x1800d7d8 DisplayImage(name)
+0x1800d8f8 Command:ramdisk
+0x1800dc54 Command:tftp
+0x1800e538 Command:usb
+0x1800e810 usb_menu_init()
+0x1800f111 Command:chunk:put_test
+0x1800f151 Command:chunk:get_test
+0x1800f3f8 Command:chunk
+0x18010374 ? = snprintf(string, size, format, args...)
+0x180103e0 bcopy(from, to, size)
+0x180103ec memmove(to, from, size)
+0x180103a6 ? = printf(format, args...)
+0x18010720 memset(data, value, size)
+0x18010860 cmp = strcmp(string, buffer)
+0x18010880 size = strncpy(to, from, size)
+0x180108c0 size = strlen(string)
+0x18010940 cmp = strncmp(string, buffer, size)
+0x18010ae0 HexDump(data, size)
+0x18010bc0 cmp = memcmp(data, buffer, size)
+0x18010e20 value = bswap_32(value)
+0x18010e24 value = bswap_32(value)
+0x18010e40 where = strstr(data, buffer)
+0x180161d8 VRom.crc
+0x180161dc VRom.patch_count
+0x180161e0 VRom.patch_list

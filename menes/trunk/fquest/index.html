@@ -1,0 +1,1531 @@
+ 
+	
+	
+	
+
+	
+	
+
+	
+
+	
+	
+	
+
+	
+	
+
+
+
+	
+
+	
+
+
+
+	
+
+	
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<meta name="robots" content="index,follow">
+<meta name="keywords" content="bank, banks, banking, banking center, banking centers, finance, financial, financial institution, financial planning, invest, investing, investment advice, investment advisers, investors, checking, checking account, checking accounts, cds, certificate of deposit, certificates of deposit, savings, savings account, savings accounts, iras, investment retirement account, roth ira, education ira, traditional ira, online banking, bank online, online, mortgage, mortgages, fha, conventional mortgage, refinance, refi, consumer loans, home equity, heloc, home equity line of credit, equity builder, home equity loan, auto loan, auto insurance, automobile loan, automobile insurance, credit card, credit cards, visa, mastercard, check card, visa check card, business banking, small business banking, business checking, business savings, business center, online business">
+<title>Bank of America | Home | Personal</title><meta name="description" content="Welcome to Bank of America, the nation's leading financial institution and home for all of your personal financial needs."> <link rel="stylesheet" href="/global/mvc_objects/stylesheet/masthead.css" type="text/css"> <link rel="stylesheet" href="/global/hs_home/stylesheets/home_mac_ns6.css" type="text/css">
+
+
+	<script language="JavaScript" type="text/javascript" src="/global/hs_home/signin.js"></script>
+
+	
+	
+
+	
+
+
+
+<script language="JavaScript" type="text/javascript">
+<!--
+if (top != self) {top.location=self.location;}
+//-->
+</script>
+
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function goPage(selectlist) {
+	theURL = selectlist.options[selectlist.selectedIndex].value
+	if (theURL != "") { location.href = theURL }
+}
+//-->
+</script>
+
+
+
+<script language="javascript" type="text/javascript">
+<!--
+function submit_search(){ document.SiteSearchForm.submit(); }
+
+function bt_rollover(ref, classRef) { eval(ref).className = classRef; }
+
+function create_button(text, href, css_class, onclick_evt, onmouseover_evt, onmouseout_evt, tabindex) {
+	var t = "";
+	if (( document.getElementById )||( document.all )) {
+		// browser implements part of W3C DOM HTML
+		// Gecko, Internet Explorer 5+, Opera 5+
+		// Internet Explorer 4 or Opera with IE user agent
+		t = "<div class=" + css_class + "><a href=\"" + href + "\" class=" + css_class
+		  + " onFocus='bt_rollover(this, \"" + css_class + "-over\")'"
+		  + " onBlur='bt_rollover(this, \"" + css_class + "\")'";
+
+		if (onclick_evt) { t = t + " onClick=\"" + onclick_evt + "\""; }
+		if (onmouseover_evt) { t = t + " onMouseOver=\"" + onmouseover_evt + "\""; }
+		if (onmouseout_evt) { t = t + " onMouseOut=\"" + onmouseout_evt + "\""; }
+		if (tabindex) { t = t + " tabindex=\"" + tabindex + "\""; }
+		t = t + ">" + text + "<\/a><\/div>";
+
+	} else if ( document.layers ) {
+		// Netscape 4
+		t = "<input type=submit  name=" + text + " value=" + text + " alt=" + text + " class=" + css_class + ">";
+	}
+	document.write(t);
+}
+//-->
+</script>
+
+<script src="/global/js/fontsize.js" language="JavaScript" type="text/javascript"></script>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+	ERROR_MESSAGE_INVALID_ID_PASSWORD = "We are unable to verify the information that you have entered.  Please be certain that you have entered your Online ID and Passcode correctly.\n\nFor more information about IDs or Passcodes, please use the ID and Passcode help links on the Home Page.";
+	ERROR_MESSAGE_INVALID_PASSWORD_MODEL = "The passcode must be 4-7 numbers and/or letters, case sensitive. It cannot contain special characters (i.e. !@#$%^&*()-+,.?/:;). Please re-enter the passcode.  For more information about your passcode, click on the passcode help icon.";
+	ERROR_MESSAGE_INVALID_ID_MODEL = "The ID must be 5-20 numbers. Please re-enter your Online ID. For more information about your Online ID, click on the ID help icon.";
+	ERROR_MESSAGE_INVALID_PASSWORD_CA = "The passcode must be 4-8 numbers and/or letters. It cannot contain special characters (i.e. !@#$%^&*()-+,.?/:;). Please re-enter the passcode.  For more information about your passcode, click the passcode help icon.";
+	ERROR_MESSAGE_INVALID_ID_CA = "The ID must be 6-20 numbers and/or letters. Please re-enter your Online ID. For more information about your Online ID, click the ID help icon.";
+	ERROR_MESSAGE_EMPTY_FIELDS = "Please enter both your Online ID and your Passcode and try again.";
+//   Prevent multiple sign in button clicks
+var signincnt = 0;
+var isNav = (navigator.appName.indexOf("Netscape") != -1);
+var isIE = (navigator.appName.indexOf("Microsoft") != -1);
+// ****************************************
+// Get Remember Me (Online ID) setting from the cookie and set global var
+// Expected format for cookie is [encrypted_id]:[prefilled_with*'s]
+var rememberme_prefill = "";
+var cname = "olb_signin_prefill=";
+// Get the cookie value
+var dcookie = document.cookie;
+// Test value
+//var dcookie = "olb_signin_prefill=abcdef10101023:*****1122; ";
+var clen = dcookie.length;
+var cbegin = 0;
+while (cbegin < clen) {
+	var vbegin = cbegin + cname.length;
+	if (dcookie.substring(cbegin, vbegin) == cname) {
+		var vend = dcookie.indexOf (";", vbegin);
+		if (vend == -1) vend = clen;
+		rememberme_prefill = unescape(dcookie.substring(vbegin, vend));
+	}
+	cbegin = dcookie.indexOf(" ", cbegin) + 1;
+	if (cbegin == 0) break;
+}
+// Get the prefill value from the cookie
+if (rememberme_prefill != "") {
+	vlen = rememberme_prefill.length;
+	var vcolon = rememberme_prefill.indexOf(":", 0) + 1;
+	if (vcolon == 0) {
+		// cookie was present but did not contain expected colon
+		rememberme_prefill = "";
+	}
+	else {
+		rememberme_prefill = rememberme_prefill.substring(vcolon, vlen);
+	}
+}
+
+// ****************************************
+//   Event handler for "Enter" key...
+function initHandlers () {
+	addhandlers( window );
+	addhandlers( document );
+	addhandlers( document.frmSignIn );
+	addhandlers( document.frmSignIn.pc );
+	// Reset id/pc if filled with *'s
+	if (document.frmSignIn.id.value == "*******") {document.frmSignIn.id.value = ""}
+	if (document.frmSignIn.pc.value == "*******") {document.frmSignIn.pc.value = ""}
+	// Don't set focus if user has already begun entering id or pc
+	if (document.frmSignIn.id.value == "" && document.frmSignIn.pc.value == "") {
+		// Check Remember Me setting
+		if (rememberme_prefill != "") {
+			// Set id to prefill, set focus to pc box, check remb me box
+			document.frmSignIn.id.value = rememberme_prefill;
+			document.frmSignIn.pc.focus();
+			document.frmSignIn.rembme.checked = true;
+		} else {
+			// no prefill, set focus to id field
+			document.frmSignIn.id.focus();
+		}
+	}
+}
+function mainHandler( e ) {
+	var whichField;
+	if ( isNav ) {
+		if ( e.target.name )
+			whichField = e.target.name;
+		Key = e.which;
+	}
+	if ( isIE ) {
+		e = window.event;
+		if ( e.srcElement && e.srcElement.name )
+			whichField = e.srcElement.name;
+		Key = e.keyCode;
+		e.cancelBubble = true;  // do not pass up the chain
+	}
+	if (( Key == 13 ) && ( whichField == "pc" )) {
+		doSignIn();
+	}
+}
+function addhandlers(o) {
+	if ( isNav )
+		window.captureEvents(Event.KEYPRESS);
+	o.onkeypress = mainHandler;
+}
+// State cookie functions
+function getState() {
+
+	
+	var state = document.frmSignIn.state.options[document.frmSignIn.state.selectedIndex].value + "";
+	if (state == "") {
+		alert("Please enter the state where your account is held and try again.");
+		return state;
+	}
+	var cookieDate = new Date();
+	var cookieExpireDays = 1461; // 4 years
+	cookieDate.setTime(cookieDate.getTime() + (cookieExpireDays * 24 * 3600 * 1000));
+	document.cookie = "state=" + state + ";expires=" + cookieDate.toGMTString() + ";path=/";
+	return state;
+
+}
+function setState() {
+
+	
+	var state = document.frmSignIn.state.options[document.frmSignIn.state.selectedIndex].value + "";
+	if (state == "") {
+		return;
+	}
+	var cookieDate = new Date();
+	var cookieExpireDays = 1461; // 4 years
+	cookieDate.setTime(cookieDate.getTime() + (cookieExpireDays * 24 * 3600 * 1000));
+	document.cookie = "state=" + state + ";expires=" + cookieDate.toGMTString() + ";path=/";
+
+	return;
+}
+function doUserIDHelp() {
+	var state = getState();
+	if (state == "") {
+		return;
+	} else if (state == "CA") {
+		helpURL = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?state=CA&reason=assistCA";
+		location.href = helpURL;
+	} else if ((state == "WA") || (state == "ID")) {
+		doSignIn();
+	} else {
+		helpURL = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?reason=assistModel&state=" + state;
+		location.href = helpURL;
+	}
+}
+function doPasscodeHelp() {
+	var state = getState();
+	if (state == "") {
+		return;
+	} else if (state == "CA") {
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.reason.value = "create_passcode_ca";
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+		document.frmSignIn.submit();
+	} else if ((state == "WA") || (state == "ID")) {
+		doSignIn();
+	} else {
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.reason.value = "create_passcode_model";
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+		document.frmSignIn.submit();
+	}
+}
+function doCreatePasscode() {
+	var state = getState();
+	if (state == "") {
+		return;
+	} else if (state == "CA") {
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.reason.value = "create_passcode_ca";
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+		document.frmSignIn.submit();
+	} else {
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.reason.value = "create_passcode_model";
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+		document.frmSignIn.submit();
+	}
+}
+function doSignIn() {
+	// user already clicked Sign In
+	if (signincnt > 0) {return;}
+	var state = getState();
+	if (document.frmSignIn.id.value == "*******" || document.frmSignIn.pc.value == "*******") {
+		alert("Safeguarding your information - For your protection, we have replaced the ID you entered earlier with asterisks. To sign in, please type in your ID over the asterisks, enter your passcode and click Sign In.");
+		return;
+	}
+	// Check to see if a Remember Me user partially typed over the prefilled ID
+	if (rememberme_prefill != "" && document.frmSignIn.id.value != rememberme_prefill && document.frmSignIn.id.value.indexOf("*", 0) >= 0) {
+		alert("The Online ID you entered is not the same as your saved ID. Please re-enter your entire ID.");
+		return;
+	}
+	if (state == "") {
+		return;
+	} else if (state == "CA") {
+		if (!doEditChecksCA(document.frmSignIn.id.value, document.frmSignIn.pc.value)) {return}
+		document.frmSignIn.Customer_Type.value = "CA";
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.Current_Passcode.value = document.frmSignIn.pc.value;
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+	} else if ((state == "WA") || (state == "ID")) {
+		// WA / ID customers get redirected to external sign in page for NW
+		if (confirm('Please click OK to go to the Online Banking Log On page for Washington and Idaho.  You will need your account number, social security number and password to sign in.  Click Cancel to return to the Bank of America home page.')) {
+			location.href = "/state.cgi?section=signin";
+		}
+		return;
+	} else {
+		if (!doEditChecksModel(document.frmSignIn.id.value, document.frmSignIn.pc.value)) {return}
+		document.frmSignIn.Customer_Type.value = "MODEL";
+		document.frmSignIn.Access_ID.value = document.frmSignIn.id.value;
+		document.frmSignIn.Current_Passcode.value = document.frmSignIn.pc.value;
+		document.frmSignIn.action = "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller";
+	}
+	document.frmSignIn.reason.value = "";
+	imgSignIn = new Image();
+	imgSignIn.src = "/images/tracking/homepage_signin.gif";
+	
+	document.frmSignIn.id.value = "*******";
+	document.frmSignIn.pc.value = "*******";
+	signincnt++;
+	document.frmSignIn.submit();
+}
+function doEditChecksModel (id, passcode) {
+	if (id.length == 0 && passcode.length == 0)	{
+		alert(ERROR_MESSAGE_EMPTY_FIELDS);
+		return false;
+	}
+	// Skip ID edit check if ID was prefilled and still matches
+	if (!(rememberme_prefill != "" && document.frmSignIn.id.value == rememberme_prefill)) {
+		if (!isValidAccessIDModel(id)) {
+			alert(ERROR_MESSAGE_INVALID_ID_MODEL);
+			return false;
+		}
+	}
+	if (!isValidPasswordModel(passcode)) {
+		alert(ERROR_MESSAGE_INVALID_PASSWORD_MODEL);
+		return false;
+	}
+	return true;  // ID and Passcode okay
+}
+function isValidAccessIDModel(accessIDString) {
+  var accessID = strip(accessIDString, " ");
+  if (!isAlphanumericOrUnderscore(accessID)) {
+    return false;
+  }
+  if ((accessID.length < 5) || (accessID.length > 20)) {
+    return false;
+  }
+  return true;
+}
+function isValidPasswordModel(passwordString) {
+  var password = strip(passwordString, " ");
+  // password must be alphanumeric
+  if (!isAlphanumeric(password)) {
+    return false;
+  }
+  // password must be 4 to 7 characters in length
+  if ((password.length < 4) || (password.length > 7)) {
+    return false;
+  }
+  //
+  if ( password == "000000" ) {
+    return false;
+  }
+
+  return true;
+}
+function doEditChecksCA (id, passcode) {
+	if (id.length == 0 && passcode.length == 0)	{
+		alert(ERROR_MESSAGE_EMPTY_FIELDS);
+		return false;
+	}
+	// Skip ID edit check if ID was prefilled and still matches
+	if (!(rememberme_prefill != "" && document.frmSignIn.id.value == rememberme_prefill)) {
+		if (!isValidAccessIDCA(id))	{
+			alert(ERROR_MESSAGE_INVALID_ID_CA);
+			return false;
+		}
+	}
+	if (!isValidPasswordCA(passcode)) {
+		alert(ERROR_MESSAGE_INVALID_PASSWORD_CA);
+		return false;
+	}
+	return true;  // ID and Passcode okay
+}
+function isValidAccessIDCA(accessIDString) {
+  var accessID = strip(accessIDString, " ");
+  if (!isAlphanumericOrUnderscore(accessID))  {
+    return false;
+  }
+  if ((accessID.length < 6) || (accessID.length > 20))  {
+    return false;
+  }
+  return true;
+}
+function isValidPasswordCA(passwordString) {
+  var password = strip(passwordString, " ");
+  // password must be alphanumeric
+  if (!isAlphanumeric(password)) {
+    return false;
+  }
+  // password must be 4 to 8 characters in length
+  if ((password.length < 4) || (password.length > 8)) {
+    return false;
+  }
+  return true;
+}
+// -->
+</script>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function doLocatorSearch() {
+    imgLocator = new Image();
+    imgLocator.src = "/images/tracking/homepage_locator.gif";
+    document.frmLocator.submit();
+}
+// -->
+</script>
+</head>
+<body onLoad="initHandlers();" id="body">
+
+<div class="hs-masthead">
+<table width="750" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td width="282"><div style="display:inline;"><a href="/accessiblebanking/"><img src="/x.gif" width="1" height="69" alt="Accessible Banking Information" border="0" /></a><a href="#skipnav"><img src="/x.gif" width="1" height="69" alt="Skip global navigational links." border="0" /></a><a href="/help/index.cfm?template=sitemap.cfm"><img src="/x.gif" width="1" height="69" alt="Go to site map." border="0" /></a><img src="/x.gif" width="9" height="69" alt="" border="0" /><img src="/global/mvc_objects/images/mhd_reg_logo.gif"
+	width="250" height="69" alt="Bank of America Higher Standards Home" border="0" /></div></td>
+
+	<td width="308"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+	<td width="200" valign="bottom">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="">
+		<tr>
+			<td colspan="2" align="right" nowrap><a href="/findit/locator.cfm" class="mh-link1">Locations</a>&nbsp;<span class="linksep1">&#8226;</span>&nbsp;<a href="/state.cgi?section=contact&page=" class="mh-link1">Contact Us</a>&nbsp;<span class="linksep1">&#8226;</span>&nbsp;<a href="/help/?page=" class="mh-link1">Help</a>&nbsp;<span class="linksep1">&#8226;</span>&nbsp;<a href="/signin/" class="mh-link2">Sign In</a></td>
+		</tr>
+		
+		<tr><td colspan="2"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+		
+		<tr>
+			<td width="5"><img src="/global/mvc_objects/images/mhd_5x5_search_corner.gif" alt="" width="5" height="5" border="0" /></td>
+			<td width="195" class="mh-hline"><img src="/x.gif" width="1" height="5" alt="" border="0" /></td>
+		</tr>
+		<tr>
+			<td width="1" class="mh-vline"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+			<td width="195" class="mh-hline-bkg" valign="bottom">
+			<form method="post" action="/search/" class="form-inline" name="SiteSearchForm">
+			<input name="ui_mode" type="hidden" value="question">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="searchbox" align="right">
+			<tr valign="middle">
+			<td><span class="ada-search"><label for="question_box" class="ada-search">Search</label></span></td><td><input
+			type="text" maxlength="75" class="home-searchbox" id="question_box" name="question_box" value=""
+			alt="Question or phrase to search." title="Get answers fast. Type in a question or phrase." /></td>
+			<td width="5"><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+					<td>
+					<table border="0" cellspacing="0" cellpadding="0" summary="">
+					<tr>
+					<td>
+					<script language="JavaScript" type="text/javascript">
+					<!--
+						create_button("Search", "javascript:submit_search();", "btn1", null, null, null );
+					//-->
+    	           	</script>
+					<noscript><input type="submit" name="Search" value="Search" alt="Search" class="btn1"/></noscript>
+					</td>
+					<td width="100%"></td>
+					</tr>
+					</table>
+
+					</td>
+					<td width="10"><img src="/x.gif" width="10" height="1" alt="" border="0" /></td>
+			</tr>
+			</table></form></td>
+		</tr>
+		</table></td>
+
+</tr>
+
+<tr>
+	<td colspan="2" class="mh-hline"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td>
+	<td class="mh-hline-bkg"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td>
+</tr>
+</table>
+
+<a name="skipnav"></a>
+</div>
+
+
+
+
+
+<div class="hs-home">
+<table border="0" cellspacing="0" cellpadding="0" width="750" summary="">
+<tr>
+	<td width="190" class="home-title2-bkg"><img src="/x.gif" width="190" height="1" alt="" border="0" /></td>
+	<td width="1" class="home-title2-bkg"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+	<td width="185" class="home-title2-bkg"><img src="/x.gif" width="185" height="1" alt="" border="0" /></td>
+	<td width="1" class="home-title2-bkg"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+	<td width="189" class="home-title2-bkg"><img src="/x.gif" width="189" height="1" alt="" border="0" /></td>
+	<td width="1" class="home-title2-bkg"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+	<td width="182" class="home-title2-bkg"><img src="/x.gif" width="182" height="1" alt="" border="0" /></td>
+</tr>
+<tr>
+	<td class="home-nav-bar2" width="190"><div class="inline"><h1><a href="/index.cfm"><img src="images/hs_home/nav_pf_on.gif" width="100" height="24" alt="Personal - Solutions for individuals, from checking accounts to loans and credit cards." border="0" /><img src="/x.gif" width="88" height="24" alt="" border="0" /></a><br /></h1></div></td>
+	<td width="1" class="home-nav-vline"><img src="/x.gif" width="1" height="2" alt="" border="0" /></td>
+	<td class="home-nav-bar1" width="185"><a href="/index.cfm?page=smbiz"><img src="images/hs_home/nav_sb_off.gif" width="136" height="24" alt="Small Business - For businesses with sales up to $10 million." border="0" /><img src="/x.gif" width="49" height="24" alt="" border="0" /></a></td>
+	<td width="1" class="home-nav-vline"><img src="/x.gif" width="1" height="2" alt="" border="0" /></td>
+	<td class="home-nav-bar1" width="189"><a href="/index.cfm?page=corp"><img src="images/hs_home/nav_ci_off.gif" width="189" height="24" alt="Corporate &amp; Institutional - For institutions and businesses with sales of $10 million or more." border="0" /></a></td>
+	<td width="1" class="home-nav-vline"><img src="/x.gif" width="1" height="2" alt="" border="0" /></td>
+	<td class="home-nav-bar1" width="182"><a href="/index.cfm?page=about"><img src="images/hs_home/nav_abt_off.gif" width="179" height="24" alt="About Bank of America" border="0" /></a></td>
+</tr>
+</table>
+<table border="0" cellspacing="0" cellpadding="0" width="748" summary="">
+<tr><td colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+<tr valign="top">
+
+	<td width="189">
+	
+<table border="0" cellspacing="0" cellpadding="0" width="100%" summary="">
+
+
+	
+
+	
+
+	
+		
+			
+		
+		
+		
+		
+		
+		
+	 		
+		
+	
+	
+		
+	
+
+
+	
+	
+
+
+	
+		
+	<script language="JavaScript" type="text/javascript">
+	<!--
+	function demo_window() {
+                if ( getCookie("state") == 'CA' ) {
+                        var demo_url = 'http://' + location.host + '/onlinebanking/demo2/detect-ca.cfm';
+                        var win = window.open(demo_url, 'preWin','width=700,height=530,scrollbars=yes,resizable=1')
+                } else {
+                        var demo_url = 'http://' + location.host + '/onlinebanking/demo2/detect-model.cfm';
+                        var win = window.open(demo_url, 'preWin','width=700,height=530,scrollbars=yes,resizable=1')
+                }
+	}
+	//-->
+	</script>
+
+
+
+	
+	
+	
+	<tr class="home-signin1-bkg"><td colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr class="home-signin1-bkg"><td colspan="3"><img src="/x.gif" width="7" height="1" alt="" border="0" /><div class="inline"><h3 class="h3-bluetext">Online Banking</h3><img src="/x.gif" width="59" height="1" alt="" border="0" /><a href="/signin/security_details_popup.cfm" onclick="javascript:window.open('/signin/security_details_popup.cfm','newwin','width=640,height=371,scrollbars=yes,resizable=yes,left=35,top=161'); return false;" target="_blank" title="Link opens Online Security pop-up window"><img src="images/hs_home/pf_lock.gif" width="12" height="14" alt="Link opens Online Security pop-up window" border="0" align="middle" /></a></div></td></tr>
+	
+
+<tr>
+	<td class="home-signin1-bkg"><img src="/x.gif" width="7" height="1" alt="" border="0" /></td>
+	<td class="home-signin1-bkg">
+	<!-- Sign In module -->
+	<table border="0" cellspacing="0" cellpadding="0" summary="">
+		<tr>
+			<td class="bg-ltblue" valign="top">
+				<form name="frmSignIn" action="https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?noscript=true" method="post" onSubmit="doSignIn(); return false;" autocomplete="OFF" class="form-inline">
+				<input type="hidden" name="reason" value="" />
+				<input type="hidden" name="Access_ID" value="" />
+				<input type="hidden" name="Current_Passcode" value="" />
+				<input type="hidden" name="acct" value="" />
+				<input type="hidden" name="pswd" value="" />
+				<input type="hidden" name="from" value="homepage" />
+				<input type="hidden" name="Customer_Type" value="" />
+				<table cellpadding="0" cellspacing="3" border="0" width="100%" summary="">
+					<tr>
+						<td colspan="3">
+						
+						<div class="home-signin-txt1" style="position:relative; top:-4px;">
+						
+							<a href="javascript:demo_window();" title="View the Online Banking demo" tabindex="4"><strong>View demo</strong></a>
+						
+							| <a href="/adtrack/index.cgi?adlink=0003020520000000a583" tabindex="4" title="Learn more about Online Banking"><strong>Learn more</strong></a>
+						
+						| <a href="/adtrack/index.cgi?adlink=00030213700000006513" tabindex="4" title="Enroll in Online Banking"><strong>Enroll</strong></a>
+
+						</div>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"><div class="home-signin-txt2"><label for="id"><strong>Online ID:</strong></label></div></td>
+						<td width="50%">
+							<input type="text" name="id" maxlength="20" id="id" class="home-signin-textbox" size="11" value="" tabindex="1" />
+							</td>
+							<td><a href="https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?noscript=true"
+							onClick="doUserIDHelp(); return false;"
+							onMouseOver="self.status='Online ID help';return true;"
+							onFocus="self.status='Online ID help';return true;"
+							onMouseOut="self.status='';return true;"
+							onBlur="self.status='';return true;"
+							title="Online ID help"
+							tabindex="4"><img src="/images/hs_home/icon_questionmark.gif"
+							width="16" height="15" hspace="3"
+							alt="Online ID Help" title="Online ID Help" border="0" align="middle" /></a>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td valign="top" colspan="2">
+						<table border="0" cellspacing="0" cellpadding="0" summary="">
+						<tr><td><input type="checkbox" name="rembme" id="rembme" value="Y" tabindex="2" /></td>
+							<td><div class="home-signin-txt2"><label for="rembme">Remember my ID</label></div></td></tr>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"><div class="home-signin-txt2"><label for="pc"><strong>Passcode:</strong></label></div></td>
+						<td>
+						
+							<input type="password" name="pc" maxlength="8" id="pc" class="home-signin-textbox" size="11" value="" tabindex="1" />
+						
+						</td>
+						<td><a href="https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?noscript=true"
+							onClick="doPasscodeHelp(); return false;"
+							onMouseOver="self.status='Passcode help';return true;"
+							onFocus="self.status='Passcode help';return true;"
+							onMouseOut="self.status='';return true;"
+							onBlur="self.status='';return true;"
+							tabindex="4"
+							title="Passcode help"><img src="/images/hs_home/icon_questionmark.gif" width="16" height="15" hspace="3" alt="Passcode help" title="Passcode help" border="0" align="middle" /></a>
+						
+						
+							
+							<script language="JavaScript" type="text/javascript">
+							<!--
+								function getCookie(NameOfCookie)
+								{
+									if (document.cookie.length > 0)
+									{
+										begin = document.cookie.indexOf(NameOfCookie+"=");
+										if (begin != -1)
+										{
+											begin += NameOfCookie.length+1;
+											end = document.cookie.indexOf(";", begin);
+											if (end == -1) end = document.cookie.length;
+											return unescape(document.cookie.substring(begin, end));
+										}
+									}
+									return null;
+								}
+								statecookie = getCookie("state");
+							//-->
+							</script>
+						
+						</td>
+					</tr>
+					
+					<tr>
+						<td align="right"><div class="home-signin-txt2"><label for="state"><strong>Account in:</strong></label></div></td>
+						<td colspan="2"> 
+	<div class="home-signin-pulldown"><select name="state" id="state" tabindex="1"><option value=""></option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">Dist. of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select></div>
+
+
+</td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td colspan="2">
+							<table border="0" cellspacing="0" cellpadding="0" summary="">
+							<tr><td>
+							<script language="JavaScript" type="text/javascript">
+							<!--
+							create_button("Sign&nbsp;In", "https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?noscript=true",  "btn1", "doSignIn(); return false;", "self.status='Sign In';return true;", "self.status='';return true;", 1 );
+							//-->
+							</script>
+							<noscript><input name="olb_signin" value="Sign In" type="Submit" /></noscript>
+							</td><td width="100%"><img src="/x.gif" width="1" height="1" alt="" /></td></tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+						<div class="home-signin-txt1">
+					
+						<div class="home-signin-a2">
+						<a href="https://onlineid.bankofamerica.com/cgi-bin/sso.login.controller?noscript=true"
+							onClick="doUserIDHelp(); return false;"
+							onMouseOver="self.status='Forgot your ID?';return true;"
+							onFocus="self.status='Forgot your ID?';return true;"
+							onMouseOut="self.status='';return true;"
+							onBlur="self.status='';return true;"
+							tabindex="3">Forgot your ID?</a>
+							
+							<br />
+						</div>
+						<div class="home-signin-a2">
+
+						
+						
+							<a href="/state.cgi?section=generic&amp;destination=nba/onlinebanking/createpasscode/"
+							tabindex="3">Create a new passcode.</a><br />
+						
+						</div>
+						
+					
+						</div>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</td>
+		</tr>
+	</table>
+</td>
+<td class="home-signin1-bkg"><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+</tr>
+
+
+	
+
+
+
+
+	<tr class="home-title2-bkg"><td colspan="3"><div class="inline"><h2><a href="/adtrack/index.cgi?adlink=000302072b220000a262"><img src="images/hs_home/home_promo_billpay.gif" alt="Pay bills online - Free >>" width="190" height="28" border="0" /></a></h2></div></td></tr>
+
+
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+	<tr class="home-title2-bkg"><td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td><td colspan="3"><div class="inline"><h3 class="h3-text">Sign In to Other Services</h3></div></td></tr>
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+	<tr><td class="home-grid-line2" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr>
+		<td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td>
+		<td>
+<form name="otherServiceForm" action="/global/hs_home/dropdown/homepage_action.cfm" method="post" class="form-inline">
+<h3 class="home-txt3"><label for="links-other-srv">Sign In to Other Services</label></h3>
+<table border="0" cellpadding="0" cellspacing="0" summary="">
+<tr valign="top">
+<td><img src="/x.gif" width="0" height="1" alt="" border="0" /></td>
+<td><div class="home-pulldown">
+<select name="links" id="links-other-srv" tabindex="4">
+
+
+
+	<option value="https://boaccn.fnfismd.com/bankofamerica/ccn/ccnlogin.asp">Service My Mortgage</option>
+	
+	<option value="https://baisidirect.com/login.html">Online Investing</option>
+	
+	<option value="https://www.pfpc-invest.com/ws_html-s/SCC/verify.asp">Future Scholar</option>
+	<option value="https://militarybankonline.bankofamerica.com/">Military Bank Online</option>
+	
+	
+	
+</select></div>
+</td>
+<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+<td align="right">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td>
+<script language="JavaScript" type="text/javascript">
+<!--
+	create_button("Go",
+				  "javascript: void();",
+				  "btn1",
+				  "goPage(document.otherServiceForm.links); return false;",
+				  null, null, 4);
+//-->
+</script><noscript><input value="Go" name="Go" type="submit" class="btn1" alt="Go" tabindex="1" /></noscript></td>
+	<td width="100%"></td>
+</tr>
+</table>
+
+</td></tr></table>
+</form>
+
+</td>
+		<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td></tr>
+	<tr><td><img src="/x.gif" width="1" height="9" alt="" border="0" /></td></tr>
+	
+	<tr><td class="home-grid-line2" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+	<tr class="home-title2-bkg"><td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td><td colspan="3"><div class="inline"><h3 class="h3-text">Account Shortcuts</h3></div></td></tr>
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+	<tr><td class="home-grid-line2" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr>
+		<td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td>
+		<td>
+
+<form name="openaccountForm" action="/global/hs_home/dropdown/homepage_action.cfm" method="post" class="form-inline">
+<h3 class="home-txt3"><label for="links-open-acct">Open an Account</label></h3>
+
+<table border="0" cellpadding="0" cellspacing="0" summary="">
+<tr valign="top">
+<td><img src="/x.gif" width="0" height="1" alt="" border="0" /></td>
+
+
+
+
+
+	<td><div class="home-pulldown">
+		<select name="links" id="links-acct-srv" tabindex="6">
+			<option value="/deposits/checksave/index.cfm?template=check_acct_choices">Checking Accounts</option>
+			<option value="/deposits/checksave/index.cfm?template=save_acct_choices">Savings Accounts</option>
+			<option value="/deposits/checksave/index.cfm?template=cd_compare">CDs</option>
+
+
+			<option value="/creditcards/index.cfm?template=choose_card">Credit Cards</option>
+			<option value="/loansandhomes/index.cfm?template=apply_now">Mortgages</option>
+			<option value="/loansandhomes/apply/">Home Equity</option>
+	</select></div></td>
+
+
+
+
+<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+<td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td>
+<script language="JavaScript" type="text/javascript">
+<!--
+	create_button("Go",
+				  "javascript: void();",
+				  "btn1",
+				  "goPage(document.openaccountForm.links); return false;",
+				  null, null, 6);
+//-->
+</script><noscript><input value="Go" name="Go" type="submit" class="btn1" alt="Go" tabindex="1" /></noscript>
+	</td>
+	<td width="100%"></td>
+</tr>
+</table>
+</td></tr></table>
+
+</form>
+
+
+</td>
+		<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+	</tr>
+
+	<tr>
+		<td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td>
+		<td>
+
+<form name="accountServicesForm" action="/global/hs_home/dropdown/homepage_action.cfm" method="post" class="form-inline">
+<h3 class="home-txt3"><label for="links-acct-srv">Account Services</label></h3>
+
+<table border="0" cellpadding="0" cellspacing="0" summary="">
+<tr valign="top">
+<td><img src="/x.gif" width="0" height="1" alt="" border="0" /></td>
+
+
+
+
+
+	<td><div class="home-pulldown">
+		<select name="links" id="links-acct-srv" tabindex="6">
+			<option value="https://www.bankofamerica.com/deposits/checkorder/">Reorder Checks</option>
+			<option value="/deposits/checksave/index.cfm?template=manage_acct_srvcs&amp;context=direct">Set up direct deposit</option>
+			<option value="/deposits/checksave/index.cfm?template=checkcards_overview">Request a Check Card</option>
+			<option value="/deposits/checksave/index.cfm?template=manage_acct_srvcs#link">Link accounts</option>
+			<option value="/state.cgi?section=generic&destination=nba/onlinebanking/redirect/signin/moving.cgi">Change Address</option>
+			<option value="/state.cgi?section=generic&destination=nba/onlinebanking/redirect/signin/moving.cgi">Change Phone Number</option>
+	</select></div></td>
+
+
+
+
+<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+<td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td>
+<script language="JavaScript" type="text/javascript">
+<!--
+	create_button("Go",
+				  "javascript: void();",
+				  "btn1",
+				  "goPage(document.accountServicesForm.links); return false;",
+				  null, null, 4);
+//-->
+</script><noscript><input value="Go" name="Go" type="submit" class="btn1" alt="Go" tabindex="1" /></noscript>
+	</td>
+	<td width="100%"></td>
+</tr>
+</table>
+</td></tr></table>
+
+</form>
+
+
+</td>
+        
+		<td><img src="/x.gif" width="5" height="1" alt="" border="0" /></td>
+	</tr>
+	<tr><td colspan="3"><img src="/x.gif" width="1" height="16" alt="" border="0" /></td></tr>
+
+	<tr><td class="home-grid-line2" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+	<tr class="home-title2-bkg"><td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td><td colspan="3"><div class="inline"><h3 class="h3-text">ATMs & Banking Centers</h3></div></td></tr>
+	<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+	<tr><td class="home-grid-line2" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+
+    
+    
+
+    
+
+    
+
+    
+
+
+	
+	
+
+
+
+<tr>
+    <td colspan="3"><img src="/x.gif" width="1" height="8" alt="" border="0" /><br /></td>
+</tr>
+
+<tr>
+    <td><img src="/x.gif" width="7" height="1" alt="" border="0" /></td>
+    <td valign="top">
+        <form name="frmLocator" action="http://bofa.via.infonow.net/locator/atmbpass/index.jsp" method="get" onSubmit="doLocatorSearch(); return false;" class="form-inline">
+        <div class="home-txt4">
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" summary="">
+
+
+            <tr>
+                    <td align="right"><label for="atm_street"><strong><span class="home-txt4">Address:&nbsp;</span></strong></label></td>
+                <td align="left"><div style="padding: 2px 0px 2px 0px"><input value="" name="STREET" size="20" maxlength="75" type="text" class="home-textbox" id="atm_street" title="Enter a street name." tabindex="4" /></div></td>
+            </tr>
+
+            <tr>
+                <td align="right"><label for="atm_city"><span class="home-txt4"><strong>City:&nbsp;</strong></span></label></td>
+                <td align="left"><div style="padding: 2px 0px 2px 0px"><input value="" name="CITY" size="20" maxlength="75" type="text" class="home-textbox" id="atm_city" title="Enter a city name." tabindex="4" /></div></td>
+            </tr>
+
+            <tr>
+                <td align="right">
+                &nbsp;&nbsp;&nbsp;&nbsp;<strong><label for="atm_state"><span class="home-txt4">State:&nbsp;</span></label></strong></td>
+                <td align="left"><div class="home-locator-pulldown">
+                <div style="padding: 2px 0px 2px 0px">
+                <select name="STATE_PROV" id="atm_state" tabindex="4">
+                    <option selected value="">Choose State</option>
+                    <option value="AL"> Alabama</option>
+                    <option value="AK"> Alaska</option>
+                    <option value="AZ"> Arizona</option>
+                    <option value="AR"> Arkansas</option>
+                    <option value="CA"> California</option>
+                    <option value="CO"> Colorado</option>
+                    <option value="CT"> Connecticut</option>
+                    <option value="DE"> Delaware</option>
+                    <option value="DC"> Dist. of Columbia</option>
+                    <option value="FL"> Florida</option>
+                    <option value="GA"> Georgia</option>
+                    <option value="HI"> Hawaii</option>
+                    <option value="ID"> Idaho</option>
+                    <option value="IL"> Illinois</option>
+                    <option value="IN"> Indiana</option>
+                    <option value="IA"> Iowa</option>
+                    <option value="KS"> Kansas</option>
+                    <option value="KY"> Kentucky</option>
+                    <option value="LA"> Louisiana</option>
+                    <option value="ME"> Maine</option>
+                    <option value="MD"> Maryland</option>
+                    <option value="MA"> Massachusetts</option>
+                    <option value="MI"> Michigan</option>
+                    <option value="MN"> Minnesota</option>
+                    <option value="MS"> Mississippi</option>
+                    <option value="MO"> Missouri</option>
+                    <option value="MT"> Montana</option>
+                    <option value="NE"> Nebraska</option>
+                    <option value="NV"> Nevada</option>
+                    <option value="NH"> New Hampshire</option>
+                    <option value="NJ"> New Jersey</option>
+                    <option value="NM"> New Mexico</option>
+                    <option value="NY"> New York</option>
+                    <option value="NC"> North Carolina</option>
+                    <option value="ND"> North Dakota</option>
+                    <option value="OH"> Ohio</option>
+                    <option value="OK"> Oklahoma</option>
+                    <option value="OR"> Oregon</option>
+                    <option value="PA"> Pennsylvania</option>
+                    <option value="RI"> Rhode Island</option>
+                    <option value="SC"> South Carolina</option>
+                    <option value="SD"> South Dakota</option>
+                    <option value="TN"> Tennessee</option>
+                    <option value="TX"> Texas</option>
+                    <option value="UT"> Utah</option>
+                    <option value="VT"> Vermont</option>
+                    <option value="VA"> Virginia</option>
+                    <option value="WA"> Washington</option>
+                    <option value="WV"> West Virginia</option>
+                    <option value="WI"> Wisconsin</option>
+                    <option value="WY"> Wyoming</option>
+                </select></div>
+                </div>
+                </td>
+            </tr>
+
+			<tr>
+				<td colspan="2" align="center"><span class="home-txt4"><strong>or </strong></span></td>
+			</tr>
+
+            <tr>
+                <td align="right"><label for="atm_zip"><span class="home-txt4"><strong>ZIP&nbsp;Code:&nbsp;</strong></span></label></td>
+                <td align="left">
+                <div style="padding: 2px 0px 2px 0px">
+                <input value="" name="POSTAL_CODE" size="20" maxlength="10" type="text" class="home-textbox" id="atm_zip" title="Enter a zip code." tabindex="4" /></div>
+                </td>
+            </tr>
+
+            <tr>
+                
+                <td colspan="2" nowrap><input name="SEARCH_TYPE"
+                id="branch_box" value="BRANCH" type="radio"
+                tabindex="4" checked /><label for="branch_box" class="home-txt4">Banking Centers</label><input name="SEARCH_TYPE" id="atm_box" value="ATM" type="radio"
+                tabindex="4" /><label for="atm_box" class="home-txt4">ATMs</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><img src="/x.gif" width="1" height="8" alt="" border="0" /><br /></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td>
+                <table width="25" border="0" cellspacing="0" cellpadding="0" summary=""><tr><td>
+                <script language="JavaScript" type="text/javascript">
+                <!--
+                    create_button("Go", "javascript:doLocatorSearch();", "btn1", null, "self.status=\'Go\';return true;", "self.status=\'\';return true;", 4);
+                //-->
+                </script>
+                <noscript><input type="submit" name="atm_go" value="Go" alt="Go" class="btn1" tabindex="4" /></noscript>
+                </td><td width="100%"></td></tr></table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><img src="/x.gif" width="1" height="8" alt="" border="0" /><br /></td>
+            </tr>
+
+            <tr>
+				<td></td>
+				<td align="left" colspan="2"><div class="home-signin-txt3"><a href="http://bofa.via.infonow.net/atmbranch/jsp/index.jsp" tabindex="4">More Location Search Options</a></div></td>
+			</tr>
+			<tr>
+			<td colspan="2"><img src="/x.gif" width="1" height="12" alt="" border="0" /></td></tr>
+
+         </table>
+         </div>
+         </form>
+    </td>
+    <td><img src="/x.gif" width="5" height="6" alt="" border="0" /></td>
+</tr>
+
+              <tr>
+              	<td class="promo-rule-bottom" colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td>
+              </tr>
+           
+			<tr>
+
+
+
+
+</table>
+
+
+	</td>
+	
+	<td width="1" class="home-grid-line1" rowspan="2"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+
+
+
+	
+	
+	<td width="554" valign="top" rowspan="2">
+		<table cellspacing="0" cellpadding="0" border="0" width="554" summary="">
+			<tr>
+				<td width="360" class="home-grid-line1"><img src="/x.gif" width="360" height="1" alt="" border="0" /></td>
+				<td width="1" class="home-grid-line1"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+				<td width="193" class="home-grid-line1"><img src="/x.gif" width="193" height="1" alt="" border="0" /></td>
+			</tr>
+			<tr><td colspan="3">
+<script language="JavaScript" type="text/javascript">
+<!--
+function masthead_popup_window(input_url) {
+	var testdrive_url = 'http://' + location.host + input_url;
+	var win = window.open(testdrive_url, 'preWin','width=700,height=530,scrollbars=yes,resizable=1')
+}
+//-->
+</script>
+
+
+
+
+
+<table summary="" border="0" cellpadding="0" cellspacing="0">
+		<tr>
+			<td><a href = "/weblinking/index.cfm?referredby=redcross"><img src="images/hs_home/pf_main_img1.gif" width="362" height="130" border="0" alt="American Red Cross. International Response Fund: Support the tsunami relief effort by donating to the American Red Cross. Make a Donation &gt;&gt;" /></a></td>
+			<td><a href = "/weblinking/index.cfm?referredby=redcross"><img src="images/hs_home/pf_main_img2.gif" width="198" height="130" border="0" alt="American Red Cross. International Response Fund: Support the tsunami relief effort by donating to the American Red Cross. Make a Donation &gt;&gt;"/></a></td>
+		</tr>
+	</table>
+
+
+
+</td></tr>
+			<tr><td colspan="3" class="home-grid-line1"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+			<tr valign="top">
+				<td width="360">
+				<table cellspacing="0" cellpadding="0" width="361" border="0" summary="">
+					
+					
+						<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+						<tr class="home-title2-bkg"><td width="360"><div class="inline"><img src="/x.gif" width="20" height="1" alt="" border="0" /><h3 class="h3-text">Products &amp; Services<br /></h3></div></td>
+						</tr>
+						<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+					
+					
+					<tr><td class="home-grid-line1"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+					<tr><td><img src="/x.gif" width="1" height="18" alt="" border="0" /></td></tr>
+					<tr><td>
+						
+						
+
+
+
+
+
+
+
+
+				<div class="inline"><h3 class="home-category">Online Services&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/adtrack/index.cgi?adlink=0003020520000000a584">Online Banking with Bill Pay</a> | <a href="/adtrack/index.cgi?adlink=0003020690000000a585">Other Online Services</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Checking &amp; Savings&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/state.cgi?section=deposits" title="Checking and savings overview">Overview</a> | <a href="/state.cgi?section=checking">Checking Accounts</a> | <a href="/state.cgi?section=savings">Savings Accounts</a> | <a href="/state.cgi?section=cds">CDs</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Cards&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/creditcards/">Credit Cards</a> | <a href="/deposits/checksave/index.cfm?template=checkcards_overview">Check Cards</a> | <a href="/giftcard/">Gift Cards</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Loans &amp; Home Buying&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/loansandhomes/" title="Loans and home buying overview">Overview</a> | <a href="/loansandhomes/index.cfm?template=lc_mortgage">Mortgages</a> | <a href="/loansandhomes/index.cfm?template=lc_mort_refinance">Refinance</a> | <a href="/loansandhomes/index.cfm?template=lc_home_equity_loc">Home Equity</a> | <a href="/loansandhomes/index.cfm?template=lc_auto_loans">Auto Loans</a> | <a href="/loansandhomes/index.cfm?template=lc_more_loans">Education &amp; Other Loans</a> | <a href="/moving/">Movers Resource Center</a> | <a href="http://realestatecenter.bankofamerica.com/">Real Estate Center</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Investments &amp; Wealth Management&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/investments/">Investment Services</a> | <a href="/premierbanking/">Premier Banking & Investments</a> | <a href="/privatebank/">The Private Bank</a> | <a href="/state.cgi?section=ira_home">IRAs</a> | <a href="/mutualfunds/">Mutual Funds</a> | <a href="/privatebank/index.cfm?template=wealth_trusts">Trust Services</a> | <a href="/futurescholar">529 College Savings Plans</a> | <a href="/charitablegiving">Charitable Giving Program</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Specialized Banking &amp; Additional Services&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/military/">Military Bank</a> | <a href="/studentbanking/">Student Banking</a> | <a href="/accessiblebanking/">Accessible Banking</a> | <a href="/insurance/">Insurance</a> | <a href="/foreigncurrency/">Foreign Currency / Travelers Cheques</a> | <a href="/safesend/?lang=en">SafeSend Money to Mexico</a></div>
+				<br /> 
+				<div class="inline"><h3 class="home-category">Financial Education &amp; Tools&nbsp;<br /></h3></div>
+				
+				<div class="home-link"><a href="/financialtools/index.cfm" title="Financial education and tools overview">Overview</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=budgeting" title="educational materials on savings and budgeting">Savings &amp; Budgeting</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=homebuy" title="educational materials on purchasing a home">Home Purchase</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=loans" title="educational materials on loans and credit cards">Loans &amp; Credit Cards</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=credit" title="educational materials on managing your credit">Credit Management</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=investing" title="educational materials on investing">Investing</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=retirement" title="educational materials on planning your retirement">Retirement</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=estate" title="educational materials on estate planning">Estates</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=turbotax" title="educational materials on taxes">Taxes</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=education" title="educational materials on planning and financing an education">Education</a> | <a href="/financialtools/index.cfm?view=PRODUCT&amp;tools=carbuy" title="educational materials on purchasing a car">Car Purchase</a></div>
+				
+				
+				<table cellspacing="0" cellpadding="0" border="0" summary="">
+					<tr>
+						<td width="20"><img src="/x.gif" width="20" height="15" alt="" border="0" /></td>
+						<td width="320"><img src="/x.gif" width="320" height="1" alt="" border="0" /></td>
+						<td width="10"><img src="/x.gif" width="10" height="1" alt="" border="0" /></td>
+					</tr>
+					<tr><td></td><td class="promo-rule-dotted"><img src="/x.gif" width="320" height="1" alt="" border="0" /></td><td></td></tr>
+					<tr><td colspan="3"><img src="/x.gif" width="350" height="10" alt="" border="0" /></td></tr>
+				</table>
+				<div class="inline" lang="es"><h3 class="home-category"><a href="/espanol/"><strong>En Español</strong></a></h3></div>
+			
+	
+
+					</td></tr>
+				</table>
+			</td>
+			
+			<td width="1" class="home-grid-line1"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+			
+			
+			<td width="193">
+				<table cellspacing="0" cellpadding="0" width="193" border="0" summary="">
+				
+					<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+					<tr class="home-title2-bkg"><td width="193"><div class="inline"><img src="/x.gif" width="7" height="1" alt="" border="0" /><h3 class="h3-text">Highlights</h3></div></td></tr>
+					<tr class="home-title2-bkg"><td colspan="3"><img src="/x.gif" width="1" height="4" alt="" border="0" /></td></tr>
+				
+				<tr><td class="home-grid-line1"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+				<tr>
+					<td>
+						
+						
+
+
+
+
+
+<table width="193" cellspacing="0" cellpadding="0" border="0" summary="">
+
+<tr>
+    
+    <td width="6"><img src="/x.gif" width="6" height="1" alt="" border="0" /></td>
+    <td>
+        <table width="193" cellspacing="0" cellpadding="0" border="0" summary="">
+        
+
+
+        
+        
+		<tr><td class="promo-rule-top"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+		<tr><td><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+		<tr>
+            <td>
+            <h3 style="font-family:Verdana,Geneva,Arial,Helvetica,sans-serif; font-size:65%; color:#333333; display:inline;">Protect Against Online Fraud</h3>
+            </td>
+        </tr>
+        
+        <tr><td><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+        <tr>
+            <td>
+            <p class="hl-txt3"><a class="hl-txt4" style = "font-size=100%" href="/adtrack/index.cgi?adlink=000302078a4100008861"
+			title = "More information about protecting yourself against online fraud.">Learn about e-mail and<br>
+			online fraud.</a></p>
+            </td>
+        </tr>
+
+		<tr><td><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+		<tr><td class="promo-rule-dotted"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+		<tr><td><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+
+        <tr>
+            <td>
+            <p class="hl-txt3"><a class="hl-txt4" style = "font-size=100%"
+			href="/privacy/index.cfm?template=privacysecur_unauthorised_acc_use">Report e-mail and online fraud.</a></p>
+            </td>
+        </tr>
+
+		<tr><td><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+		<tr><td class="promo-rule-dotted"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+		<tr><td><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+
+        <tr>
+            <td>
+            <p class="hl-txt3"><a class="hl-txt4" style = "font-size=100%" href="/privacy/">More about privacy and security.</a></p>
+            </td>
+        </tr>
+
+
+		<br>
+
+        
+        
+        <tr>
+        <td>
+		<table width="193" cellspacing="0" cellpadding="0" border="0" summary="">
+        <tr><td><img src="/x.gif" width="1" height="6" alt="" border="0" /></td></tr>
+        <tr><td class="promo-rule-bottom"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+        </table>
+        </td>
+        </tr>
+        </table>
+    </td>
+</tr>
+</table>
+
+
+
+						
+						
+								
+
+
+
+	
+	
+		
+		
+		
+		
+		
+    	
+	    
+ 		
+	
+    
+
+	
+
+ 	
+ 	
+	
+	
+	
+	
+	
+	
+
+
+
+<table width="193" cellspacing="0" cellpadding="0" border="0" summary="">
+
+<tr>
+	
+	<td width="6"><img src="/x.gif" width="6" height="1" alt="" border="0" /></td>
+	<td>
+	<table border="0" cellspacing="0" cellpadding="0" summary="">
+	<tr>
+		<td width="53"><img src="/x.gif" width="53" height="20" alt="" border="0" /></td>
+		<td width="81"><img src="/x.gif" width="86" height="20" alt="" border="0" /></td>
+		<td width="53"><img src="/x.gif" width="53" height="20" alt="" border="0" /></td>
+	</tr>
+	
+	<tr>
+		<td class="promo-rule-top" colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td>
+	</tr>
+	
+        
+		
+		
+		    
+			<tr>
+				<td valign="middle"><a href="/adtrack/index.cgi?adlink=0003020276430000a643"><img src="/images/promo/20050107_a643_PFHome_HL1_saveact_46x46.jpg" width="46" height="46" alt="It's time to start saving for life's important moments. Savings accounts >>" border="0" hspace="0" vspace="0" /></a><img src="/images/hs_home/gray_pix.gif" alt="" width="1" height="36" hspace="3" vspace="8" border="0" /></td>
+				<td colspan="2" valign="middle" align="left"><a  href="/adtrack/index.cgi?adlink=0003020276430000a643"
+				 class="highlights-txt1"><strong>It's time to start saving for life's important moments.</strong> Savings&nbsp;accounts &gt;&gt;</a></td>
+			</tr>
+		
+		
+		
+			
+			<tr>
+				<td class="promo-rule-dotted" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /><br /></td>
+			</tr>
+			<tr>
+				<td colspan="2" valign="middle" align="left"><a href="/adtrack/index.cgi?adlink=00030200569658058391" class="highlights-txt1"><strong>Get rewards with the MilesEdge® Card</strong> and travel the way you want.</a></td>
+				<td valign="middle"><img src="/images/hs_home/gray_pix.gif" alt="" width="1" height="36" hspace="3" vspace="8" border="0" /><a
+				href="/adtrack/index.cgi?adlink=00030200569658058391"><img src="/images/promo/20050107_8391_PFHome_HL2_milesedge_46x46.jpg" width="46" height="46" alt="Get rewards with the MilesEdge® Card and travel the way you want." border="0" /></a><br /></td>
+			</tr>
+		
+		
+		
+		    
+				
+				<tr>
+					<td class="promo-rule-dotted" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td>
+				</tr>
+			
+			<tr>
+				<td valign="middle"><a href="/adtrack/index.cgi?adlink=000302084b410000a644"><img src="/images/promo/20050107_a644_PFHome_HL3_homeEquity_46x46.gif" width="46" height="46" alt="Looking for a new home? Learn the benefits of prequalifying for a mortgage." border="0" hspace="0" vspace="0" /></a><img src="/images/hs_home/gray_pix.gif" alt="" width="1" height="36" hspace="3" vspace="8" border="0" /></td>
+				<td colspan="2" valign="middle" align="left"><a  href="/adtrack/index.cgi?adlink=000302084b410000a644"
+				 class="highlights-txt1"><strong>Looking for a new home?</strong> Learn the benefits of prequalifying for a mortgage.</a></td>
+			</tr>
+		
+		
+	
+	
+	<tr>
+		<td class="promo-rule-bottom" colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td>
+	</tr>
+	
+	<tr>
+		<td colspan="3"><img src="/x.gif" width="1" height="12" alt="" border="0" /></td>
+	</tr>
+
+
+								
+	
+	
+	<tr>
+	     
+		  <td align="center" colspan="3"><a href="/adtrack/index.cgi?adlink=000309029c940000a645"><img src="/images/promo/20050107_a645_PFHome_Graphic_referral_187x140.gif" alt="Recommend our checking to a friend and you can both get $25. Learn more >>" width="187" height="140" hspace="0" border="0"></a></td>
+		 
+		<td></td>
+	</tr>
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		
+	
+	<tr><td colspan="3"><img src="/x.gif" width="1" height="12" alt="" border="0" /></td></tr>
+	
+	<tr><td class="promo-rule-top" colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+	
+	<tr>
+		<td colspan="3">
+			<div class="inline"><div class="hl-txt2"><h3><a href="/adtrack/index.cgi?adlink=0003020727750000a646">Online banking with free Bill Pay.</a><br /></h3></div></div>
+			<p class="hl-txt3">You can save $53 by paying your bills online.</p>
+			<p><a href="/adtrack/index.cgi?adlink=0003020727750000a646" class="hl-txt4" title="Learn more about the benefits of paying your bills online.">
+				
+					<strong>Learn more</strong>
+				 <img src="/images/hs_home/icon_call2action_secondary.gif" align="bottom" hspace="0" width="10" height="6" alt="" border="0" /></a></p>
+		</td>
+	</tr>
+	
+		
+		<tr><td colspan="3"><img src="/x.gif" width="1" height="12" alt="" border="0" /></td></tr>
+		
+		<tr><td class="promo-rule-dotted" colspan="3"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+		
+		<tr><td colspan="3"><img src="/x.gif" width="1" height="6" alt="" border="0" /></td></tr>
+	
+	<tr>
+		<td colspan="3">
+			<div class="inline"><div class="hl-txt2"><h3><a href="/adtrack/index.cgi?adlink=000302031c720000a647">It’s easy to protect your family.</a><br /></h3></div></div>
+			<p class="hl-txt3">Use our calculator to help establish your life insurance needs.</p>
+			<p><a href="/adtrack/index.cgi?adlink=000302031c720000a647" class="hl-txt4" title="Learn more about how easy it is to protect your family.">
+				
+					<strong>Learn more</strong>
+				 <img src="/images/hs_home/icon_call2action_secondary.gif" align="bottom" hspace="0" width="10" height="6" alt="" border="0" /></a></p>
+		</td>
+	</tr>
+	
+	
+	<tr><td colspan="3"><img src="/x.gif" width="1" height="5" alt="" border="0" /></td></tr>
+	
+	<tr><td class="promo-rule-bottom" colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+	</table>
+	</td>
+  </tr>
+</table>
+<br /><img src="/x.gif" hspace="0" width="1" height="10" alt="" border="0" />
+
+
+							
+						
+					</td>
+				</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+	</td>
+</tr>
+
+<tr>
+	<td width="189" rowspan="2">
+		<img src="/x.gif" width="189" height="1" alt="" border="0" />
+		
+		
+			<div class="home-srvc-txt"><a href="/state.cgi?section=onlinebanking_svc" tabindex="4" class="home-mod-link">Service agreement</a></div>
+		
+	</td>
+</tr>
+
+</table>
+ 
+</div>
+
+
+
+	
+	
+<div class="hs-footer">
+<table width="749" border="0" cellspacing="0" cellpadding="0" summary="">
+	<tr><td colspan="3" class="ftr-hr"><img src="/x.gif" width="1" height="1" alt="" border="0" /></td></tr>
+	<tr><td colspan="3"><img src="/x.gif" width="1" height="3" alt="" border="0" /></td></tr>
+	<tr valign="top">
+		<td width="8"><img src="/x.gif" width="8" height="1" alt="" border="0" /></td>
+		<td valign="top"><a href="/privacy/" class="ftr-link1">Privacy &amp; Security</a>&nbsp;<span class="linksep1">&#8226;</span>&nbsp;<a href="/careers/" class="ftr-link1">Careers</a>&nbsp;<span class="linksep1">&#8226;</span>&nbsp;<a href="/help/index.cfm?template=sitemap.cfm" class="ftr-link1">Site Map</a><br />
+		<img src="/x.gif" width="1" height="19" alt="" border="0" />
+		<div class="ftr-text1">Bank of America, N.A. Member FDIC.
+
+		
+		
+		<a href="/help/equalhousing_popup.cfm" onclick="javascript:window.open('/help/equalhousing_popup.cfm','newwin','width=640,height=371,scrollbars=yes,resizable=yes,left=35,top=161'); return false;" target="_blank" class="ftr-link2" title="Link opens Equal Housing Lender pop-up window">Equal Housing Lender</a><a href="/help/equalhousing_popup.cfm" onclick="javascript:window.open('/help/equalhousing_popup.cfm','newwin','width=640,height=371,scrollbars=yes,resizable=yes,left=35,top=161'); return false;" target="_blank" title="Link opens Equal Housing Lender pop-up window"><img src="/images/shared/house.gif" width="14" height="9" hspace="3" alt="Link opens Equal Housing Lender pop-up window" border="0" /></a><br />
+		
+
+		&copy; 2004 Bank of America Corporation. All rights reserved.
+		</div>
+		<br />
+		</td>
+		<td align="right" width="131"><a href="/sponsorships/"><img src="/global/mvc_objects/images/foot_olympic.gif"
+		alt="Official Sponsor 2004-2008 U.S. Olympic Teams"
+		width="131" height="33" border="0" align="right" vspace="7" /></a></td>
+	</tr>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN COREMETRICS -->
+
+
+<script language="javascript1.1" src="/coremetrics/homepage-cmdatatagutils.js"></SCRIPT>
+<script language="javascript1.1">
+<!--
+cmSetProduction();cmCreateRegistrationTag(null, 'personal', '20050109:0:E:000F2173-F046-11E0-9AF280FF94C94552', false, '', '', 'homepage'); 
+//-->
+</script>
+
+</body>
+</html>
+

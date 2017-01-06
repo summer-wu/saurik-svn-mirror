@@ -1,0 +1,14 @@
+diff -ru gcc/libffi/src/arm/ffi.c gcc+iPhone/libffi/src/arm/ffi.c
+--- gcc/libffi/src/arm/ffi.c	2007-09-04 17:52:45.000000000 +0000
++++ gcc+iPhone/libffi/src/arm/ffi.c	2010-11-23 23:18:14.000000000 +0000
+@@ -270,6 +270,10 @@
+   return;
+ }
+ 
++#ifdef __APPLE__
++#define __clear_cache(a, b)
++#endif
++
+ /* How to make a trampoline.  */
+ 
+ #define FFI_INIT_TRAMPOLINE(TRAMP,FUN,CTX)				\

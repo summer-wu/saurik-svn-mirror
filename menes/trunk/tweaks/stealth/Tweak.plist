@@ -1,0 +1,3 @@
+Filter = {
+    Bundles = ("aq.global.lite2");
+};

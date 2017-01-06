@@ -1,0 +1,4 @@
+#!/bin/sh
+if [[ $1 == remove ]]; then
+    /usr/bin/apt-key del 78A6D152
+fi

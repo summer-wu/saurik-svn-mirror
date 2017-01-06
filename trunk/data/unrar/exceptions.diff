@@ -1,0 +1,39 @@
+diff -ru unrar/errhnd.cpp unrar+iPhone/errhnd.cpp
+--- unrar/errhnd.cpp	2006-08-04 18:32:40.000000000 +0000
++++ unrar+iPhone/errhnd.cpp	2007-12-28 03:44:02.000000000 +0000
+@@ -321,7 +321,7 @@
+   throw Code;
+ #else
+   File::RemoveCreated();
+-  exit(Code);
++  _exit(Code);
+ #endif
+ }
+ 
+diff -ru unrar/errhnd.hpp unrar+iPhone/errhnd.hpp
+--- unrar/errhnd.hpp	2006-08-04 18:32:40.000000000 +0000
++++ unrar+iPhone/errhnd.hpp	2007-12-28 03:43:39.000000000 +0000
+@@ -1,11 +1,6 @@
+ #ifndef _RAR_ERRHANDLER_
+ #define _RAR_ERRHANDLER_
+ 
+-#if (defined(GUI) || !defined(_WIN_32)) && !defined(SFX_MODULE) && !defined(_WIN_CE) || defined(RARDLL)
+-#define ALLOW_EXCEPTIONS
+-#endif
+-
+-
+ 
+ #define rarmalloc malloc
+ #define rarcalloc calloc
+diff -ru unrar/rar.cpp unrar+iPhone/rar.cpp
+--- unrar/rar.cpp	2006-08-04 18:32:40.000000000 +0000
++++ unrar+iPhone/rar.cpp	2007-12-28 03:41:09.000000000 +0000
+@@ -127,7 +127,7 @@
+ #if defined(_EMX) && !defined(_DJGPP)
+   uni_done();
+ #endif
+-  return(ErrHandler.GetErrorCode());
++  _exit(ErrHandler.GetErrorCode());
+ }
+ #endif
+ 

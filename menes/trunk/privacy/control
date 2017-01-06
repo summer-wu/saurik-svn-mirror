@@ -1,0 +1,14 @@
+Package: com.saurik.privacy
+Conflicts: com.openhebrew.privacy
+Replaces: com.openhebrew.privacy
+Priority: optional
+Section: Administration
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.3108-1
+Description: global opt-out of anonymous usage tracking
+Name: PrivaCy
+Depends: mobilesubstrate (>= 0.9.2996-1), preferenceloader
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.privacy/
+Tag: purpose::setting, role::enduser

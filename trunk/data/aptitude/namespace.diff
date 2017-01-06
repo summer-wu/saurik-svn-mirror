@@ -1,0 +1,22 @@
+diff -ru aptitude_0.4.11.11.orig/src/generic/apt/matchers.cc aptitude_0.4.11.11.orig+iPhone/src/generic/apt/matchers.cc
+--- aptitude_0.4.11.11.orig/src/generic/apt/matchers.cc	2008-11-20 03:17:12.000000000 +0000
++++ aptitude_0.4.11.11.orig+iPhone/src/generic/apt/matchers.cc	2009-07-07 09:48:40.000000000 +0000
+@@ -4289,6 +4289,9 @@
+   return real_matcher->get_match(pkg, cache, records, stack);
+ }
+ 
++namespace
++{
++
+ class pkg_const_matcher : public pkg_matcher_real
+ {
+   pkgCache::PkgIterator match_pkg;
+@@ -4333,6 +4336,8 @@
+   }
+ };
+ 
++}
++
+ pkg_matcher *make_const_matcher(const pkgCache::PkgIterator &pkg)
+ {
+   return new pkg_const_matcher(pkg);

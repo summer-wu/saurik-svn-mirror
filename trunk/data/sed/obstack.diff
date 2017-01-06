@@ -1,0 +1,83 @@
+Only in sed-4.1.5+iPhone/: config.h
+Only in sed-4.1.5+iPhone/: config.log
+Only in sed-4.1.5+iPhone/: config.status
+Only in sed-4.1.5+iPhone/doc: Makefile
+Only in sed-4.1.5+iPhone/intl: bindtextdom.o
+Only in sed-4.1.5+iPhone/intl: charset.alias
+Only in sed-4.1.5+iPhone/intl: dcgettext.o
+Only in sed-4.1.5+iPhone/intl: dcigettext.o
+Only in sed-4.1.5+iPhone/intl: dcngettext.o
+Only in sed-4.1.5+iPhone/intl: dgettext.o
+Only in sed-4.1.5+iPhone/intl: dngettext.o
+Only in sed-4.1.5+iPhone/intl: explodename.o
+Only in sed-4.1.5+iPhone/intl: finddomain.o
+Only in sed-4.1.5+iPhone/intl: gettext.o
+Only in sed-4.1.5+iPhone/intl: intl-compat.o
+Only in sed-4.1.5+iPhone/intl: l10nflist.o
+Only in sed-4.1.5+iPhone/intl: libintl.a
+Only in sed-4.1.5+iPhone/intl: libintl.h
+Only in sed-4.1.5+iPhone/intl: loadmsgcat.o
+Only in sed-4.1.5+iPhone/intl: localcharset.o
+Only in sed-4.1.5+iPhone/intl: localealias.o
+Only in sed-4.1.5+iPhone/intl: localename.o
+Only in sed-4.1.5+iPhone/intl: Makefile
+Only in sed-4.1.5+iPhone/intl: ngettext.o
+Only in sed-4.1.5+iPhone/intl: osdep.o
+Only in sed-4.1.5+iPhone/intl: plural-exp.o
+Only in sed-4.1.5+iPhone/intl: plural.o
+Only in sed-4.1.5+iPhone/intl: ref-add.sed
+Only in sed-4.1.5+iPhone/intl: ref-del.sed
+Only in sed-4.1.5+iPhone/intl: textdomain.o
+Only in sed-4.1.5+iPhone/lib: .deps
+Only in sed-4.1.5+iPhone/lib: getline.o
+Only in sed-4.1.5+iPhone/lib: getopt1.o
+Only in sed-4.1.5+iPhone/lib: getopt.o
+Only in sed-4.1.5+iPhone/lib: libsed.a
+Only in sed-4.1.5+iPhone/lib: Makefile
+diff -r -u sed-4.1.5/lib/Makefile.in sed-4.1.5+iPhone/lib/Makefile.in
+--- sed-4.1.5/lib/Makefile.in	2006-02-03 09:24:34.000000000 +0000
++++ sed-4.1.5+iPhone/lib/Makefile.in	2007-12-27 00:16:29.000000000 +0000
+@@ -125,11 +125,11 @@
+ LDFLAGS = @LDFLAGS@
+ LIBICONV = @LIBICONV@
+ LIBINTL = @LIBINTL@
+-LIBOBJS = @LIBOBJS@
++LIBOBJS = @LIBOBJS@ obstack.o
+ LIBS = @LIBS@
+ LTLIBICONV = @LTLIBICONV@
+ LTLIBINTL = @LTLIBINTL@
+-LTLIBOBJS = @LTLIBOBJS@
++LTLIBOBJS = @LTLIBOBJS@ obstack.o
+ MAKEINFO = @MAKEINFO@
+ MAKEINFO_HTML_FALSE = @MAKEINFO_HTML_FALSE@
+ MAKEINFO_HTML_TRUE = @MAKEINFO_HTML_TRUE@
+@@ -206,7 +206,7 @@
+ AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/intl -I$(top_srcdir) \
+ 	-I$(top_builddir)/lib -I$(top_builddir)/intl
+ 
+-libsed_a_LIBADD = @LIBOBJS@ @ALLOCA@
++libsed_a_LIBADD = @LIBOBJS@ @ALLOCA@ obstack.o
+ libsed_a_DEPENDENCIES = $(libsed_a_LIBADD)
+ DISTCLEANFILES = regex.h stdbool.h
+ all: all-am
+Only in sed-4.1.5+iPhone/lib: obstack.o
+Only in sed-4.1.5+iPhone/lib: regex.h
+Only in sed-4.1.5+iPhone/lib: regex.o
+Only in sed-4.1.5+iPhone/lib: strverscmp.o
+Only in sed-4.1.5+iPhone/lib: utils.o
+Only in sed-4.1.5+iPhone/: Makefile
+Only in sed-4.1.5+iPhone/po: Makefile
+Only in sed-4.1.5+iPhone/po: Makefile.in
+Only in sed-4.1.5+iPhone/po: POTFILES
+Only in sed-4.1.5+iPhone/sed: compile.o
+Only in sed-4.1.5+iPhone/sed: .deps
+Only in sed-4.1.5+iPhone/sed: execute.o
+Only in sed-4.1.5+iPhone/sed: fmt.o
+Only in sed-4.1.5+iPhone/sed: Makefile
+Only in sed-4.1.5+iPhone/sed: mbcs.o
+Only in sed-4.1.5+iPhone/sed: regexp.o
+Only in sed-4.1.5+iPhone/sed: sed
+Only in sed-4.1.5+iPhone/sed: sed.o
+Only in sed-4.1.5+iPhone/: stamp-h1
+Only in sed-4.1.5+iPhone/testsuite: .deps
+Only in sed-4.1.5+iPhone/testsuite: Makefile

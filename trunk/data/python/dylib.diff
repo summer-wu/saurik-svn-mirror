@@ -1,0 +1,33 @@
+diff -ru Python-2.5.1/Python/dynload_shlib.c Python-2.5.1+iPhone/Python/dynload_shlib.c
+--- Python-2.5.1/Python/dynload_shlib.c	2006-01-04 01:30:17.000000000 +0000
++++ Python-2.5.1+iPhone/Python/dynload_shlib.c	2008-01-09 10:04:49.000000000 +0000
+@@ -40,11 +40,14 @@
+ 	{".pyd", "rb", C_EXTENSION},
+ 	{".dll", "rb", C_EXTENSION},
+ #else
+-#ifdef __VMS
++#if defined(__VMS)
+         {".exe", "rb", C_EXTENSION},
+         {".EXE", "rb", C_EXTENSION},
+         {"module.exe", "rb", C_EXTENSION},
+         {"MODULE.EXE", "rb", C_EXTENSION},
++#elif defined(__APPLE__)
++	{".dylib", "rb", C_EXTENSION},
++	{"module.dylib", "rb", C_EXTENSION},
+ #else
+ 	{".so", "rb", C_EXTENSION},
+ 	{"module.so", "rb", C_EXTENSION},
+diff -ru Python-2.5.1/configure.in Python-2.5.1+iPhone/configure.in
+--- Python-2.5.1/configure.in	2007-03-12 10:50:51.000000000 +0000
++++ Python-2.5.1+iPhone/configure.in	2008-01-09 10:27:52.000000000 +0000
+@@ -636,8 +638,8 @@
+ 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+ 	  INSTSONAME="$LDLIBRARY".$SOVERSION
+           ;;
+-    Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*)
+-	  LDLIBRARY='libpython$(VERSION).so'
++    Linux*|GNU*|NetBSD*|FreeBSD*|DragonFly*|Darwin*)
++	  LDLIBRARY='libpython$(VERSION)'"${SO-so}"
+ 	  BLDLIBRARY='-L. -lpython$(VERSION)'
+ 	  RUNSHARED=LD_LIBRARY_PATH=`pwd`:${LD_LIBRARY_PATH}
+ 	  case $ac_sys_system in

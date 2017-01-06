@@ -1,0 +1,4 @@
+#!/bin/sh
+if [[ $1 == configure ]]; then
+    /usr/bin/apt-key add /usr/share/keyrings/hvkls.dyndns.org-keyring.gpg
+fi

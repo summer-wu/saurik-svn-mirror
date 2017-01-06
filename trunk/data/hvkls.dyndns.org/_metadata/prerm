@@ -1,0 +1,4 @@
+#!/bin/sh
+if [[ $1 == remove ]]; then
+    /usr/bin/apt-key del F9C1FEEB
+fi

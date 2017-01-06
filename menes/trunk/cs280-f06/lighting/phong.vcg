@@ -1,0 +1,29 @@
+struct Input_ {
+    float4 position_ : POSITION;
+    float3 normal_ : NORMAL;
+    float4 color_ : DIFFUSE;
+};
+
+struct Output_ {
+    float4 projected_ : POSITION;
+    float4 color_ : COLOR0;
+    float3 normal_ : TEXCOORD0;
+    float3 light_ : TEXCOORD1;
+    float3 camera_ : TEXCOORD2;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform float4x4 mvp,
+    uniform float4x4 mv,
+    uniform float3 light
+) {
+    Output_ output;
+    output.projected_ = mul(mvp, input.position_);
+    output.color_ = input.color_;
+    output.camera_ = -mul(mv, input.position_).xyz;
+    output.light_ = -normalize(output.camera_ + light);
+    output.camera_ = normalize(output.camera_);
+    output.normal_ = mul(mv, float4(input.normal_, 0)).xyz;
+    return output;
+}

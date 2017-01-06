@@ -1,0 +1,12 @@
+diff -ru pam_modules-36.1/pam_unix/pw_util.c pam_modules-36.1+iPhone/pam_unix/pw_util.c
+--- pam_modules-36.1/pam_unix/pw_util.c	2007-01-16 05:28:31.000000000 +0000
++++ pam_modules-36.1+iPhone/pam_unix/pw_util.c	2009-04-08 09:26:20.000000000 +0000
+@@ -82,7 +82,7 @@
+ 
+ #include "pw_util.h"
+ 
+-extern char *tempname;
++char *tempname;
+ static pid_t editpid = -1;
+ static int lockfd;
+ 

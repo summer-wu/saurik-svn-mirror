@@ -1,0 +1,426 @@
+<body title="Upgrading the iPhone Toolchain" sidead="true">
+
+<inset>
+    <p>Seriously, these instructions <em>are</em> up to date. I update them <em>live</em> as I make changes to my local environment. The description describes building either a 1.x or a 2.x toolchain from my sources, and was written when 1.x was dominant, but the description explains the differences.</p>
+
+    <p>I would love to provide an easier mechanism for installation of this toolchain. My intention is to distribute to Linux and Fink (Mac OS X) via APT and to provide something appropriate for Cygwin. Unfortunately, due to <a href="http://fuckingnda.com/">Apple's NDA</a> there are various files that I have not been able to distribute in Cydia. Apple's NDA has recently been lifted, but they made some other changes to the contract that I have been needing to study (especially given my continued usage of the 2.0 SDK as a base) to verify that everything is kosher before release.</p>
+</inset>
+
+<p>In order to target a device such as the iPhone or the iPod Touch for software development, one needs a "toolchain". This typically consists of, at bare minimum:</p>
+
+<ul>
+    <li>a compiler (to convert high-level code down to the system's assembly language)</li>
+    <li>an assembler (to generate formatted binaries and machine code given assembly)</li>
+    <li>a linker (to connect these binaries up with existing code available on the platform)</li>
+    <li>and a set of header files (or some other description, which tells you what features you may find on the platform and how they are used)</li>
+</ul>
+
+<section title="Toolchain 0.30">
+    <p>Until recently, the most popular toolchain for these devices has been provided by the <a href="http://code.google.com/p/iphone-dev/">iphone-dev project</a>, which was started by NightWatch. This project has forked some other open source projects and added whatever was required to make it all work. This toolchain has stood the test of time and has been used by virtually all of the software you may currently find.</p>
+
+    <p>For the compiler and linker, NightWatch forked Open Darwin's CC Tools, which is the open-source side of Apple's assembler and linker (as well as a few other, related tools). Really designed to compile on a Mac, he carefully added autoconf scripts and a new build environment to make it compatible with other systems. The linker seems like it was easy (the format used for different architectures is roughly the same).</p>
+
+    <p>The assembler, though, was another matter, and required a complete implementation of the ARM instruction set. This particular project is one that I have been involved in, <a href="http://code.google.com/p/iphone-dev/issues/detail?id=87">providing patches</a> for a few types of instructions that hadn't yet been added. While porting Java I also ran into a few other limitations, many of which were in Apple's original code, that I either fixed or backported (Apple's assembler is an <em>ancient</em> fork of GNU gas).</p>
+</section>
+
+<section title="GCC, Apple, and LLVM">
+    <p>The story of the compiler is a little more interesting. While Apple uses GNU's gcc, which has been ported to numerous platforms and is maintained by a large number of volunteers, they are often at odds with the GNU developers. To this day, Apple's compiler is a rather drastic fork, and gcc proper simply does not target any of Apple's machines.</p>
+
+    <p>Luckily, as is required under the GPL (gcc's license), Apple publishes the source code for these modifications. They don't seem to be very good about it, though (I have heard that they never released the source code to Xcode 2.5's build of gcc, and they seem to believe they can provide source on their own schedule, rather than with the corresponding binaries, which is required by the license).</p>
+
+    <p>As an example: they released the code to their iPhone assembler a month late and only after I complained about it. (To be frank, I wouldn't be surprised at all if Apple ends up on the bad end of a GPL-related lawsuit.)</p>
+
+    <p>Getting access to current copies of Apple's compiler technology is thereby difficult, if not impossible. There is, however, a backdoor: <a href="http://www.llvm.org/">LLVM</a>. This project has aimed to provide some of the runtime compilation benefits of Java (which I only use as the exemplar because it is well known, not because it originated any of the techniques) without requiring all of the sandboxing and safety mechanisms.</p>
+
+    <p>Recently, when Apple has needed an optimizer (such as for their OpenGL shading language implementations), they have turned to LLVM. This has quite possibly been motivated by gcc's recent switch to GPL3, which Apple seems to have taken offense at. With their internal engineers working on the project, code merges occur with some frequency from Apple's internal compiler base.</p>
+</section>
+
+<section title="Considering LLVM-gcc">
+    <p>LLVM also has the property of maintaining the support for other machines that Apple routinely drops, not only as compilation targets, but also as build hosts. This latter property means that it is generally much simpler to start with LLVM's codebase to compile on non-Macintosh machines than to begin with Apple's occasional releases.</p>
+
+    <p>Unfortunately, there is also a cost for this usage: the very feature that LLVM has added. While their JIT compilation work is interesting, it isn't done yet. In the process of adding it they have also added the occasional bug to the core compiler, which can be difficult to track down. Also, they adamantly do not support the iPhone, and really only have experimental support for the ARM platform.</p>
+    
+    <p>Between the added bugs and the experimental optimizer, LLVM manages to scramble almost any complex code. This burned me while working on porting Java, as JamVM's threaded interpreter is highly intricate and uses a number of computed jumps, which simply segment faulted if compiled at speed. This also caused issues with previous work on iPhone kernel extensions, both by myself and the iPhone hacker known as "core", as "long calls" are not supported by LLVM.</p>
+
+    <p>This setup is further limited by the time at which it was ported, which has led to an interesting restriction: no one can upgrade past revision 42498 of LLVM and maintain compatibility with the iphone-dev compiler. Progress has therefore come to an almost complete halt.</p>
+</section>
+
+<section title="Apple's iPhone SDK">
+    <p>Luckily, for many, there is an alternative: In early March (after missing their own deadline of mid-February), Apple finally entered this space, providing the <a href="http://developer.apple.com/iphone/">iPhone SDK</a>, which also includes such components as a debugger (to help isolate software bugs) and a simulator (to run code on a desktop machine, where you have a larger screen and a full keyboard).</p>
+
+    <p>This toolchain, however, only runs on a desktop Macintosh (and, while I have not verified this personally, supposedly only installs on Intel-based machines). At least for me, this is utterly worthless: I do not own any Macintosh computers, nor do I ever intend to (I'm personally a Linux user).</p>
+
+    <p>Additionally, it's still gcc 4.0. The gcc project is now on version 4.3 and doesn't even mention 4.0 on it's main website anymore: it's just that old. Personally, I <em>hate</em> using old tools: back when I was spending all of my time working on Menes I routinely required CVS HEAD copies of gcc just in order to compile my (insanely generic) C++ templates. Being forced to use gcc 4.0 in order to do development for the iPhone is therefore <em>quite</em> painful.</p>
+
+    <p>Finally, Apple's released set of system headers for this SDK is miserable. They've left out a large number of important files, even though all of the support is there in the system. This makes it difficult to compile many standard open source projects (such as screen).</p>
+</section>
+
+<section title="Instructions and Disclaimer">
+    <p>Really, neither of these options have been at all attractive to me. I have therefore spent my free time over the course of almost a month working on doing a massive merge of the latest revision of LLVM-gcc, the most recent code release from Apple for gcc_42, and doing my own development when required to produce a high quality operational toolchain for the iPhone platform.</p>
+
+    <p>Now, the instructions I am providing aren't necessarily "copy and paste": the goal was to use a precise syntax to describe what I meant, not to write a working shell script. Still, I have tried to make them obvious and I have even tried to make them just runnable, but I just wouldn't feel comfortable having someone go through these instructions if they really had no clue what the commands were doing. If you feel this applies to you, get a friend to help.</p>
+
+    <p>Please understand that I can't really state that this will work on anything but my system, but if you e-mail me we can work on figuring out how to make these instructions more general. My system, for the record, is an AMD64 Debian Linux Etch box. Hopefully, if we think about it together, we can make it work for everyone.</p>
+
+    <p>On this note, I encourage people to come to #iphone on irc.saurik.com to find either myself or others who have worked through this process. (Although please, don't come there asking someone to walk you through it. Only come ask for help if you have a concrete question.) I will admit have not done much testing with this yet. I have <em>compiled</em> a lot of code with it and what I've tested of it seems to work; but I haven't run that much of it yet.</p>
+
+    <p>I think it would be even more useful, though, to use the <a href="http://www.telesphoreo.org/report/1">Telesphoreo bug tracking site</a> to coordinate issues. When you find problems, file bugs against the component 'Toolchain' so that others (including myself) can work on trying to correct them.</p>
+
+    <p>Finally, I haven't spent the time to merge in most Objective-C headers, so you should get those from Erica's website or classdump them yourself. I've been working on an alternative to classdump that is iPhoneOS 2.0 compatible, at which point this toolchain will be 100% ready to compile any application.</p>
+
+    <p>Despite all of that, I think this is still going to be of use to some people. In fact, it already has: <a href="http://www.zodttd.com/blog/zodttd/">ZodTTD</a> has gotten quite good performance optimizations from this toolchain for his/her Playstation emulator. Regardless, I think we aren't going to make much progress getting this all to work unless we start somewhere, even if that somewhere is a tad broken.</p>
+</section>
+
+<section title="Filesystem Locations">
+    <p>The first step is obtaining the requisite source materials to begin the compile. We need a filesystem off an iPhone (for this I am using an extracted .dmg for iPhone-1.1.4) and the headers from both the Mac OS X 10.5 SDK and the iPhoneOS 2.0 SDK.</p>
+
+    <inset>
+        <p>Please note that it is probably a bad idea to copy the running filesystem off an already installed iPhone. This is especially true if you have installed any packages from Telesphoreo, as they include features for doing development such as headers and linkable libraries. These have the possibility of confusing your build.</p>
+    </inset>
+
+    <p>In order to make it easier to find things later, and to optimize for screen width, I am going to use environment variables to describe all the paths used in each step of the process. So, here we define the locations to the two aforementioned parts. I use bash, so the syntax I use will reflect that.</p>
+
+<blockquote><syntax><![CDATA[
+export iphonefs=/home/saurik/iPhone-1.1.4
+export target=arm-apple-darwin8
+
+export leopardsdk=/Developer/SDKs/MacOSX10.5.sdk
+export leopardinc=${leopardsdk}/usr/include
+export leopardlib=${leopardsdk}/System/Library/Frameworks
+
+export iphoneplt=/Developer/Platforms/iPhoneOS.platform
+export iphonesdk=${iphoneplt}/Developer/SDKs/iPhoneOS2.0.sdk
+export iphoneinc=${iphonesdk}/usr/include
+export iphonelib=${iphonesdk}/System/Library/Frameworks
+]]></syntax></blockquote>
+
+    <inset>
+        <p>Note carefully the <syntax>target</syntax>: arm-apple-darwin8. This is a change from older toolchains that used arm-apple-darwin, and allows us to specify, as Apple does, the overall revision of the operating system we are targetting. If you are compiling for iPhoneOS 2.x, you should specify arm-apple-darwin9. This will affect the default linking options, the ABI used for Objective-C, and some of the APIs available from the headers files.</p>
+    </inset>
+
+    <p>In a similar vein, we need to decide where things are going to go. We need a location for the installed toolchain (the prefix for installations), the sysroot of the compiler (where the compiler will go to find the target system's filesystem image), where we are locally going to build the code for the toolchain, and places to check out all the required source code. Note that none of these folders currently exist: they will be created by our compilation.</p>
+
+<blockquote><syntax><![CDATA[
+export prefix=/dat/pre
+export sysroot=/dat/sys
+
+export PATH="${prefix}/bin":"${PATH}"
+
+export cctools=/dat/src/cctools
+export gcc=/dat/src/gcc
+export csu=/dat/src/csu
+
+export build=/dat/bld
+]]></syntax></blockquote>
+
+    <p>Now, let's put everything together to build our sysroot. This will place our /usr/include within the iPhone filesystem, so it will feel like we copied a real development platform into the folder. (Oh, and while we are at it, Apple forgot a few symlinks that we are going to need.)</p>
+
+    <p>Scattered throughout these instructions, you will find references to a variable we <em>haven't</em> yet defined: <syntax>${apple}</syntax>. Each of the folders under this directory correspond to packages available from <a href="http://www.opensource.apple.com/darwinsource/">Apple's Darwin Open Source Releases</a>. We are cobbling together all of these sources in order to obtain the most powerful possible set of headers that will let us compile everything from userland applications to system tools to kernel extensions.</p>
+
+<inset>
+    <p>Yes, you can get newer version of some of these files. No, that doesn't make these instructions out of date. No, there is not much good reason to use newer versions of these files. No, I haven't tested newer version of these files. No, I will not support you if you decided to use different versions of these files. Yes, I'm using two different versions of XNU: deal with it.</p>
+</inset>
+
+<blockquote><syntax><![CDATA[
+mkdir -p "$(dirname "${sysroot}")"
+cp -aH "${iphonefs}" "${sysroot}"
+cd "${sysroot}"
+rm -rf usr/include
+cp -a "${leopardinc}" usr/include
+cd usr/include
+ln -s . System
+
+cp -af "${iphoneinc}"/* .
+cp -af "${apple}"/xnu-1228.7.58/osfmk/* .
+cp -af "${apple}"/xnu-1228.7.58/bsd/* .
+
+cp -af "${apple}"/cctools-667.8.0/include/mach .
+cp -af "${apple}"/cctools-667.8.0/include/mach-o .
+cp -af "${iphoneinc}"/mach-o/dyld.h mach-o
+
+cp -af "${leopardinc}"/mach/machine mach
+cp -af "${leopardinc}"/mach/machine.h mach
+cp -af "${leopardinc}"/machine .
+cp -af "${iphoneinc}"/machine .
+
+cp -af "${iphoneinc}"/sys/cdefs.h sys
+cp -af "${leopardinc}"/sys/dtrace.h sys
+
+cp -af "${leopardlib}"/Kernel.framework/Headers/machine/disklabel.h machine
+cp -af "${apple}"/configd-210/dnsinfo/dnsinfo.h .
+cp -a "${apple}"/Libc-498/include/kvm.h .
+cp -a "${apple}"/launchd-258.1/launchd/src/*.h .
+
+cp -a i386/disklabel.h arm
+cp -a mach/i386/machine_types.defs mach/arm
+
+# if you don't have mig, just ignore this for now
+for defs in clock_reply exc mach_exc notify; do
+    mig -server /dev/null -user /dev/null -header /dev/null \
+        -sheader mach/"${defs}"_server.h mach/"${defs}".defs
+done
+
+find . \( -name '*.c' -o -name '*.s' \) -exec rm -f {} \;
+
+mkdir Kernel
+cp -a "${apple}"/xnu-1228.3.13/libsa/libsa Kernel
+
+mkdir Security
+cp -a "${apple}"/libsecurity_authorization-32564/lib/*.h Security
+cp -a "${apple}"/libsecurity_cdsa_client-32432/lib/*.h Security
+cp -a "${apple}"/libsecurity_cdsa_utilities-33506/lib/*.h Security
+cp -a "${apple}"/libsecurity_cms-32521/lib/*.h Security
+cp -a "${apple}"/libsecurity_codesigning-33803/lib/*.h Security
+cp -a "${apple}"/libsecurity_cssm-32993/lib/*.h Security
+cp -a "${apple}"/libsecurity_keychain-34101/lib/*.h Security
+cp -a "${apple}"/libsecurity_mds-32820/lib/*.h Security
+cp -a "${apple}"/libsecurity_ssl-32463/lib/*.h Security
+cp -a "${apple}"/libsecurity_utilities-32820/lib/*.h Security
+cp -a "${apple}"/libsecurityd-33470/lib/*.h Security
+
+mkdir DiskArbitration
+cp -a "${apple}"/DiskArbitration-183/DiskArbitration/*.h DiskArbitration
+
+cp -a "${apple}"/xnu-1228.3.13/iokit/IOKit .
+cp -a "${apple}"/IOKitUser-388.2.1/*.h IOKit
+
+cp -a "${apple}"/IOGraphics-193.2/IOGraphicsFamily/IOKit/graphics IOKit
+cp -a "${apple}"/IOHIDFamily-258.3/IOHIDSystem/IOKit/hidsystem IOKit
+
+for proj in kext ps pwr_mgt; do
+    mkdir -p IOKit/"${proj}"
+    cp -a "${apple}"/IOKitUser-388/"${proj}".subproj/*.h IOKit/"${proj}"
+done
+
+ln -s IOKit/kext/bootfiles.h .
+
+mkdir IOKit/storage
+cp -a "${apple}"/IOStorageFamily-88/*.h IOKit/storage
+cp -a "${apple}"/IOCDStorageFamily-39/*.h IOKit/storage
+cp -a "${apple}"/IODVDStorageFamily-26/*.h IOKit/storage
+
+mkdir DirectoryService
+cp -a "${apple}"/DirectoryService-514.23/APIFramework/*.h DirectoryService
+
+mkdir DirectoryServiceCore
+cp -a "${apple}"/DirectoryService-514.23/CoreFramework/Private/*.h DirectoryServiceCore
+cp -a "${apple}"/DirectoryService-514.23/CoreFramework/Public/*.h DirectoryServiceCore
+
+mkdir SystemConfiguration
+cp -a "${apple}"/configd-210/SystemConfiguration.fproj/*.h SystemConfiguration
+
+mkdir WebCore
+cp -a "${apple}"/WebCore-351.9/bindings/objc/*.h WebCore
+cp -a "${apple}"/WebCore-351.9/bridge/mac/*.h WebCore
+
+cp -aH "${leopardlib}"/CoreFoundation.framework/Headers CoreFoundation
+cp -af "${apple}"/CF-476.14/*.h CoreFoundation
+cp -af "${iphonelib}"/CoreFoundation.framework/Headers/* CoreFoundation
+
+for framework in AudioToolbox AudioUnit CoreAudio Foundation; do
+    cp -aH "${leopardlib}"/"${framework}".framework/Headers "${framework}"
+    cp -af "${iphonelib}"/"${framework}".framework/Headers/* "${framework}"
+done
+
+for framework in AppKit Cocoa CoreData CoreVideo JavaScriptCore OpenGL QuartzCore WebKit; do
+    cp -aH "${leopardlib}"/"${framework}".framework/Headers "$(basename "${framework}" .framework)"
+done
+
+for framework in AddressBook; do
+    cp -aH "${iphonelib}"/"${framework}".framework/Headers "$(basename "${framework}" .framework)"
+done
+
+cp -aH "${leopardlib}"/ApplicationServices.framework/Headers ApplicationServices
+for service in "${leopardlib}"/ApplicationServices.framework/Frameworks/*.framework; do
+    cp -aH "${service}"/Headers "$(basename "${service}" .framework)"
+done
+
+cp -aH "${leopardlib}"/CoreServices.framework/Headers CoreServices
+for service in "${leopardlib}"/CoreServices.framework/Frameworks/*.framework; do
+    cp -aH "${service}"/Headers "$(basename "${service}" .framework)"
+done
+
+for subdir in css dom editing history html loader page platform{,/{graphics,text}} rendering; do
+    cp -a "${apple}"/WebCore-351.9/"${subdir}"/*.h WebCore
+done
+
+cp -a "${apple}"/WebCore-351.9/css/CSSPropertyNames.in WebCore
+(cd WebCore; perl "${apple}"/WebCore-351.9/css/makeprop.pl)
+
+mkdir kjs
+cp -a "${apple}"/JavaScriptCore-466.1/kjs/*.h kjs
+
+mkdir -p wtf/unicode/icu
+cp -a "${apple}"/JavaScriptCore-466.1/wtf/*.h wtf
+cp -a "${apple}"/JavaScriptCore-466.1/wtf/unicode/*.h wtf/unicode
+cp -a "${apple}"/JavaScriptCore-466.1/wtf/unicode/icu/*.h wtf/unicode/icu
+
+mkdir unicode
+cp -a "${apple}"/JavaScriptCore-466.1/icu/unicode/*.h unicode
+
+# this step may have a bad hunk in CoreFoundation and thread_status while patching
+# these errors are to be ignored, as these are changes for issues Apple has now fixed
+wget -qO- http://svn.telesphoreo.org/trunk/tool/include.diff | patch -p3
+wget -qO arm/locks.h http://svn.telesphoreo.org/trunk/tool/patches/locks.h
+
+mkdir GraphicsServices
+cd GraphicsServices
+wget -q http://svn.telesphoreo.org/trunk/tool/patches/GraphicsServices.h
+
+cd "${sysroot}"
+ln -sf gcc/darwin/4.0/stdint.h usr/include
+ln -s libstdc++.6.dylib usr/lib/libstdc++.dylib
+]]></syntax></blockquote>
+
+    <p>Depending on what version of the iPhoneOS and from what source you obtained your filesystem from, there may be a number of missing symbolic links related to IOKit. Here we will replace those:</p>
+
+<blockquote><syntax><![CDATA[
+ln -sfn A System/Library/Frameworks/IOKit.framework/Versions/Current
+ln -sf Versions/Current/IOKit System/Library/Frameworks/IOKit.framework
+]]></syntax></blockquote>
+
+    <p>The one final thing we need are the set of object files that gcc links against almost everything. These handle the dynamic loading and operating system entrypoint bootstrapping. While the new SDK comes with these, we are going to avoid them as their copies seem to rely on using their new ld64 linker which I haven't yet finished porting to ARM. (I do have this linker running on Linux though, which is the first step as it's rather Mac-centric). This is a component that NightWatch pretty much wrote from scratch.</p>
+
+<blockquote><syntax><![CDATA[
+mkdir -p "${csu}"
+cd "${csu}"
+svn co http://iphone-dev.googlecode.com/svn/trunk/csu .
+cp -a *.o "${sysroot}"/usr/lib
+cd "${sysroot}"/usr/lib
+chmod 644 *.o
+cp -af crt1.o crt1.10.5.o
+cp -af dylib1.o dylib1.10.5.o
+]]></syntax></blockquote>
+</section>
+
+<section title="Checking Things Out">
+    <p>Now that we've decided where everything is going to happen, we need to get the source code. I have provided the revision numbers I used in the commands below, in order to assure a repeatable build. However, it is quite likely that whatever the latest code is will work (modulo the applicability of the couple patches I have made).</p>
+
+<blockquote><syntax><![CDATA[
+rm -rf "${gcc}"
+git clone git://git.saurik.com/llvm-gcc-4.2 "${gcc}"
+]]></syntax></blockquote>
+
+    <p>We also need to get the compiler tools for Darwin (which includes the assembler and the linker). Apple's versions of these are <em>ancient</em>, and have a ton of custom modifications for their binary formats, so going direct to the standard source (binutils) for this is way too painful.</p>
+
+    <p>Instead, we are going to pull the copy from the <a href="http://code.google.com/p/iphone-dev/">iphone-dev toolchain</a> project, which maintains a fork that adds support for ARM. I have a rather large number of changes to this particular project: a more complete parser for modern gas macros, constant offset expressions (not certain if that's a technical term), a few new forms of relocations, support for the macro instruction adr, common symbol alignment, a couple extra instructions to the grammar, and the new armv6 -arch type that Apple seems to be going with in their modifications to LLVM-gcc.</p>
+
+    <p>However, after writing the first version of this article, I was granted commit access, so now these changes are all integrated into the base toolchain. This makes the following instructions very easy, and exactly the same as they were for the gcc 4.0 based toolchain most users are using. I highly recommend people update and track this project now that it is being actively maintained again.</p>
+
+<blockquote><syntax><![CDATA[
+rm -rf "${cctools}"
+svn co http://iphone-dev.googlecode.com/svn/branches/odcctools-9.2-ld "${cctools}"
+]]></syntax></blockquote>
+</section>
+
+<section title="Building Darwin CC Tools">
+    <p>This build step is pretty much unchanged. Note that I have added the -m32 flags because I am using a 64-bit Linux machine as my development environment and Apple's code (irritatingly) assumes you are targeting a machine with the same word size as the machine you are running the tool on. You may not need those modifications.</p>
+
+<blockquote><syntax><![CDATA[
+mkdir -p "${build}"
+cd "${build}"
+mkdir cctools-iphone
+cd cctools-iphone
+CFLAGS=-m32 LDFLAGS=-m32 "${cctools}"/configure \
+    --target="${target}" \
+    --prefix="${prefix}" \
+    --disable-ld64
+make
+make install
+]]></syntax></blockquote>
+
+    <inset>
+        <p>To compile odcctools you will need to have the Objective-C compiler installed. If you are on a Mac this will be a given, but on other systems you may have to install it separately. If you are using Debian it is as easy as installing the gobjc package.</p>
+    </inset>
+</section>
+
+<section title="Compiling LLVM-gcc">
+    <p>Compiling LLVM-gcc is a little more complicated, but not overly so. We have to specify our assembler (lest the system one get used), and match the compilation flags that apple used while building libstdc++ (they don't support wchar_t), but otherwise this is quite straightforward.</p>
+
+<blockquote><syntax><![CDATA[
+mkdir -p "${build}"
+cd "${build}"
+mkdir gcc-4.2-iphone
+cd gcc-4.2-iphone
+"${gcc}"/configure \
+    --target="${target}" \
+    --prefix="${prefix}" \
+    --with-sysroot="${sysroot}" \
+    --enable-languages=c,c++,objc,obj-c++ \
+    --with-as="${prefix}"/bin/"${target}"-as \
+    --with-ld="${prefix}"/bin/"${target}"-ld \
+    --enable-wchar_t=no \
+    --with-gxx-include-dir=/usr/include/c++/4.0.0
+make -j2
+make install
+]]></syntax></blockquote>
+
+    <p>One finishing touch, and this is where someone who has more experience working with gcc cross compiles might be able to help, is that the folder that is searched for the C++ include path is now inside the sysroot, even though it was installed to our local prefix. The simplest fix I have found for this is to simply link our local prefix into the sysroot as if it were also on the target machine.</p>
+
+<blockquote><syntax><![CDATA[
+mkdir -p "${sysroot}"/"$(dirname "${prefix}")"
+ln -s "${prefix}" "${sysroot}"/"$(dirname "${prefix}")"
+]]></syntax></blockquote>
+</section>
+
+<section title="Telesphoreo Compatibility">
+    <p>A final note, if you are wanting to compile Telesphoreo packages with this toolchain (or simply compile your own packages with the Telesphoroeo build environment), you should delete the following libraries, as they are replaced and upgraded by Telesphoreo. If you leave them, the dependency analysis can get badly confused.</p>
+
+<blockquote><syntax><![CDATA[
+for lib in crypto curses form ncurses sqlite3 ssl xml2; do
+    rm -f "${sysroot}"/usr/lib/lib${lib}.*
+done
+]]></syntax></blockquote>
+</section>
+
+<section title="What Next?">
+
+    <p>One thing I'd recommend more advanced users start checking out is the iphone-gcc package in Telesphoreo. With the new non-LLVM toolchain, I've been able to get a stable, working compiler on the iPhone itself that is easy to install thanks to APT and Cydia. (Currently you will have to provide your own /usr/include, as I still need to think through the legal issues of distributing that.)</p>
+
+<blockquote><syntax>
+<highlight>transponder:~ root#</highlight> apt-get install iphone-gcc
+Reading package lists... Done
+Building dependency tree... Done
+The following extra packages will be installed:
+  csu odcctools
+The following NEW packages will be installed:
+  csu iphone-gcc odcctools
+0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+Need to get 16.4MB of archives.
+After unpacking 41.5MB of additional disk space will be used.
+Do you want to continue [Y/n]? y
+Get:1 http://apt.saurik.com tangelo/main csu 232-1 [2630B]
+Get:2 http://apt.saurik.com tangelo/main odcctools 238-9 [2079kB]
+Get:3 http://apt.saurik.com tangelo/main iphone-gcc 4.2-20080410-1-4 [14.4MB]
+Fetched 16.4MB in 33s (498kB/s)
+Selecting previously deselected package csu.
+(Reading database ... 3632 files and directories currently installed.)
+Unpacking csu (from .../csu_232-1_darwin-arm.deb) ...
+Selecting previously deselected package odcctools.
+Unpacking odcctools (from .../odcctools_238-9_darwin-arm.deb) ...
+Selecting previously deselected package iphone-gcc.
+Unpacking iphone-gcc (from .../iphone-gcc_4.2-20080410-1-4_darwin-arm.deb) ...
+Setting up csu (232-1) ...
+Setting up odcctools (238-9) ...
+Setting up iphone-gcc (4.2-20080410-1-3) ...
+<highlight>transponder:~ root#</highlight> gcc -v
+Using built-in specs.
+Target: arm-apple-darwin8
+Configured with: ../llvm-gcc-4.2/configure --build=x86_64-unknown-linux-gnu --host=arm-apple-darwin8 --enable-static=no --enable-shared=yes --prefix=/usr --localstatedir=/var/cache/iphone-gcc --enable-languages=c,c++,objc,obj-c++ --enable-wchar_t=no --with-gxx-include-dir=/usr/include/c++/4.0.0
+Thread model: posix
+gcc version 4.2.1 (Based on Apple Inc. build 5555)
+<highlight>transponder:~ root#</highlight> gcc
+gcc: no input files
+<highlight>transponder:~ root#</highlight> echo 'main() { printf("Hello, world!\n"); }' >main.c
+<highlight>transponder:~ root#</highlight> gcc -o main main.c
+main.c: In function 'main':
+main.c:1: warning: incompatible implicit declaration of built-in function 'printf'
+<highlight>transponder:~ root#</highlight> ./main
+Hello, world!
+<highlight>transponder:~ root#</highlight>
+</syntax></blockquote>
+
+    <p>Well, have fun! ;P Here's to Apple having produced a useful SDK!</p>
+</section>
+
+</body>

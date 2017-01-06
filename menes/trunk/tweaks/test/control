@@ -1,0 +1,11 @@
+Package: com.saurik.iphone.test
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.3040-1
+Description: silly test of something inconsequential
+Name: Test Extension
+Depends: mobilesubstrate (>= 0.9.2685-1)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/com.saurik.iphone.test/

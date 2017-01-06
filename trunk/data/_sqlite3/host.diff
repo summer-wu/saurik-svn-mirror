@@ -1,0 +1,32 @@
+diff -ru sqlite-3.5.9/configure.ac sqlite-3.5.9+iPhone/configure.ac
+--- sqlite-3.5.9/configure.ac	2008-05-07 12:18:23.000000000 +0000
++++ sqlite-3.5.9+iPhone/configure.ac	2009-08-11 11:52:36.000000000 +0000
+@@ -163,8 +163,8 @@
+ 
+ #########
+ # Check to see if the --with-hints=FILE option is used.  If there is none,
+-# then check for a files named "$host.hints" and ../$hosts.hints where
+-# $host is the hostname of the build system.  If still no hints are
++# then check for a files named "$host_.hints" and ../$hosts_.hints where
++# $host_ is the hostname of the build system.  If still no hints are
+ # found, try looking in $system.hints and ../$system.hints where
+ # $system is the result of uname -s.
+ #
+@@ -172,12 +172,12 @@
+   AC_HELP_STRING([--with-hints=FILE],[Read configuration options from FILE]),
+   hints=$withval)
+ if test "$hints" = ""; then
+-  host=`hostname | sed 's/\..*//'`
+-  if test -r $host.hints; then
+-    hints=$host.hints
++  host_=`hostname | sed 's/\..*//'`
++  if test -r $host_.hints; then
++    hints=$host_.hints
+   else
+-     if test -r ../$host.hints; then
+-       hints=../$host.hints
++     if test -r ../$host_.hints; then
++       hints=../$host_.hints
+      fi
+   fi
+ fi

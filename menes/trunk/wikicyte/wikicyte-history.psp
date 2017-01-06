@@ -1,0 +1,317 @@
+<html><head><title>WikiCyte - <%=uri%></title>
+    <script type="text/javascript" src="http://cydia.saurik.com/menes/menes.js"></script>
+<script type="text/javascript">
+
+var approval = {
+    'null': 'pending',
+    'false': 'deleted',
+    'true': 'approved'
+};
+
+var radio = function (set) {
+    for (var i = 0; i != set.length; ++i)
+        if (set[i].checked)
+            return set[i].value;
+    return null;
+};
+
+var inline = function (id, old, value) {
+    var td = $('#inline-' + id);
+    if (td.hasClass("active")[0]) {
+        td.html('');
+        td.removeClass("active");
+    } else {
+        td.html('<iframe src="/_diff/' + old + '/' + id + '" scrolling="yes"></iframe>');
+        td.addClass("active");
+    }
+};
+
+var diff = function () {
+    var first = radio(document.form.first);
+    var second = radio(document.form.second);
+    if (first != null && second != null)
+        window.location = '/_diff/' + first + '/' + second;
+    else
+        alert('You must select both a starting and an ending point to diff between.');
+};
+
+var approve_ = function (row, name) {
+    row.removeClass('pending');
+    row.removeClass('deleted');
+    row.removeClass('approved');
+    row.addClass(name);
+}
+
+var approve = function (id, value) {
+    var name = value == null ? 'null' : value.toString();
+    var url = '/_approve/' + id + '/' + name;
+    $.xhr(url, 'GET', {}, null, {
+        success: function (value) {
+            approve_($('#id-' + id), approval[name]);
+            approve_($('#inline-row-' + id), approval[name]);
+        }
+    });
+};
+
+</script><style type="text/css">
+
+body {
+    font-family: Arial, serif;
+    margin: 0;
+    padding: 10px;
+}
+
+a {
+    color: #5555cc;
+}
+
+td.id {
+    text-align: right;
+    width: 50px;
+}
+
+.change img {
+    margin-left: 4px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+td.tools {
+    text-align: center;
+    width: 70px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+    text-align: center;
+}
+
+td.who {
+    width: 70px;
+}
+
+td.host {
+    width: 125px;
+}
+
+td.when {
+    width: 190px;
+}
+
+td.where {
+    text-align: left;
+    width: 310px;
+}
+
+input.radio {
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    border-top: 1px solid #dddddd;
+    text-align: center;
+}
+
+td.diff {
+    text-align: right;
+    padding: 0 5px 0 0;
+    width: 30px;
+}
+
+td.change {
+    text-align: right;
+    width: 50px;
+}
+
+div.center {
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 18px;
+    text-align: center;
+}
+
+table {
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+tr.approved td.when {
+    color: #00aa00;
+}
+
+tr.deleted td.when {
+    color: #ff0000;
+}
+
+tr.deleted {
+    background-color: #ffdddd;
+}
+
+tr.approved {
+    background-color: #ccffcc;
+}
+
+/*tr.deleted.odd {
+    background-color: #fff0f0;
+}
+
+tr.approved.odd {
+    background-color: #f3fff3;
+}
+
+tr.even {
+    background-color: #fcfcfc;
+}
+
+tr.odd {
+    background-color: #ffffff;
+}*/
+
+tr.approved a.approve-true {
+    display: none;
+}
+
+tr.approved a.approve-null-false {
+    display: none;
+}
+
+tr.deleted a.approve-null-true {
+    display: none;
+}
+
+tr.pending a.approve-null-true {
+    display: none;
+}
+
+tr.pending a.approve-null-false {
+    display: none;
+}
+
+tr.deleted a.approve-false {
+    display: none;
+}
+
+#toolbar {
+    margin-bottom: 3px;
+    text-align: right;
+    width: 960px;
+}
+
+#changes {
+}
+
+tr.inline td {
+    border: none;
+}
+
+tr.inline iframe {
+    border: none;
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+    margin: 5px 0;
+    width: 890px;
+    height: 200px;
+}
+
+th {
+    text-align: center;
+}
+
+th.uri {
+    text-align: left;
+}
+
+</style></head><body>
+
+<div class="center">
+
+<h1 class="title">History: <%=uri%></h1>
+
+<!--div style="background-color: black; width: 960px; margin: 0 auto">a</div-->
+
+<form name="form">
+<table cellspacing="0" cellpadding="0">
+    <tr>
+        <th class="tools" colspan="2">Tools</th>
+        <th class="when">When</th>
+        <th class="uri">URI</th>
+        <th class="user">User</th>
+        <th class="host">IP/Host</th>
+
+        <th colspan="2">
+            <input type="button" value="Show Changes" onclick="diff()" id="changes"/>
+        </th>
+    </tr>
+<%
+approval = {
+    None: 'pending',
+    False: 'deleted',
+    True: 'approved'
+}
+
+odd = False
+old = None
+state = False
+for edit in history:
+    odd = not odd
+    approved = edit['approved']
+    id = edit['id']
+    color = ecol(edit['user']) if edit['user'] != None else '000000'
+    old = edit['from']
+%>
+    <tr class="<%=approval[approved]%> <%="odd" if odd else "even"%>" id="id-<%=id%>">
+        <td class="id"><a href="/_page/<%=id%>"><%=id%></a></td>
+
+        <td class="tools">
+            <a class="approve-true" title="approve revision" href="javascript:approve(<%=id%>, true)"><img src="http://cache.saurik.com/silk/accept.png" border="0"/></a>
+            <a class="approve-null-true" title="remove approval" href="javascript:approve(<%=id%>, null)"><img src="http://cache.saurik.com/silk/resultset_first.png" border="0"/></a>
+            <a class="approve-null-false" title="remove rejection" href="javascript:approve(<%=id%>, null)"><img src="http://cache.saurik.com/silk/resultset_first.png" border="0"/></a>
+            <a class="approve-false" title="reject revision" href="javascript:approve(<%=id%>, false)"><img src="http://cache.saurik.com/silk/delete.png" border="0"/></a>
+        </td>
+
+        <td class="when"><%=etim(edit['when'].replace(microsecond=0)).strftime("%b %d %Y | %H:%M") if edit['when'] != None else '-'%></td>
+
+        <td class="where"><a style="color: #<%='000000' if uri != None else ecol(edit['uri'])%>" href="<%=edit['uri']%>"><%=edit['uri']%></a></td>
+        <td class="who" style="color: #<%=color%>"><%=edit['user'] if edit['user'] != None else '-'%></td>
+        <td class="host"><%=edit['host'] if edit['host'] != None else '-'%></td>
+
+        <td class="change"><%
+    if old != None:
+        %><a href="javascript:inline(<%=id%>, <%=old%>, true)" title="view changes"><%=old%><img src="http://cache.saurik.com/silk/shape_align_center.png" border="0"/></a><%
+    else:
+        %>&ldquo;New&rdquo;<%
+    #
+%>
+        </td>
+
+        <td class="diff">
+            <input class="radio" type="radio" name="first" value="<%=id%>" <%='checked' if state == True else ''%>/>
+            <input class="radio" type="radio" name="second" value="<%=id%>" <%='checked' if state == False else ''%>/>
+        </td>
+    </tr><%
+
+    if old != None:
+        %><tr class="inline <%=approval[approved]%> <%="odd" if odd else "even"%>" id="inline-row-<%=id%>">
+            <td colspan="8" id="inline-<%=id%>"></td>
+        </tr>
+<%
+    #
+    old = edit['id']
+    state = True if state == False else None
+#
+%>
+</table></form>
+
+</div>
+
+</body></html>

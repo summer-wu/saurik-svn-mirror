@@ -1,0 +1,194 @@
+diff -ur subversion-1.4.6/subversion/libsvn_subr/opt.c subversion-1.4.6+iPhone/subversion/libsvn_subr/opt.c
+--- subversion-1.4.6/subversion/libsvn_subr/opt.c	2007-12-06 18:50:24.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/libsvn_subr/opt.c	2008-06-18 06:53:08.000000000 +0000
+@@ -972,8 +972,8 @@
+     }
+ 
+   SVN_ERR(svn_cmdline_printf(pool, _("%s, version %s\n"
+-                                     "   compiled %s, %s\n\n"), pgm_name,
+-                             SVN_VERSION, __DATE__, __TIME__));
++                                     "\n"), pgm_name,
++                             SVN_VERSION));
+   SVN_ERR(svn_cmdline_fputs(_("Copyright (C) 2000-2007 CollabNet.\n"
+                               "Subversion is open source software, see"
+                               " http://subversion.tigris.org/\n"
+diff -ur subversion-1.4.6/subversion/po/de.po subversion-1.4.6+iPhone/subversion/po/de.po
+--- subversion-1.4.6/subversion/po/de.po	2006-10-24 07:17:59.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/de.po	2008-06-18 06:53:13.000000000 +0000
+@@ -4351,11 +4351,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, Version %s\n"
+-"   übersetzt %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/es.po subversion-1.4.6+iPhone/subversion/po/es.po
+--- subversion-1.4.6/subversion/po/es.po	2006-11-10 18:45:10.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/es.po	2008-06-18 06:53:16.000000000 +0000
+@@ -4254,11 +4254,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, versión %s\n"
+-"   compilado %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:957
+diff -ur subversion-1.4.6/subversion/po/fr.po subversion-1.4.6+iPhone/subversion/po/fr.po
+--- subversion-1.4.6/subversion/po/fr.po	2006-08-24 07:06:31.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/fr.po	2008-06-18 06:53:18.000000000 +0000
+@@ -4363,11 +4363,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, version %s\n"
+-"    compilé %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:957
+diff -ur subversion-1.4.6/subversion/po/it.po subversion-1.4.6+iPhone/subversion/po/it.po
+--- subversion-1.4.6/subversion/po/it.po	2006-12-25 23:16:34.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/it.po	2008-06-18 06:53:21.000000000 +0000
+@@ -4343,11 +4343,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, versione %s\n"
+-"   compilato %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:957
+diff -ur subversion-1.4.6/subversion/po/ja.po subversion-1.4.6+iPhone/subversion/po/ja.po
+--- subversion-1.4.6/subversion/po/ja.po	2007-03-26 17:25:34.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/ja.po	2008-06-18 06:53:24.000000000 +0000
+@@ -4490,11 +4490,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, バージョン %s\n"
+-"   コンパイル日時: %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/ko.po subversion-1.4.6+iPhone/subversion/po/ko.po
+--- subversion-1.4.6/subversion/po/ko.po	2006-11-20 07:02:47.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/ko.po	2008-06-18 06:53:27.000000000 +0000
+@@ -4159,11 +4159,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, 버젼 %s\n"
+-"    %s, %s에 컴파일 됨\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/nb.po subversion-1.4.6+iPhone/subversion/po/nb.po
+--- subversion-1.4.6/subversion/po/nb.po	2007-03-07 15:17:47.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/nb.po	2008-06-18 06:53:31.000000000 +0000
+@@ -4268,11 +4268,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, versjon %s\n"
+-"   kompilert %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/pl.po subversion-1.4.6+iPhone/subversion/po/pl.po
+--- subversion-1.4.6/subversion/po/pl.po	2006-08-23 19:35:09.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/pl.po	2008-06-18 06:53:34.000000000 +0000
+@@ -4261,11 +4261,8 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+-"\n"
+ msgstr ""
+ "%s, wersja %s\n"
+-"   kompilacja %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:957
+diff -ur subversion-1.4.6/subversion/po/pt_BR.po subversion-1.4.6+iPhone/subversion/po/pt_BR.po
+--- subversion-1.4.6/subversion/po/pt_BR.po	2006-10-28 20:37:07.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/pt_BR.po	2008-06-18 06:53:38.000000000 +0000
+@@ -4238,11 +4238,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, versão %s\n"
+-"   compilado %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/sv.po subversion-1.4.6+iPhone/subversion/po/sv.po
+--- subversion-1.4.6/subversion/po/sv.po	2006-10-25 07:32:55.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/sv.po	2008-06-18 06:53:45.000000000 +0000
+@@ -4194,11 +4194,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, version %s\n"
+-"   kompilerad %s, %s\n"
+ "\n"
+ 
+ #: libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/zh_CN.po subversion-1.4.6+iPhone/subversion/po/zh_CN.po
+--- subversion-1.4.6/subversion/po/zh_CN.po	2007-12-09 14:28:45.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/zh_CN.po	2008-06-18 06:53:49.000000000 +0000
+@@ -4140,11 +4140,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s，版本 %s\n"
+-"   编译于 %s，%s\n"
+ "\n"
+ 
+ #: ../libsvn_subr/opt.c:977
+diff -ur subversion-1.4.6/subversion/po/zh_TW.po subversion-1.4.6+iPhone/subversion/po/zh_TW.po
+--- subversion-1.4.6/subversion/po/zh_TW.po	2006-08-23 19:35:09.000000000 +0000
++++ subversion-1.4.6+iPhone/subversion/po/zh_TW.po	2008-06-18 06:53:54.000000000 +0000
+@@ -4216,11 +4216,9 @@
+ #, c-format
+ msgid ""
+ "%s, version %s\n"
+-"   compiled %s, %s\n"
+ "\n"
+ msgstr ""
+ "%s, 版本 %s\n"
+-"   編譯於 %s, %s\n"
+ "\n"
+ 
+ # as-is

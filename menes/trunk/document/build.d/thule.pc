@@ -1,0 +1,2 @@
+CXXFLAGS += -I/home/saurik/opt/postgresql-7.4.3/include
+LDFLAGS += -L/home/saurik/opt/postgresql-7.4.3/lib

@@ -1,0 +1,67 @@
+"ooTextFile"
+!
+! The t-deletion grammar of Reynolds (1994: 136)
+! and two corresponding output distributions
+!
+"Collection" 3
+
+"OTGrammar" "Reynolds_tdeletion"
+
+7 constraints
+"PossOns-P2"    100  0
+"*Coda"         100  0
+"Align-Right"   100  0
+"Parse-COR"     100  0
+"*ComplexOns"   100  0
+"Lx=Pr"         100  0
+"Onset"         100  0
+
+0 fixed rankings
+
+4 inputs  !  "P2" "*Cod" "Right" "COR" "*CxOns" "Lx=Pr" "Onset"
+"Ct][|V" 3
+   "Ct][|V"    0     2      0      0       0       0       1
+   "C]<t>[|V"  0     1      0      1       0       0       1
+   "C][t|V"    0     1      0      0       0       1       0
+"Ct][|R" 3
+   "Ct][|R"    0     2      0      0       0       0       0
+   "C]<t>[|R"  0     1      0      1       0       0       0
+   "C][t|R"    0     1      0      0       1       1       0
+"Ct][|L" 3
+   "Ct][|L"    0     2      0      0       0       0       0
+   "C]<t>[|L"  0     1      0      1       0       0       0
+   "C][t|L"    1     1      0      0       1       1       0
+"Ct|]]" 3
+   "Ct]|]"     0     2      0      0       0       0       0
+   "C|]<t>]"   0     1      0      1       0       0       0
+   "C|]t]"     0     1      1      0       0       0       0
+
+"PairDistribution" "tdeletion_A"
+12
+"Ct][|V"  "Ct][|V"    0
+"Ct][|V"  "C]<t>[|V" 20
+"Ct][|V"  "C][t|V"   80
+"Ct][|R"  "Ct][|R"    0
+"Ct][|R"  "C]<t>[|R" 40
+"Ct][|R"  "C][t|R"   60
+"Ct][|L"  "Ct][|L"   20
+"Ct][|L"  "C]<t>[|L" 80
+"Ct][|L"  "C][t|L"    0
+"Ct|]]"   "Ct]|]"     0
+"Ct|]]"   "C|]<t>]"  60
+"Ct|]]"   "C|]t]"    40
+
+"PairDistribution" "tdeletion_B"
+12
+"Ct][|V"  "Ct][|V"    0
+"Ct][|V"  "C]<t>[|V" 40
+"Ct][|V"  "C][t|V"   60
+"Ct][|R"  "Ct][|R"    0
+"Ct][|R"  "C]<t>[|R" 60
+"Ct][|R"  "C][t|R"   40
+"Ct][|L"  "Ct][|L"   20
+"Ct][|L"  "C]<t>[|L" 80
+"Ct][|L"  "C][t|L"    0
+"Ct|]]"   "Ct]|]"     0
+"Ct|]]"   "C|]<t>]"  20
+"Ct|]]"   "C|]t]"    80

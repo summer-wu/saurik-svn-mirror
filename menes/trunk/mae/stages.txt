@@ -1,0 +1,28 @@
+type source code into window
+  good ol' regex
+save source code into text file
+  <find really complicated paper on parsers>
+parse source code into parse trees
+  OpenC++
+generate intermediate language
+  TenDRA
+  LLVM
+run optimizer
+  ...
+construct assembly
+  (arguably wash/rinse/repeat)
+obtain binary translation unit
+  om
+link translation units into single binary
+  eel
+strip symbols from binary
+  leel + modification
+load program
+  <modify dynamic linker>
+dynamically link program
+  MobileSubstrate
+  mach_inject
+fetch call instruction
+  valgrind
+execute call instruction
+  bochs

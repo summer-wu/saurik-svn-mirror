@@ -1,0 +1,11 @@
+diff -ru ffmpeg-export-2008-05-20/cmdutils.c ffmpeg-export-2008-05-20+iPhone/cmdutils.c
+--- ffmpeg-export-2008-05-20/cmdutils.c	2008-05-09 11:56:36.000000000 +0000
++++ ffmpeg-export-2008-05-20+iPhone/cmdutils.c	2008-06-19 04:35:45.000000000 +0000
+@@ -206,7 +206,6 @@
+ #if ENABLE_AVFILTER
+     fprintf(stderr, "  libavfilter version: " AV_STRINGIFY(LIBAVFILTER_VERSION) "\n");
+ #endif
+-    fprintf(stderr, "  built on " __DATE__ " " __TIME__);
+ #ifdef __GNUC__
+     fprintf(stderr, ", gcc: " __VERSION__ "\n");
+ #else

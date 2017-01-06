@@ -1,0 +1,1 @@
+libdl's dladdr() may be useful for hop::Function debugging

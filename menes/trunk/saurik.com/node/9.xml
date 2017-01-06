@@ -1,0 +1,143 @@
+<body title="iPhone Theming on WinterBoard" sidead="true">
+
+<p>Pretty much the most requested application for iPhoneOS 2.x has been SummerBoard. Unfortunately, RiPDev is busy writing a new Installer for 2.x (the branding for which they bought off of NullRiver, whom I hope made a pretty penny on that transaction), which means no SummerBoard, not for us. (Also, RiPDev seems like they are going to be selling a similar product via Installer, so its unlikely that they are going to want the competition from anything free.)</p>
+
+<p>This, unfortunately, leaves the rest of us in a lurch. It gives me a warm feeling inside when I see the wallpapers I've taken show up behind SpringBoard, and I haven't been able to do that since I upgraded to the iPhone 3G. Seeing as I <a href="http://sleepers.net/news/2008/08/01/cydia-got-a-facelift/">just finished releasing a new version of Cydia</a> (which has a number of features people have been looking for in it), I figured I'd have time to solve this: enter WinterBoard.</p>
+
+<p>Now, when I do things, I like to <em>seriously</em> do things. Here, that means not just creating a "temporary solution": WinterBoard, to me, needs to be everything SummerBoard was <em>and</em> wasn't. I mean, let's face it: SummerBoard was nice, but it just didn't cut it after a while and NullRiver pretty much stopped updating it after only a few months of work. Also, as it wasn't open source, no one else could continue the project.</p>
+
+<p>For those who don't know that much about SummerBoard the idea is that you should be able to theme SpringBoard: change the icons of applications, use a custom wallpaper (well, a wallpaper at all), and even modify the statusbar and dock. This is pretty much all SummerBoard did, though. Even this had a bunch of issues involving localization (themes often do not work very well in other languages as icons are themed by the displayed name of the program. Besides, many more things to theme started cropping up in the community: sliders, batteries, etc..</p>
+
+<p>What SummerBoard really had going for it, though, was how it worked: it hooks into SpringBoard and overrides functionality down into its core. This lets it swap out icons at runtime without having to actually muck around on disk and swap out the .png files. This, in turn, makes it incredibly safe: you don't have to worry that the guy packaging the theme managed to think through backups correctly (or that the people who wrote the package mangager didn't think through package conflicts... I'm looking at you Installer...): the theme sits entirely self contained in its own folder.</p>
+
+<p>With WinterBoard, I therefore wanted to bring as much power as I could for theming the device down in one simple backend tool as I possibly could, and I think I've drastically succeeded. Pretty much every form of graphic-file related theme I've so far seen (and a few other varieties we may think of) is supported by WinterBoard, all using the SummerBoard model of "the safe other folder". WinterBoard truly is the modern replacement for SummerBoard. It's also <a href="http://svn.saurik.com/repos/menes/trunk/winterboard/">open source</a>.</p>
+
+<section title="What is a Theme?">
+    <p>A theme is a folder that sits in /Library/Themes (or $HOME/Library/SummerBoard/Themes, which is supported for backwards compatibility with SummerBoard, but storing themes there is wrong on a few different levels). These folders end in ".theme" and are otherwise the name of the theme; for example: "Transparent Icon Labels.theme". Inside of this folder you have a set of folders, a number of .png files, and optionally an Info.plist that contains some extended information.</p>
+
+    <inset><p>One thing I wished I had done, btw, is spent the extra hour before going to bed thinking through having it be &lt;name&gt;.theme instead of just &lt;name&gt;, but by the time I woke up again there were already hundreds of themes posted and it was too late :P. I have gone ahead and made this change, as documented in the previous paragraph, but themes without this extension will still work.</p></inset>
+
+    <p>One thing that is a drastic modification from SummerBoard is that you can have multiple themes installed at once. This is partly due to how powerful WinterBoard is: there are so many things you can theme that people really want to be able to mix and match them. This means you might have a battery theme installed from one source, a set of icons from another, and might override the wallpaper with your user settings.</p>
+
+    <p>The interface for this is a priority ordered list of themes that you can drag around (with the same interface as the MobilePhone favorites screen, although the dragging is a little more finicky, a bug I currently believe to be a fault in the control Apple made public for doing that), each of which can either be checked or unchecked, which indicates whether it is turned on.</p>
+</section>
+
+<section title="Legacy Theme Support">
+    <p>As most of the existing themes out there are designed for SummerBoard, it is definitely important to support this "de-facto standard" of theme organization. The way a SummerBoard theme worked is by having a few components, all of which are optional:</p>
+
+    <ul>
+        <li><strong>Dock.png</strong> - replacement graphic for the bottom dock (which may be transparent)</li>
+        <li><strong>Icons/</strong> - a folder of files such as Calendar.png which are used as application icons</li>
+        <li><strong>StatusBar.png</strong> - graphic to display as the status bar at the top, when its "dark"</li>
+        <li><strong>Wallpaper.png</strong> - an image to display behind all of the icons on SpringBoard</li>
+    </ul>
+
+    <p>This is really simple and is supported fully by WinterBoard. The one thing that should be pointed out: the Icons/ folder was horrendously non-internationalized. As it uses the displayed name of the program (such as "Calendar"), if you are using a different language icons simply don't theme. The way some of the larger themes got around this by seriously providing icons (often duplicate files as Installer didn't support symlinks very well at all) for every possible name of a program in the many languages the phone supported.</p>
+
+    <p>Personally, I think that's nuts, and it's been confusing users of WinterBoard over the last few days. WinterBoard therefore looks up the english variation of the name and attempts that if it can't find an icon specifically for the current language. Also, if you have your device switched to use Celsius for temperatures the Weather icon is also different (and is even loaded as a special case): WinterBoard corrects this oversight as well, mapping the Weather icon in as would be expected.</p>
+
+    <p>One final note on icon themes: App Store applications often are "composed" by SpringBoard from a flat, square graphic by wrapping them in a button style with a shadow. This effect can destroy many theme sets, to the point where people have called this wrapping "raping". WinterBoard therefore turns this behavior off for icons that are themed. If, however, your theme is designed with this effect in mind you can set the key ComposeStoreIcons to true in your Info.plist file. (Please note that this behavior is currently a little weird in how its supported with multiple themes. This will be fixed.)</p>
+</section>
+
+<section title="Miscellaneous Features">
+    <ul>
+        <li><highlight>Video Wallpaper</highlight> - Apparently some people have become addicted to video wallpaper, a feature that has been around on and off in various forms from random theme packages. In order to bring this into the WinterBoard fold you can specify a Wallpaper.mp4 file that will be placed at the very bottom of the wallpaper stack. Obviously, your video will need to be the right dimensions for the device. (Please note that right now it skips a little to a black screen as it loops.)</li>
+        <li><highlight>Sounds</highlight> - A bunch of system sounds are stored in /System/Library/Audio/UISounds/. If you create a folder in your theme called UISounds/ you will be able to theme these (provided you also can provide .caf files). Support for other formats may be forthcoming.</li>
+        <li><highlight>Web Clips</highlight> - If you want to theme Web Clips you can do so using Icons/ using the name of the clip (example: Google.png). This works very similarly to how Icons/ themes other icons by name.</li>
+        <li><highlight>Lock Background</highlight> - You can also theme the background of the lock screen using LockBackground.png.</li>
+        <li><highlight>SMS Background</highlight> - Behind the SMS windows you can put an image using SMSBackground.png.</li>
+        <li><highlight>Debug Output</highlight> - If you <a href="http://sleepers.net/news/blank/enable-syslog-on-20/">activate syslogd</a> you can set Debug to true in your com.saurik.WinterBoard.plist preferences file (yes, this is rather esoteric) in order to get a dump of various hooks. This can help figure out filenames you might want to theme.</li>
+        <li><highlight>Font Replacement</highlight> - WinterBoard can globally rename one font into another. To do this, by way of example: you can place a key "FontName-Helvetica" with the value "Courier New" to use the latter font anywhere someone would have used the former.</li>
+        <li><highlight>Per-Page Wallpapers</highlight> - You can have a different wallpaper per page of SpringBoard icons by having a file named Page#.png, such as Page0.png. This graphic will be displayed above widgets and wallpapers, but below the icons. Unfortunately, due to a bug that I'm working on fixing, it will also be displayed above the dock when your icons are wiggling. Please do not freak out when this happens ;P.</li>
+        <li><highlight>Icon Alpha</highlight> - Setting the IconAlpha key of your Info.plist to some decimal number between 0 and 1 will affect the transparency of the icons.</li>
+    </ul>
+</section>
+
+<section title="Theming Bundle Resources">
+    <p>The entire idea, though, of theming things by their displayed named is wrong, even if not for localization reasons: with App Store multiple programs are allowed to have the same name. What they <em>should</em> have that's unique, though is their "bundle identifier". Pretty much everything we think about on Apple computers is stored in the form of a "bundle" (including our themes in short order, albeit usually with extensions like .theme... *sigh*). These then have names which are supposed to be unique (although watch them not end up being all the time in practice).</p>
+
+    <p>In general, the way you figure out the bundle identifier of a bundle is to open its Info.plist file and read the key for CFBundleIdentifier. This can be done using the Property List Editor tool on a Mac or by using either Apple's (desktop) or Erica's (on-device) plutil to convert the file to XML. Now, I realize this can be difficult, so please bear with me for a moment and I'll show you an alternative.</p>
+
+    <p>With this information you can now use the bundle identifier as the name of a file in Icons/ (such as Icons/com.apple.mobilemail.png). The fun doesn't stop there, though. More often than not (although there are some irritating exceptions) most of the graphics files on disk are loaded using a filename offset from a named bundle (in which case they are called "resources". An example of this are the pictures used for battery status on the lock screen. These files are stored in /System/Library/CoreServices/SpringBoard.app: a bundle that represents the SpringBoard program.</p>
+
+    <p>To theme these we then simply need to get their name (such as BatteryBG_1.png) and then place a file in Bundles/com.apple.springboard (com.apple.springboard is the bundle identifier of com.apple.springboard). As promised, there's another option if getting that bundle identifier is getting irritating: you can also use Folders/SpringBoard.app/BatteryBG_1.png to theme bundle resources by folder name.</p>
+
+    <p>This mechanism should provide a <em>very</em> generic mechanism for theming files from random programs even, including App Store applications. (This is possible to do in WinterBoard, btw, as WinterBoard doesn't just hook SummerBoard: its resident in every program that's running to provide global themes.) It is so generic that it even replaces StatusBar.png and Dock.png: we can theme FSO_BG.png and SBDockBG.png out of SpringBoard's bundle.</p>
+
+    <p>Oh, one more thing: as I love genericity I also use this system to replace the Icons/ folder entirely (which is kind of a weird concept anyway). The icons for applications are stored as icon.png inside the bundle and are accessed as such, so you can mostly theme using Bundles/com.apple.mobilemail/icon.png (for example). I think there may still be some issues with how this works, though, so I might stick to Icons/ for a bit longer until I iron out all the kinks (specifically having to do with multi-app bundles like MobileSlideShow).</p>
+</section>
+
+<section title="Cached .artwork Themes">
+    <p>Finally, the most complex example of image-based themes I've so far seen has to do with .artwork files. These files exist as loading lots of small .png files from disk can be irritatingly time consuming, so instead they are loaded as a block and stored (I believe) in a shared memory cache. As these tiny graphics are often used to build all aspects of the interface these represent the ultima thule of iPhone theming.</p>
+
+    <p>Messing with them, though, is currently <em>really</em> hard: you have to use special tools to unpack the files and all you get out of them are a bunch of numerically-named png files (.artwork files don't have filenames in them). You then have to carefully make new images of the same size and rebuild the complete .artwork file, which <em>then</em> has to be installed on the phone with a rickety package that attempts to backup and restore the original. Yeek!</p>
+
+    <p>After I heard about this, I set out to fix this with WinterBoard: I want theming to be a fun, safe experience that can be taken up by anybody without special tools. To do this I first analyzed how .artwork files worked, and lo and behold there actually <em>are</em> filenames that go with all of those png files people were compressing (already this makes the task a million times easier.</p>
+
+    <p>At first I implemented this by providing a folder in your theme called UIImages/ in which you can store replacements for these files. As an example, you might have UIImages/UISearchFieldIcon.png (which happens to be the name of the little magnifying glass used at the left of text fields to indicate you can search with them).</p>
+
+    <p>However, I have since figured out that these .artwork files are actually designed to be a cache of files that are otherwise part of a bundle and should really be stored in Folders/UIKit.framework/. The UIImages/ path will be maintained for backwards compatibility. This new understanding, combined with some code updates, means that we can now theme any .artwork file (such as those used for MobilePhone.app).</p>
+
+    <inset><p>I'm writing this documentation a little bit before the WinterBoard release related to it, so for right now you need to keep using UIImages/. The support for MobilePhone.app is in there, but hooking back to UIKit.framework/ is not.</p></inset>
+
+    <p>Of course, you need to know what you can put there to make this feature useful. For a list of filenames you can theme you can grab <a href="http://test.saurik.com/winterboard/UIImages.txt">this text file</a>, but just having the names isn't really helpful. While I currently feel uncomfortable distributing a copy of these images from Apple as a file on my website, I have released a tool as part of WinterBoard that will let you quickly extract them for yourself called, yep, UIImages. Here's how you use it:</p>
+
+<blockquote><syntax><![CDATA[
+$ mkdir /tmp/images
+$ cd /tmp/images
+$ /Applications/WinterBoard.app/UIImages
+$ ls UISearchFieldIcon.png -la
+-rw-r--r-- 1 root wheel 468 Aug  4 03:13 UISearchFieldIcon.png
+]]></syntax></blockquote>
+
+    <p>One final variant are things that are loaded from a "mapped image domain". Common examples of this are the TextInput localization bundles. The way you specify these is using Domains/TextInput_ru/std-kb-ru.png.</p>
+</section>
+
+<section title="Theming with HTML">
+    <p>So, while staring at the desktop, I realized "wait, why don't I make that a website? then you could do all kinds of neat things with it!". This dream has been made a reality with the latest version of WinterBoard. There is a new file you can add called Wallpaper.html which puts a UIWebDocumentView behind SpringBoard. (You can use LockBackground.html to do the same thing on the lock screen.)</p>
+
+    <p>This view has a transparent background and has been told not to clear what's behind it, so you can set its background-color: CSS to transparent if you want to see through to Wallpaper.png (although you can also use standard HTML to handle the backgrounds now rather than resorting to that specific case).</p>
+
+    <p>The example theme, "Saurik", uses this to do a cross-fade background between two images (as I really couldn't decide which one I liked better ;P). Now, for those who have tried to do such effects before with MobileSafari and felt it was <em>way</em> too slow (as the JavaScript engine is miserable and the way it renders is equally bad) you should seriously check it out.</p>
+    
+    <p>The way I did this (and this is just a property of my theme, you can do anything you want obviously) is to use the WebKit-specific CSS properties Apple provided us with for doing transforms and animations. These work beutifully and are super fast. For more documentation on these, you should go to Apple's <a href="https://developer.apple.com/webapps/docs_iphone/referencelibrary/index-date.html">iPhone Reference Library</a> and get the two guides they have for download.</p>
+
+    <p>If what you really want is to install "widgets" (things that sit on the wallpaper and provide interesting HTML functionality) then you should use Widget.html: these will get layered on top of all other wallpaper layers (in priority order) and not conflict against the wallpaper in other themes.</p>
+</section>
+
+<section title="Theming .strings Localization Files">
+    <p>When a program needs to support multiple languages, what it does is it constructs multiple folders in its bundle of the form &lt;language&gt;.lproj. Inside of these folders it has .strings files, which are serialized property lists (which, in turn, can be in one of a number of different formats). These .strings files are called "tables" and map from "keys" to localized strings.</p>
+
+    <p>As an example, SpringBoard.app has a folder English.lproj, which contains a file SpringBoard.strings, which maps the key "AWAY_LOCK_LABEL" to the value "slide to unlock". This string is what is displayed on the main lock screen under the slider.</p>
+    
+    <p>This file is stored in the binary version of the property list format, but you can convert it by first installing Erica's Utilities from Cydia and then running plutil -c xml1 on the file (I'd recommend doing this to a copy so you aren't changing your original).</p>
+
+    <p>If you'd like to change this text you can mirror that same structure in your theme under Folders/SpringBoard.app/. Inside your SpringBoard.strings you will want to map just that one string to a different value. The simplest format you can use is the string table format, which looks like this:</p>
+
+    <blockquote><syntax><![CDATA[
+"AWAY_LOCK_LABEL" = "slide to saurik";
+]]></syntax></blockquote>
+
+    <inset>
+        <p>A quick note on the naming of a language: it used to be that, if you wanted English, you used English.lproj. This naming scheme was used for a few more languages until it became obvious that it didn't scale, at which point the localization system switched to using ISO country codes. The software on the iPhone, though, continues to use the older names for its .lproj folders.</p>
+        <p>However, I actually haven't figured out yet how to get these old names, so I don't support them. If you want to theme something in English you will need to use en.lproj, not English.lproj, even if the original folder on disk was using the older name.</p>
+    </inset>
+</section>
+
+<section title="SpringBoard Text Styles">
+    <p>For a while a really common request was that WinterBoard A) let you "fix" the color of the icon labels to SummerBoard's white and B) allow you to make them transparent. The former is supported by modifying Info.plist which allows for many CSS styles to be applied to the labels. This takes the form of two keys: DockedIconLabelStyle and UndockedIconLabelStyle. An example of a reasonable value is "color: blue; font-family: monospace".</p>
+
+    <p>The story on this is a little more complicated, though, and is worth mentioning: the default color for docked icon labels is white, but SpringBoard makes all the other icons get gray text. This behavior was apparently changed by SummerBoard to make the text more consistently viewable over random wallpapers. Specifically, all text is rendered white.</p>
+
+    <p>To make WinterBoard correctly support these old themes, it does something similar. Specifically, if it detects that no themes are specifically setting any styles (so there are no DockedIconLabelStyle or UndockedIconLabelStyle values in play) it forces SpringBoard to render all icon labels as if they were on the dock. To override specifically this behavior (which I doubt there is any good reason to do rather than just applying a specific style) you can set the key UndockedIconLabels to true.</p>
+
+    <p>Similarly, you can set TimeStyle to change the style of text used to render the clock on the status bar and OperatorNameStyle to change any text-based (not image based) carrier names (such as those used by MakeItMine). Another new addition is CalendarIconDateStyle and CalendarIconDayStyle, which modify the number and day of the week that are drawn on the calendar icon, respectively.</p>
+
+    <p>Finally we have BadgeStyle, which you can use to change the rendering of the little badge icons that appear on icons (like for new mail).</p>
+</section>
+
+<section title="More to Come!">
+    <p>This is actually not even all WinterBoard does currently, but certainly isn't all WinterBoard will be able to do given another few days of work. For continued updates on new WinterBoard functionality keep checking out this page: I'm going to be continue to update this page as more features are designed!</p>
+</section>
+
+</body>

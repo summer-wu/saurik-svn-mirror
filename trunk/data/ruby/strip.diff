@@ -1,0 +1,15 @@
+diff -ru ruby-1.9.2-rc2/configure.in ruby-1.9.2-rc2+iPhone/configure.in
+--- ruby-1.9.2-rc2/configure.in	2010-07-10 04:06:05.000000000 +0000
++++ ruby-1.9.2-rc2+iPhone/configure.in	2010-08-07 23:48:29.000000000 +0000
+@@ -1967,9 +1967,9 @@
+ 
+ AS_CASE(["$target_os"],
+   [linux* | gnu* | k*bsd*-gnu | kopensolaris*-gnu], [
+-	STRIP='strip -S -x'],
++	STRIP=${STRIP}' -S -x'],
+   [nextstep* | openstep* | rhapsody* | darwin*], [
+-	STRIP='strip -A -n'])
++	STRIP=${STRIP}' -A -n'])
+ 
+ AC_ARG_WITH(ext,
+             AC_HELP_STRING([--with-ext=EXTS],

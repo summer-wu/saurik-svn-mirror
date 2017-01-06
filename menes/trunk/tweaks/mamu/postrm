@@ -1,0 +1,4 @@
+#!/bin/bash
+if [[ $1 == remove ]]; then
+    killall MobileMail MobileSafari 2>/dev/null || true
+fi

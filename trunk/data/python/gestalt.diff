@@ -1,0 +1,25 @@
+diff -ru Python-2.5.1/Lib/ctypes/__init__.py Python-2.5.1+iPhone/Lib/ctypes/__init__.py
+--- Python-2.5.1/Lib/ctypes/__init__.py	2007-03-09 20:21:16.000000000 +0000
++++ Python-2.5.1+iPhone/Lib/ctypes/__init__.py	2008-03-08 20:35:54.000000000 +0000
+@@ -24,19 +24,13 @@
+ 
+ DEFAULT_MODE = RTLD_LOCAL
+ if _os.name == "posix" and _sys.platform == "darwin":
+-    import gestalt
++    import platform
+ 
+-    # gestalt.gestalt("sysv") returns the version number of the
+-    # currently active system file as BCD.
+-    # On OS X 10.4.6 -> 0x1046
+-    # On OS X 10.2.8 -> 0x1028
+-    # See also http://www.rgaros.nl/gestalt/
+-    #
+     # On OS X 10.3, we use RTLD_GLOBAL as default mode
+     # because RTLD_LOCAL does not work at least on some
+     # libraries.
+ 
+-    if gestalt.gestalt("sysv") < 0x1040:
++    if int(platform.release().split('.')[0]) < 8:
+         DEFAULT_MODE = RTLD_GLOBAL
+ 
+ from _ctypes import FUNCFLAG_CDECL as _FUNCFLAG_CDECL, \

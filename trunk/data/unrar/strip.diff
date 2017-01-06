@@ -1,0 +1,17 @@
+diff -ru unrar/makefile.unix unrar+iPhone/makefile.unix
+--- unrar/makefile.unix	2005-04-30 07:00:12.000000000 +0000
++++ unrar+iPhone/makefile.unix	2008-04-04 20:59:42.000000000 +0000
+@@ -105,13 +105,11 @@
+ unrar:	$(OBJECTS) $(UNRAR_OBJ)
+ 	@rm -f unrar
+ 	$(LINK) -o unrar $(LDFLAGS) $(OBJECTS) $(UNRAR_OBJ) $(LIBS)	
+-	$(STRIP) unrar
+ 
+ sfx:	WHAT=SFX_MODULE
+ sfx:	$(OBJECTS)
+ 	@rm -f default.sfx
+ 	$(LINK) -o default.sfx $(LDFLAGS) $(OBJECTS)
+-	$(STRIP) default.sfx
+ 
+ lib:	WHAT=RARDLL
+ lib:	$(OBJECTS) $(LIB_OBJ)

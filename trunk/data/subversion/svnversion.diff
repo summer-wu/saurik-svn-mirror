@@ -1,0 +1,12 @@
+diff -r -u subversion-1.4.6/Makefile.in subversion-1.4.6+iPhone/Makefile.in
+--- subversion-1.4.6/Makefile.in	2007-03-03 00:30:11.000000000 +0000
++++ subversion-1.4.6+iPhone/Makefile.in	2007-12-28 13:36:33.000000000 +0000
+@@ -325,7 +325,7 @@
+ 
+ ### HACK!! Find a better way to do this
+ revision-install:
+-	subversion/svnversion/svnversion $(top_srcdir) /repos/svn/trunk > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
++	svnversion $(top_srcdir) /repos/svn/trunk > $(DESTDIR)$(includedir)/subversion-1/svn-revision.txt
+ 
+ install-static: @INSTALL_STATIC_RULES@
+ 

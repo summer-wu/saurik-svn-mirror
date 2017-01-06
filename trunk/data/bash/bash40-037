@@ -1,0 +1,60 @@
+			     BASH PATCH REPORT
+			     =================
+
+Bash-Release: 4.0
+Patch-ID: bash40-037
+
+Bug-Reported-by:	Chet Ramey <chet.ramey@case.edu>
+Bug-Reference-ID:	<4AD7D749.5030601@case.edu>
+Bug-Reference-URL:
+
+Bug-Description:
+
+The configure script does not work on Snow Leopard and will result in
+attempts to link against the incorrect version of readline.
+
+Patch:
+
+*** ../bash-4.0-patched/configure.in	2009-02-06 12:03:44.000000000 -0500
+--- configure.in	2009-10-01 16:38:24.000000000 -0400
+***************
+*** 534,538 ****
+  		# dynamic version
+  		case "${host_os}" in
+! 		darwin[[89]]*)	READLINE_LIB='${READLINE_LIBRARY}' ;;
+  		*)		READLINE_LIB=-lreadline ;;
+  		esac
+--- 534,538 ----
+  		# dynamic version
+  		case "${host_os}" in
+! 		darwin[[89]]*|darwin10*) READLINE_LIB='${READLINE_LIBRARY}' ;;
+  		*)		READLINE_LIB=-lreadline ;;
+  		esac
+***************
+*** 569,573 ****
+  		# dynamic version
+  		case "${host_os}" in
+! 		darwin[[89]]*)	HISTORY_LIB='${HISTORY_LIBRARY}' ;;
+  		*)		HISTORY_LIB=-lhistory ;;
+  		esac
+--- 569,573 ----
+  		# dynamic version
+  		case "${host_os}" in
+! 		darwin[[89]]*|darwin10*) HISTORY_LIB='${HISTORY_LIBRARY}' ;;
+  		*)		HISTORY_LIB=-lhistory ;;
+  		esac
+*** ../bash-4.0/patchlevel.h	2009-01-04 14:32:40.000000000 -0500
+--- patchlevel.h	2009-02-22 16:11:31.000000000 -0500
+***************
+*** 26,30 ****
+     looks for to find the patch level (for the sccs version string). */
+  
+! #define PATCHLEVEL 36
+  
+  #endif /* _PATCHLEVEL_H_ */
+--- 26,30 ----
+     looks for to find the patch level (for the sccs version string). */
+  
+! #define PATCHLEVEL 37
+  
+  #endif /* _PATCHLEVEL_H_ */

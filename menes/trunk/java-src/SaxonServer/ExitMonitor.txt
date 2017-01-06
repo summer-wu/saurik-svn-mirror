@@ -1,0 +1,2 @@
++SaxonServer.ExitMonitor
+invokestatic void java\.lang\.System\.exit\(int\)

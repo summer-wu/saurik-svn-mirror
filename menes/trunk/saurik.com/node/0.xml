@@ -1,0 +1,67 @@
+<body title="Table of Contents">
+    <p>Yes, I finally have a (realistic) website. No, the world has not ended. I finally decided I needed somewhere to talk about all the things I was working on so I didn't keep getting asked about them everywhere I went ;P.</p>
+
+    <p>If you need to get a hold of me, I at least vaguely recommend connecting to irc.saurik.com and joining #iphone or #saurik. I tend to check it most of the time, but if not at least once a day (so stay connected and be patient if I'm not there right then). If you only have a webbrowser, you can use my web IRC client.</p>
+
+    <section title="Education">
+        <ul>
+            <li>
+                <em><a href="http://www.ccs.ucsb.edu">College of Creative Studies</a>, University of California, Santa Barbara</em>
+                <p>B.S., Creative Studies, Emphasis in Computer Science: Complete</p>
+            </li>
+
+            <li>
+                <em>College of Engineering, University of California, Santa Barbara</em>
+                <p>Ph.D. Student, Computer Science: Work Ongoing</p>
+            </li>
+        </ul>
+    </section>
+
+    <section title="Academic Papers">
+        <ul>
+            <li>
+                <em><a href="http://www.runtime-verification.org/rv2004/papers/paper11.pdf">jMonitor: Java Runtime Event Specification and Monitoring Library</a></em>
+                <p>Murat Karaorman and Jay Freeman</p>
+                <p>Electronic Notes in Theoretical Computer Science</p>
+                <p>Volume 113, 3 January 2005, Pages 181-200</p>
+                <p>Proceedings of the Fourth Workshop on Runtime Verification (RV 2004)</p>
+            </li>
+        </ul>
+    </section>
+
+    <section title="Personal Projects">
+        <ul>
+            <li><a href="http://legacy.saurik.com/net/exemplar/">Anakrino</a> - first C# decompiler for Microsoft's .NET</li>
+            <li><a href="http://svn.haxx.se/dev/archive-2002-06/1614.shtml">Chora/SVN</a> - web client for Subversion, beating ViewSVN to market</li>
+            <li><a href="http://www.cycorder.com/">Cycorder</a> - first high speed (MJPEG) video recorder for the iPhone</li>
+            <li><a href="http://www.cycript.org/">Cycript</a> - highly compatible JavaScript->Objective-C bridge</li>
+            <li><a href="http://www.saurik.com/id/1">Cydia</a> - iPhone APT frontend used on >2 million jailbroken devices</li>
+            <li><a href="http://www.cyrket.com/">Cyrket</a> - Android Market client for desktop web browsers</li>
+            <li><a href="http://forum.developers.facebook.com/viewtopic.php?pid=9172">FQL/JDBC</a> - JDBC driver for Facebook's FQL</li>
+            <li><a href="http://www.irclogs.com/">ircWAB</a> - HTTP based IRC client, without Java or Flash</li>
+            <li><a href="http://iphone.fiveforty.net/wiki/index.php/IPhone_Java">Java/iPhone</a> - port of Java to the iPhone (with Objective-C connectors)</li>
+            <li><a href="http://svn.saurik.com/repos/menes/trunk/">Menes/C++</a> - high-level platform abstraction and utility library for C++</li>
+            <li><a href="ftp://ftp.saurik.com/pub/nmap/nmap+V">Nmap+V</a> - original versioning port scanner with XML scripting</li>
+            <li><a href="http://svn.saurik.com/repos/menes/trunk/s3fs/">s3fs</a> - in-kernel, high-performance Linux filesystem for S3</li>
+            <li><a href="http://www.telesphoreo.org/">Telesphoreo</a> - distribution of Unix software for modern smartphones</li>
+            <li><a href="http://www.facebook.com/apps/application.php?id=2418951374">Quotes</a> - Facebook application for sharing what your friends have said</li>
+        </ul>
+    </section>
+
+    <section title="Entrepreneurship">
+        <ul>
+            <li><a href="http://www.cyberuniverse.com/">CyberUniverse</a> - web design and consulting company (in high school)</li>
+            <li><a href="http://www.cocommand.com/">Gnostic Labs</a> - Eschaton: Chain of Command (a team action strategy game)</li>
+            <li><a href="http://www.letscram.com/">Let's Cram</a> - social homeworking for high school students</li>
+        </ul>
+    </section>
+
+    <!--ul>
+        <li><a href="/saurik">Personal Bio</a></li>
+        <li><a href="/saurik.com">Site Information</a></li>
+        <li><a href="/papers">Academic Papers</a></li>
+        <li><a href="/entrepreneurship">Companies Started</a></li>
+        <li><a href="/consulting">Consulting Work</a></li>
+        <li><a href="/projects">Personal Projects</a></li>
+    </ul-->
+</body>

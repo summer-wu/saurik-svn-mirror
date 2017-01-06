@@ -1,0 +1,136 @@
+#!/bin/bash
+
+# dZip - Universal Extraction Assistant
+# Copyright (C) 2009  Jay Freeman (saurik)
+
+#        Redistribution and use in source and binary
+# forms, with or without modification, are permitted
+# provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the
+#    above copyright notice, this list of conditions
+#    and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the
+#    above copyright notice, this list of conditions
+#    and the following disclaimer in the documentation
+#    and/or other materials provided with the
+#    distribution.
+# 3. The name of the author may not be used to endorse
+#    or promote products derived from this software
+#    without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS''
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+# BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+# TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+set -o pipefail
+shopt -s extglob
+
+if [[ $# -ne 1 ]]; then
+    echo "dZip - by Jay Freeman (saurik)"
+    echo "usage: $(basename "$0") <file>"
+    exit 1
+fi
+
+f=$1
+t=$(file "$f")
+echo "$t"
+t=${t#$f: }
+
+d=$f.d
+
+function dgzip_ {
+    LANG=C grep -boa $'hsqs' "$f" | cut -f 1 -d : | while read -r o; do
+        p=$d$o
+        tail -c +$(($o + 1)) "$f" >"$p" 2>/dev/null
+        s=$(wc -c "$p" | cut -d ' ' -f 1)
+        if [[ $s -eq 0 ]]; then
+            rm -f "$p"
+        else
+            dzip "$p"
+        fi
+    done
+
+    LANG=C grep -boa $'\x1f\x8b' "$f" | cut -f 1 -d : | while read -r o; do
+        p=$d$o
+        tail -c +$(($o + 1)) "$f" | gunzip -c >"$p" 2>/dev/null
+        s=$(wc -c "$p" | cut -d ' ' -f 1)
+        if [[ $s -eq 0 ]]; then
+            rm -f "$p"
+        else
+            dzip "$p"
+        fi
+    done
+}
+
+case "$t" in
+    (data)
+        m=$(head -c8 "$f" | od -t x1 | head -n 1 | cut -d ' ' --output-delimiter='' -f 2-10)
+        case "$m" in
+            (33676d49*) #img3
+                #k=$(grep -boa GABK "$f" | cut -d ':' -f 1)
+                #set $(tail "$f" -c +$((k + 21)) | head -c 48 | openssl enc -d -aes-$((0x$(tail "$f" -c +$((k + 17)) | od -t x1 | head -n 1 | cut -d ' ' -f 2)))-cbc -K 5F650295E1FFFC97CE77ABD49DD955B3 -iv 0 2>/dev/null | od -t x1 | head -n 2 | cut -d ' ' --output-delimiter='' -f 2-17)
+                #img3decrypt e "$f" "$d" "$1" "$2"
+                dd if="$f" of="$d" bs=$((0x40)) skip=1
+                dzip "$d"
+            ;;
+
+            (636f6d706c7a7373) #complzss
+                dd if="$f" of="$d.lzs" bs=$((0x180)) skip=1
+                complzss "$d.lzs"
+                rm -f "$d.lzs"
+                dzip "$d"
+            ;;
+
+            (*)
+                dgzip_
+            ;;
+        esac
+    ;;
+
+    (u-boot/PPCBoot\ image)
+        dgzip_
+    ;;
+
+    (gzip\ compressed\ data*)
+        gunzip -c "$f" >"$d"
+        dzip "$d"
+    ;;
+
+    (bzip2\ compressed\ data*)
+        bunzip2 -c "$f" >"$d"
+        dzip "$d"
+    ;;
+
+    (POSIX\ tar\ archive*)
+        mkdir -p "$d"
+        tar -xf "$f" -C "$d"
+        file "$d"
+    ;;
+
+    (Zip\ archive\ data*)
+        unzip -qod "$d" "$f"
+        file "$d"
+    ;;
+
+    (ASCII\ cpio*)
+        mkdir -p "$d"
+        (cd "$d"; cpio -id --no-absolute-filenames --sparse --quiet --unconditional) <"$f"
+        file "$d"
+    ;;
+
+    (Squashfs*)
+        unsquashfs -d "$d" "$f"
+    ;;
+esac

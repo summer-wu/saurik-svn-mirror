@@ -1,0 +1,14 @@
+diff -ru p7zip_4.57/makefile.macosx p7zip_4.57+iPhone/makefile.macosx
+--- p7zip_4.57/makefile.macosx	2007-05-27 09:57:49.000000000 +0000
++++ p7zip_4.57+iPhone/makefile.macosx	2008-01-23 08:09:43.000000000 +0000
+@@ -7,8 +7,8 @@
+ 	-DNDEBUG -D_REENTRANT -DENV_UNIX \
+ 	$(LOCAL_FLAGS)
+ 
+-CXX=c++ $(ALLFLAGS)
+-CC=cc $(ALLFLAGS)
++CXX=$${PKG_TARG}-g++ $(ALLFLAGS)
++CC=$${PKG_TARG}-gcc $(ALLFLAGS)
+ LINK_SHARED=-bundle
+ 
+ LOCAL_LIBS=

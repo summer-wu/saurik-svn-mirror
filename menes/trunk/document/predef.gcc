@@ -1,0 +1,8 @@
+#!/bin/bash
+
+gcc="$MENES_CXX"
+if [ "$gcc" = "" ]; then
+    gcc="gcc"
+fi
+
+$gcc -E -dM - "$@" < /dev/null

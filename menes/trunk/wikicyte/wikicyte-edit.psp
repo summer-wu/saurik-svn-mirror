@@ -1,0 +1,182 @@
+<%
+import time
+%><html><head><title>WikiCyte - <%=uri%></title>
+    <base href="<%=req.construct_url(uri)%>"/>
+<script type="text/javascript">
+</script><style type="text/css">
+
+* {
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Georgia, serif;
+}
+
+input[type="submit"] {
+    padding: 0 10px;
+}
+
+input[type="text"] {
+    display: inline;
+    width: 810px;
+}
+
+textarea {
+    float: left;
+    padding: 6px;
+    width: 430px;
+}
+
+input[type="text"],
+textarea {
+    display: block;
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+input[type="text"],
+.data {
+    margin-bottom: 15px;
+}
+
+.preview {
+    border: 1px solid gray;
+    overflow-y: scroll;
+    margin-left: 10px;
+    padding: 10px;
+    height: 425px;
+    width: 447px;
+}
+
+.preview {
+    font-size: 12px;
+}
+
+.preview h1 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: .6em 0;
+}
+
+.preview em {
+    font-style: italic;
+}
+
+.preview strong {
+    font-weight: bold;
+}
+
+.preview a {
+    text-decoration: none;
+}
+
+.preview ol,
+.preview ul {
+    list-style-position: outside;
+    margin-left: 2em;
+}
+
+.preview h2 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: .6em 0;
+}
+
+.preview h3 {
+    font-size: 12px;
+    font-weight: bold;
+    margin: .6em 0;
+}
+
+.preview p {
+    margin: .6em 0;
+}
+
+.preview li {
+    margin: .6em 0;
+}
+
+textarea {
+    min-height: 410px;
+}
+
+div.center {
+    margin: 0 auto;
+    width: 910px;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+    text-align: center;
+}
+
+input[type="submit"] {
+    float: right;
+    font-size: 18px;
+}
+
+label {
+    display: inline;
+    float: left;
+    font-size: 14px;
+    margin-bottom: 5px;
+    width: 100px;
+}
+
+a.syntax {
+    float: left;
+    text-decoration: none;
+}
+
+</style></head><body>
+
+<div class="center">
+
+<h1 class="title">Editing: <%=uri%></h1>
+
+<form name="edit" method="POST" action="/_edit<%=uri%>">
+    <div class="data">
+        <textarea name="data"><%=data%></textarea>
+        <div class="preview wmd-preview"></div>
+    </div>
+
+<%
+if rev != None:
+%>
+        <input type="hidden" name="from" value="<%=str(rev)%>"/>
+<%
+%>
+
+    <input type="hidden" name="now" value="<%=str(time.time())%>"/>
+
+<%
+if target != None:
+%>
+    <input type="hidden" name="target" value="<%=target%>"/>
+<%
+%>
+
+    <a class="syntax" href="http://daringfireball.net/projects/markdown/syntax">The Syntax of Markdown: A Reference</a>
+    <input type="submit" value="Save"/>
+</form>
+
+</div>
+
+    <script type="text/javascript">
+        wmd_options = {
+            output: "Markdown",
+            lineLength: 40,
+            buttons: "bold italic | link blockquote code image | ol ul heading hr",
+            autostart: true
+        };
+    </script>
+
+    <script type="text/javascript" src="/wmd/wmd.js"></script>
+</body></html>

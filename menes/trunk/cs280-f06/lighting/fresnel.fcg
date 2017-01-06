@@ -1,0 +1,20 @@
+struct Input_ {
+    float3 normal_ : TEXCOORD0;
+    float3 incident_ : TEXCOORD1;
+};
+
+struct Output_ {
+    float4 color_ : COLOR;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform samplerCUBE environment
+) {
+    Output_ output;
+    float4 reflected = texCUBE(environment, reflect(input.incident_, input.normal_));
+    float4 refracted = texCUBE(environment, refract(input.incident_, input.normal_, 1.5f));
+    float coefficient = clamp(0.3f + 0.4f * (1 + dot(input.incident_, input.normal_)), 0.0f, 1.0f);
+    output.color_ = lerp(refracted, reflected, coefficient);
+    return output;
+}

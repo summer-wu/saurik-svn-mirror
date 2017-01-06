@@ -1,0 +1,18 @@
+struct Input_ {
+    float4 position_ : POSITION;
+};
+
+struct Output_ {
+    float4 position_ : POSITION;
+    float4 color_ : COLOR0;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform float4x4 mvp
+) {
+    Output_ output;
+    output.position_ = mul(mvp, input.position_);
+    output.color_ = float4(1.0f, 0.0f, 0.0f, 1.0f);
+    return output;
+}

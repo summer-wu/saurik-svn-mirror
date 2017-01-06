@@ -1,0 +1,32 @@
+menes/alg: ALGrebraics
+menes/api: Application Programming Interface
+menes/app: APPlication primitives
+menes/bnf: Backus Naur Form
+menes/cli: Command Line Interface
+menes/clr: Common Language Runtime
+menes/com: Component Object Model
+menes/crt: C++ RunTime library
+menes/cse: Character Sets & Encoding
+menes/dbi: DataBase Interface
+menes/enc: ENCryption
+menes/etl: Extended Template Library
+menes/ext: EXTension library
+menes/g3d: Graphics (3D)
+menes/gui: Graphical User Interface
+menes/hop: Higher Order Programming
+menes/imc: Instant Messaging Client
+menes/ios: Input/Output Streams
+menes/log: LOGging
+menes/mak: MAKing... stuff?
+menes/mfa: Multi-Fiber Architecture
+menes/msg: MeSsaGe dispatching
+menes/mta: Multi-Threaded Architecture
+menes/net: NETworking
+menes/opt: OPTimization
+menes/prg: user PRoGrams
+menes/scr: SCRipting language bindings
+menes/szf: Serialization & (Z)compression Framework
+menes/vfs: Virtual File System
+menes/waf: Web Application Framework
+menes/xml: XML processing
+menes/xpp: Xml Plus Plus

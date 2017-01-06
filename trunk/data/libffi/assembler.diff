@@ -1,0 +1,43 @@
+Index: libffi/src/arm/sysv.S
+===================================================================
+--- gcc/libffi/src/arm/sysv.S	(revision 130618)
++++ gcc+iPhone/libffi/src/arm/sysv.S	(working copy)
+@@ -38,7 +38,7 @@
+ #else
+ #define CNAME(x) x
+ #endif
+-#define ENTRY(x) .globl CNAME(x); .type CNAME(x),%function; CNAME(x):
++#define ENTRY(x) .globl CNAME(x); CNAME(x):
+ #endif
+ 
+ #ifdef __ELF__
+@@ -219,7 +219,7 @@
+ 
+ .ffi_call_SYSV_end:
+ 	UNWIND .fnend
+-        .size    CNAME(ffi_call_SYSV),.ffi_call_SYSV_end-CNAME(ffi_call_SYSV)
++@        .size    CNAME(ffi_call_SYSV),.ffi_call_SYSV_end-CNAME(ffi_call_SYSV)
+ 
+ /*
+ 	unsigned int FFI_HIDDEN
+@@ -235,11 +235,11 @@
+ 	stmfd	sp!, {ip, lr}
+ 	UNWIND .save	{r0, lr}
+ 	add	r2, sp, #8
+-	.pad #16
++@	.pad #16
+ 	sub	sp, sp, #16
+ 	str	sp, [sp, #8]
+ 	add	r1, sp, #8
+-	bl	ffi_closure_SYSV_inner
++	bl	_ffi_closure_SYSV_inner
+ 	cmp	r0, #FFI_TYPE_INT
+ 	beq	.Lretint
+ 
+@@ -291,5 +291,5 @@
+ 
+ .ffi_closure_SYSV_end:
+ 	UNWIND .fnend
+-        .size    CNAME(ffi_closure_SYSV),.ffi_closure_SYSV_end-CNAME(ffi_closure_SYSV)
++@        .size    CNAME(ffi_closure_SYSV),.ffi_closure_SYSV_end-CNAME(ffi_closure_SYSV)
+ 

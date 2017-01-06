@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<waf:logic xmlns:waf="http://www.saurik.com/menes/waf/0.9">
+
+<waf:include file="menes/dbi/connection.hpp"/>
+<waf:include file="menes/dbi/driver.hpp"/>
+<waf:include file="menes/dbi/resultset.hpp"/>
+
+<waf:include file="menes/ext/uuid.hpp"/>
+
+<waf:set-status code="200"/>
+<waf:add-header name="Content-Type" value="text/html"/>
+
+ext::Uuid id(lexical_cast< ext::Uuid >(<waf:get-path-info/>));
+
+_R< dbi::Driver > driver(dbi::GetDriver("dbi::PgSql::Driver"));
+_R< dbi::Connection > database(driver->Connect("", "saurik", "", "gallery"));
+_R< dbi::ResultSet > gallery(database->Execute("SELECT name FROM pg_gallery WHERE id = ?", id));
+
+if (!gallery->MoveNext()) {
+    <waf:content>Unknown Gallery</waf:content>
+} else {
+    <html><head>
+        <title>Photo Gallery: {gallery->GetString("name")}</title>
+        <link href="/stylesheet.css" rel="stylesheet" type="text/css"/>
+        <script language="JavaScript" src="/file-style.js"/>
+    </head><body><waf:logic>
+        {
+            _R< dbi::ResultSet > galleries(database->Execute("SELECT id, name FROM pg_gallery WHERE parent = ?", id));
+
+            while (galleries->MoveNext()) {
+                <table></table>
+            }
+        }
+
+        <table><tr><td>
+            <form method="post" action="/create/{id}.post" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input name="file" type="file"/>
+                </div>
+
+                <br/>
+
+                <input name="name" type="text"/>
+                <input type="image" src="/upload.gif"/>
+            </form>
+
+            <form method="get" action="/create/{id}.post">
+                <input name="name" type="text"/>
+                <input type="image" src="/create.gif"/>
+            </form>
+        </td></tr></table>
+    </waf:logic></body></html>
+}
+
+</waf:logic>

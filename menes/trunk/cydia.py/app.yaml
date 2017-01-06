@@ -1,0 +1,21 @@
+application: cydia
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /rating/
+  script: rating.py
+
+- url: /review/
+  script: review.py
+  login: required
+
+- url: /reviews/
+  script: reviews.py
+
+- url: /reviews_/
+  script: reviews_.py
+
+- url: /submit/
+  script: submit.py

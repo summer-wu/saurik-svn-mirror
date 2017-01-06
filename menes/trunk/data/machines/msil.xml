@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine name="msil">
+
+	<opcodes set="msil" endian="little">
+
+		<!-- 0x00 - 0x0F -->
+
+		<op code="0" name="nop" sin="0" sout="0"/>
+
+		<op code="1" name="break" sin="0" sout="0"/>
+
+		<op code="2" name="ldarg.0" sin="0" sout="1"/>
+
+		<op code="3" name="ldarg.1" sin="0" sout="1"/>
+
+		<op code="4" name="ldarg.2" sin="0" sout="1"/>
+
+		<op code="5" name="ldarg.3" sin="0" sout="1"/>
+
+		<op code="6" name="ldloc.0" sin="0" sout="1"/>
+
+		<op code="7" name="ldloc.1" sin="0" sout="1"/>
+
+		<op code="8" name="ldloc.2" sin="0" sout="1"/>
+
+		<op code="9" name="ldloc.3" sin="0" sout="1"/>
+
+		<op code="a" name="stloc.0" sin="1" sout="0"/>
+
+		<op code="b" name="stloc.1" sin="1" sout="0"/>
+
+		<op code="c" name="stloc.2" sin="1" sout="0"/>
+
+		<op code="d" name="stloc.3" sin="1" sout="0"/>
+
+		<op code="e" name="ldarg.s" sin="0" sout="1">
+			<arg type="U1" name="argNum"/>
+		</op>
+
+		<op code="f" name="ldarga.s" sin="0" sout="1">
+			<arg type="U1" name="argNum"/>
+		</op>
+
+		<!-- 0x10 - 0x1F -->
+
+		<op code="10" name="starg.s" sin="1" sout="0">
+			<arg type="U1" name="num"/>
+		</op>
+
+		<op code="11" name="ldloc.s" sin="0" sout="1">
+			<arg type="U1" name="indx"/>
+		</op>
+
+		<op code="12" name="ldloca.s" sin="0" sout="1">
+			<arg type="U1" name="index"/>
+		</op>
+
+		<op code="13" name="stloc.s" sin="1" sout="0">
+			<arg type="U1" name="indx"/>
+		</op>
+
+		<op code="14" name="ldnull" sin="0" sout="1"/>
+
+		<op code="15" name="ldc.i4.m1" sin="0" sout="1"/>
+
+		<op code="16" name="ldc.i4.0" sin="0" sout="1"/>
+
+		<op code="17" name="ldc.i4.1" sin="0" sout="1"/>
+
+		<op code="18" name="ldc.i4.2" sin="0" sout="1"/>
+
+		<op code="19" name="ldc.i4.3" sin="0" sout="1"/>
+
+		<op code="1a" name="ldc.i4.4" sin="0" sout="1"/>
+
+		<op code="1b" name="ldc.i4.5" sin="0" sout="1"/>
+
+		<op code="1c" name="ldc.i4.6" sin="0" sout="1"/>
+
+		<op code="1d" name="ldc.i4.7" sin="0" sout="1"/>
+
+		<op code="1e" name="ldc.i4.8" sin="0" sout="1"/>
+
+		<op code="1f" name="ldc.i4.s" sin="0" sout="1">
+			<arg type="I1" name="num"/>
+		</op>
+
+		<!-- 0x20 - 0x2F -->
+
+		<op code="20" name="ldc.i4" sin="0" sout="1">
+			<arg type="I4" name="num"/>
+		</op>
+
+		<op code="21" name="idc.i8" sin="0" sout="1">
+			<arg type="I8" name="num"/>
+		</op>
+
+		<op code="22" name="ldc.r4" sin="0" sout="1">
+			<arg type="R4" name="num"/>
+		</op>
+
+		<op code="23" name="ldc.r8" sin="0" sout="1">
+			<arg type="R8" name="num"/>
+		</op>
+
+		<!-- op code="24" name="" -->
+
+		<op code="25" name="dup" sin="1" sout="2"/>
+
+		<op code="26" name="pop" sin="1" sout="0"/>
+
+		<op code="27" name="jmp" stop="yes" sin="0" sout="0">
+			<arg type="T" name="method"/>
+		</op>
+
+		<op code="28" name="call">
+            <stack>
+                const Metallurgy::Module *module = method.getModule();
+                Metallurgy::Member *member = dynamic_cast&lt;Metallurgy::Member *&gt;(module-&gt;ResolveToken(operator [](L"method")-&gt;num()));
+                const Metallurgy::Signature *signature = member-&gt;getSignature();
+                stackin = signature-&gt;getCount();
+                if (signature-&gt;getHasThis())
+                    ++stackin;
+                stackout = signature-&gt;getReturn()-&gt;isVoid() ? 0 : 1;
+            </stack>
+			<arg type="T" name="method"/>
+		</op>
+
+		<op code="29" name="calli">
+			<arg type="T" name="callsitedescr"/>
+		</op>
+
+        <op code="2a" name="ret" stop="yes">
+            <stack>
+                const Metallurgy::Signature *signature = method.getSignature();
+                stackin = signature-&gt;getReturn()-&gt;isVoid() ? 0 : 1;
+                stackout = 0;
+            </stack>
+        </op>
+
+		<op code="2b" name="br.s" stop="yes" sin="0" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="2c" name="brfalse.s" sin="1" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="2d" name="brtrue.s" sin="1" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="2e" name="beq.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="2f" name="bge.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<!-- 0x30 - 0x3F -->
+
+		<op code="30" name="bgt.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="31" name="ble.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="32" name="blt.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="33" name="bne.un.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="34" name="bge.un.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="35" name="bgt.un.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="36" name="ble.un.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="37" name="blt.un.s" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="38" name="br" stop="yes" sin="0" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="39" name="brfalse" sin="1" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="3a" name="brtrue" sin="1" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="3b" name="beq" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="3c" name="bge" sin="2" sout="0">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="3d" name="bgt" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="3e" name="ble" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="3f" name="blt" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<!-- 0x40 - 0x4F -->
+
+		<op code="40" name="bne.un" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="41" name="bge.un" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="42" name="bgt.un" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="43" name="ble.un" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="44" name="blt.un" sin="2" sout="0">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="45" name="switch" sin="1" sout="0">
+			<arg type="U4" name="n"/>
+			<multi start="1" end="@n" name="targets">
+				<arg type="I4" name="t" branch="post"/>
+			</multi>
+		</op>
+
+		<op code="46" name="ldind.i1" sin="1" sout="1"/>
+
+		<op code="47" name="ldind.u1" sin="1" sout="1"/>
+
+		<op code="48" name="ldind.i2" sin="1" sout="1"/>
+
+		<op code="49" name="ldind.u2" sin="1" sout="1"/>
+
+		<op code="4a" name="ldind.i4" sin="1" sout="1"/>
+
+		<op code="4b" name="ldind.u4" sin="1" sout="1"/>
+
+		<op code="4c" name="ldind.i8" sin="1" sout="1"/>
+
+		<op code="4d" name="ldind.i" sin="1" sout="1"/>
+
+		<op code="4e" name="ldind.r4" sin="1" sout="1"/>
+
+		<op code="4f" name="ldind.r8" sin="1" sout="1"/>
+
+		<!-- 0x50 - 0x5F -->
+
+		<op code="50" name="ldind.ref" sin="1" sout="1"/>
+
+		<op code="51" name="stind.ref" sin="2" sout="0"/>
+
+		<op code="52" name="stind.il" sin="2" sout="0"/>
+
+		<op code="53" name="stind.i2" sin="2" sout="0"/>
+
+		<op code="54" name="stind.i4" sin="2" sout="0"/>
+
+		<op code="55" name="stind.i8" sin="2" sout="0"/>
+
+		<op code="56" name="stind.r4" sin="2" sout="0"/>
+
+		<op code="57" name="stind.r8" sin="2" sout="0"/>
+
+		<op code="58" name="add" sin="2" sout="1"/>
+
+		<op code="59" name="sub" sin="2" sout="1"/>
+
+		<op code="5a" name="mul" sin="2" sout="1"/>
+
+		<op code="5b" name="div" sin="2" sout="1"/>
+
+		<op code="5c" name="div.un" sin="2" sout="1"/>
+
+		<op code="5d" name="rem" sin="2" sout="1"/>
+
+		<op code="5e" name="rem.un" sin="2" sout="1"/>
+
+		<op code="5f" name="and" sin="2" sout="1"/>
+
+		<!-- 0x60 - 0x6F -->
+
+		<op code="60" name="or" sin="2" sout="1"/>
+
+		<op code="61" name="xor" sin="2" sout="1"/>
+
+		<op code="62" name="shl" sin="2" sout="1"/>
+
+		<op code="63" name="shr" sin="2" sout="1"/>
+
+		<op code="64" name="shr.un" sin="2" sout="1"/>
+
+		<op code="65" name="neg" sin="1" sout="1"/>
+
+		<op code="66" name="not" sin="1" sout="1"/>
+
+		<op code="67" name="conv.il" sin="1" sout="1"/>
+
+		<op code="68" name="conv.i2" sin="1" sout="1"/>
+
+		<op code="69" name="conv.i4" sin="1" sout="1"/>
+
+		<op code="6a" name="conv.i8" sin="1" sout="1"/>
+
+		<op code="6b" name="conv.r4" sin="1" sout="1"/>
+
+		<op code="6c" name="conv.r8" sin="1" sout="1"/>
+
+		<op code="6d" name="conv.u4" sin="1" sout="1"/>
+
+		<op code="6e" name="conv.u8" sin="1" sout="1"/>
+
+		<op code="6f" name="callvirt">
+            <stack>
+                const Metallurgy::Module *module = method.getModule();
+                Metallurgy::Member *member = dynamic_cast&lt;Metallurgy::Member *&gt;(module-&gt;ResolveToken(operator [](L"method")-&gt;num()));
+                const Metallurgy::Signature *signature = member-&gt;getSignature();
+                stackin = signature-&gt;getCount();
+                if (signature-&gt;getHasThis())
+                    ++stackin;
+                stackout = signature-&gt;getReturn()-&gt;isVoid() ? 0 : 1;
+            </stack>
+			<arg type="T" name="method"/>
+		</op>
+
+		<!-- 0x70 - 0x7F -->
+
+		<op code="70" name="cpobj" sin="2" sout="0">
+			<arg type="T" name="classTok"/>
+		</op>
+
+		<op code="71" name="ldobj" sin="1" sout="1">
+			<arg type="T" name="method"/>
+		</op>
+
+		<op code="72" name="ldstr" sin="0" sout="1">
+			<arg type="T" name="string"/>
+		</op>
+
+		<op code="73" name="newobj">
+			<arg type="T" name="ctor"/>
+		</op>
+
+		<op code="74" name="castclass" sin="1" sout="1">
+			<arg type="T" name="type"/>
+		</op>
+
+		<op code="75" name="isinst" sin="1" sout="1">
+			<arg type="T" name="type"/>
+		</op>
+
+		<op code="76" name="conv.r.un" sin="1" sout="1"/>
+
+		<!-- op code="77" name="" -->
+
+		<!-- op code="78" name="" -->
+
+		<op code="79" name="unbox" sin="1" sout="1">
+			<arg type="T" name="valuetype"/>
+		</op>
+
+		<op code="7a" name="throw" stop="yes" sin="1" sout="0"/>
+
+		<op code="7b" name="ldfld" sin="1" sout="1">
+			<arg type="T" name="field"/>
+		</op>
+
+		<op code="7c" name="ldflda" sin="1" sout="1">
+			<arg type="T" name="field"/>
+		</op>
+
+		<op code="7d" name="stfld" sin="2" sout="0">
+			<arg type="T" name="field"/>
+		</op>
+
+		<op code="7e" name="ldsfld" sin="0" sout="1">
+			<arg type="T" name="field"/>
+		</op>
+
+		<op code="7f" name="ldsflda" sin="0" sout="1">
+			<arg type="T" name="field"/>
+		</op>
+
+		<!-- 0x80 - 0x8F -->
+
+		<op code="80" name="stsfld" sin="1" sout="0">
+			<arg type="T" name="field"/>
+		</op>
+
+		<op code="81" name="stobj" sin="2" sout="0">
+			<arg type="T" name="classTok"/>
+		</op>
+
+		<op code="82" name="conv.ovf.i1.un" sin="1" sout="1"/>
+
+		<op code="83" name="conv.ovf.i2.un" sin="1" sout="1"/>
+
+		<op code="84" name="conv.ovf.i4.un" sin="1" sout="1"/>
+
+		<op code="85" name="conv.ovf.i8.un" sin="1" sout="1"/>
+
+		<op code="86" name="conv.ovf.u1.un" sin="1" sout="1"/>
+
+		<op code="87" name="conv.ovf.u2.un" sin="1" sout="1"/>
+
+		<op code="88" name="conv.ovf.u4.un" sin="1" sout="1"/>
+
+		<op code="89" name="conv.ovf.u8.un" sin="1" sout="1"/>
+
+		<op code="8a" name="conv.ovf.i.un" sin="1" sout="1"/>
+
+		<op code="8b" name="conv.ovf.u.un" sin="1" sout="1"/>
+
+		<op code="8c" name="box" sin="1" sout="1">
+			<arg type="T" name="valueTypeTok"/>
+		</op>
+
+		<op code="8d" name="newarr">
+			<arg type="T" name="etype"/>
+		</op>
+
+		<op code="8e" name="ldlen" sin="1" sout="1"/>
+
+		<op code="8f" name="ldelema">
+			<arg type="T" name="type"/>
+		</op>
+
+		<!-- 0x90 - 0x9F -->
+
+		<op code="90" name="ldelem.i1" sin="2" sout="1"/>
+
+		<op code="91" name="ldelem.u1" sin="2" sout="1"/>
+
+		<op code="92" name="ldelem.i2" sin="2" sout="1"/>
+
+		<op code="93" name="ldelem.u2" sin="2" sout="1"/>
+
+		<op code="94" name="ldelem.i4" sin="2" sout="1"/>
+
+                <op code="95" name="ldelem.u4" sin="2" sout="1"/>
+
+		<op code="96" name="ldelem.i8" sin="2" sout="1"/>
+
+		<op code="97" name="ldelem.i" sin="2" sout="1"/>
+
+		<op code="98" name="ldelem.r4" sin="2" sout="1"/>
+
+		<op code="99" name="ldelem.r8" sin="2" sout="1"/>
+
+		<op code="9a" name="ldelem.ref" sin="2" sout="1"/>
+
+		<op code="9b" name="stelem.i" sin="2" sout="1"/>
+
+		<op code="9c" name="stelem.i1" sin="2" sout="1"/>
+
+		<op code="9d" name="stelem.i2" sin="2" sout="1"/>
+
+		<op code="9e" name="stelem.i4" sin="2" sout="1"/>
+
+		<op code="9f" name="stelem.i8" sin="2" sout="1"/>
+
+		<!-- 0xA0 - 0xAF -->
+
+		<op code="a0" name="stelem.r4" sin="2" sout="1"/>
+
+		<op code="a1" name="stelem.r8" sin="2" sout="1"/>
+
+		<op code="a2" name="stelem.ref" sin="2" sout="1"/>
+
+		<!-- op code="a3" name="" -->
+
+		<!-- op code="a4" name="" -->
+
+		<!-- op code="a5" name="" -->
+
+		<!-- op code="a6" name="" -->
+
+		<!-- op code="a7" name="" -->
+
+		<!-- op code="a8" name="" -->
+
+		<!-- op code="a9" name="" -->
+
+		<!-- op code="aa" name="" -->
+
+		<!-- op code="ab" name="" -->
+
+		<!-- op code="ac" name="" -->
+
+		<!-- op code="ad" name="" -->
+
+		<!-- op code="ae" name="" -->
+
+		<!-- op code="af" name="" -->
+
+		<!-- 0xB0 - 0xBF -->
+
+		<!-- op code="b0" name="" -->
+
+		<!-- op code="b1" name="" -->
+
+		<!-- op code="b2" name="" -->
+
+		<op code="b3" name="conv.ovf.i1" sin="1" sout="1"/>
+
+		<op code="b4" name="conv.ovf.u1" sin="1" sout="1"/>
+
+		<op code="b5" name="conv.ovf.i2" sin="1" sout="1"/>
+
+		<op code="b6" name="conv.ovf.u2" sin="1" sout="1"/>
+
+		<op code="b7" name="conv.ovf.i4" sin="1" sout="1"/>
+
+		<op code="b8" name="conv.ovf.u4" sin="1" sout="1"/>
+
+		<op code="b9" name="conv.ovf.i8" sin="1" sout="1"/>
+
+		<op code="ba" name="conv.ovf.u8" sin="1" sout="1"/>
+
+		<!-- 0xC0 - 0xCF -->
+
+		<!-- op code="c0" name="" -->
+
+		<!-- op code="c1" name="" -->
+
+		<op code="c2" name="refanyval">
+			<arg type="T" name="type"/>
+		</op>
+
+		<op code="c3" name="ckfinite"/>
+
+		<!-- op code="c4" name="" -->
+
+		<!-- op code="c5" name="" -->
+
+		<op code="c6" name="mkrefany">
+			<arg type="T" name="type"/>
+		</op>
+
+		<!-- 0xD0 - 0xDF -->
+
+		<op code="d0" name="ldtoken">
+			<arg type="T" name="token"/>
+		</op>
+
+		<op code="d1" name="conv.u2" sin="1" sout="1"/>
+
+		<op code="d2" name="conv.u1" sin="1" sout="1"/>
+
+		<op code="d3" name="conv.i" sin="1" sout="1"/>
+
+		<op code="d4" name="conv.ovf.i" sin="1" sout="1"/>
+
+		<op code="d5" name="conv.ovf.u" sin="1" sout="1"/>
+
+		<op code="d6" name="add.ovf" sin="2" sout="1"/>
+
+		<op code="d7" name="add.ovf.un" sin="2" sout="1"/>
+
+		<op code="d8" name="mul.ovf" sin="2" sout="1"/>
+
+		<op code="d9" name="mul.ovf.un" sin="2" sout="1"/>
+
+		<op code="da" name="sub.ovf" sin="2" sout="1"/>
+
+		<op code="db" name="sub.ovf.un" sin="2" sout="1"/>
+
+		<op code="dc" name="endfinally"/>
+
+		<op code="dd" name="leave">
+			<arg type="I4" name="next" branch="post"/>
+		</op>
+
+		<op code="de" name="leave.s">
+			<arg type="I1" name="next" branch="post"/>
+		</op>
+
+		<op code="df" name="stind.i"/>
+
+		<!-- 0xE0 - 0xEF -->
+
+		<op code="e0" name="conv.u"/>
+
+		<!-- 0xF0 - 0xFF -->
+
+		<strata code="fe">
+
+			<!-- 0x00 - 0x0F -->
+
+			<op code="0" name="arglist" sin="0" sout="1"/>
+
+			<op code="1" name="ceq" sin="2" sout="1"/>
+
+			<op code="2" name="cgt" sin="2" sout="1"/>
+
+			<op code="3" name="cgt.un" sin="2" sout="1"/>
+
+			<op code="4" name="clt" sin="2" sout="1"/>
+
+			<op code="5" name="clt.un" sin="2" sout="1"/>
+
+			<op code="6" name="ldftn">
+				<arg type="T" name="method"/>
+			</op>
+
+			<op code="7" name="ldvirtftn">
+				<arg type="T" name="mthd"/>
+			</op>
+
+			<!-- op code="8" name="" -->
+
+			<op code="9" name="ldarg" sin="0" sout="1">
+				<arg type="U2" name="num"/>
+			</op>
+
+			<op code="a" name="ldarga">
+				<arg type="U2" name="argNum"/>
+			</op>
+
+			<op code="b" name="starg" sin="1" sout="0">
+				<arg type="U2" name="num"/>
+			</op>
+
+			<op code="c" name="ldloc" sin="0" sout="1">
+				<arg type="U2" name="indx"/>
+			</op>
+
+			<op code="d" name="ldloca">
+				<arg type="U2" name="index"/>
+			</op>
+
+			<op code="e" name="stloc">
+				<arg type="U2" name="indx"/>
+			</op>
+
+			<op code="f" name="localloc"/>
+
+			<!-- 0x10 - 0x1F -->
+
+			<!-- op code="10" name="" -->
+
+			<op code="11" name="endfilter"/>
+
+			<op code="12" name="unaligned.">
+				<arg type="U2" name="alignment"/>
+			</op>
+
+			<op code="13" name="volatile."/>
+
+			<op code="14" name="tail."/>
+
+			<op code="15" name="initobj">
+				<arg type="T" name="classTok"/>
+			</op>
+
+			<!-- op code="16" name="" -->
+
+			<op code="17" name="cpblk"/>
+
+			<op code="18" name="initblk"/>
+
+			<!-- op code="19" name="" -->
+
+			<op code="1a" name="rethrow" stop="yes"/>
+
+			<!-- op code="1b" name="" -->
+
+			<op code="1c" name="sizeof">
+				<arg type="T" name="valueType"/>
+			</op>
+
+			<op code="1d" name="refanytype"/>
+
+		</strata>
+
+	</opcodes>
+
+</engine>

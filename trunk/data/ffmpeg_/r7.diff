@@ -1,0 +1,48 @@
+diff -ru ffmpeg-export-2008-05-20/libavcodec/armv4l/float_arm_vfp.c ffmpeg-export-2008-05-20+iPhone/libavcodec/armv4l/float_arm_vfp.c
+--- ffmpeg-export-2008-05-20/libavcodec/armv4l/float_arm_vfp.c	2008-05-11 20:06:03.000000000 +0000
++++ ffmpeg-export-2008-05-20+iPhone/libavcodec/armv4l/float_arm_vfp.c	2008-05-21 00:44:04.000000000 +0000
+@@ -141,6 +141,13 @@
+ }
+ 
+ #ifdef HAVE_ARMV6
++
++#ifdef __APPLE__
++#define r7 "r9"
++#else
++#define r7 "r7"
++#endif
++
+ /**
+  * ARM VFP optimized float to int16 conversion.
+  * Assume that len is a positive number and is multiple of 8, destination
+@@ -163,7 +170,7 @@
+         "subs       %[len], %[len], #8\n\t"
+         "fmrrs      r3, r4, {s0, s1}\n\t"
+         "fmrrs      r5, r6, {s2, s3}\n\t"
+-        "fmrrs      r7, r8, {s4, s5}\n\t"
++        "fmrrs      "r7", r8, {s4, s5}\n\t"
+         "fmrrs      ip, lr, {s6, s7}\n\t"
+         "fldmiasgt  %[src]!, {s16-s23}\n\t"
+         "ssat       r4, #16, r4\n\t"
+@@ -181,10 +188,10 @@
+         "ftosisgt   s6, s22\n\t"
+         "ftosisgt   s7, s23\n\t"
+         "ssat       r8, #16, r8\n\t"
+-        "ssat       r7, #16, r7\n\t"
++        "ssat       "r7", #16, "r7"\n\t"
+         "ssat       lr, #16, lr\n\t"
+         "ssat       ip, #16, ip\n\t"
+-        "pkhbt      r5, r7, r8, lsl #16\n\t"
++        "pkhbt      r5, "r7", r8, lsl #16\n\t"
+         "pkhbt      r6, ip, lr, lsl #16\n\t"
+         "stmia      %[dst]!, {r3-r6}\n\t"
+         "bgt        1b\n\t"
+@@ -193,7 +200,7 @@
+         :
+         : "s0",  "s1",  "s2",  "s3",  "s4",  "s5",  "s6",  "s7",
+           "s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23",
+-          "r3", "r4", "r5", "r6", "r7", "r8", "ip", "lr",
++          "r3", "r4", "r5", "r6", r7, "r8", "ip", "lr",
+           "cc", "memory");
+ }
+ #endif

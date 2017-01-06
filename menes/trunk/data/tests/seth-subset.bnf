@@ -1,0 +1,8 @@
+@W
+Program := @W #bof [Statement Comment ListenerDeclaration]* #eof
+Statement := [ClickStatement KeyPressStatement ListenerDeclaration]*
+
+ListenerDeclaration := "on" Event Block
+Event := [
+    ("(" Action ")")
+]

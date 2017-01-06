@@ -1,0 +1,41 @@
+c <- ''
+d <- ( 1000 ''s )
+f <- { echo -n; }
+s <- ( '' )
+u <- 
+z <- 0
+$@ <- {1..100}
+
+for x in "$@"; do echo -n; done        *
+
+$(echo -n)                           340
+eval 'function f() { echo -n; }'       7.7
+echo -n >/dev/null                     5.8
+eval 'v='                              4.9
+f                                      4.8
+if [ "@$z" = "@1" ]; then echo -n; fi  4.6
+if [[ $z =~ '1$' ]]; then echo -n; fi  4.6
+${d[1000]}                             4.5
+if [ "$z" -eq 1 ]; then echo -n; fi    4.4
+${s[1000]}                             4.3
+${longer_word}                         4.2
+${d[0]}                                3.9
+${s[0]}                                3.9
+if [[ "$z" = "1" ]]; then echo -n; fi  3.6
+if [[ "$z" == "1" ]]; then echo -n; fi 3.6
+echo -n                                3.3
+a[1000]=                               3.5
+${tla}                                 3.3
+a[0]=                                  3.2
+case "$z" in (*1) echo -n;; esac       3.1
+if ((a == 1)); then echo -n; fi        3.0
+if [[ $z -eq 1 ]]; then echo -n; fi    3.0
+while [[ $# -ne 0 ]]; do echo -n; shift; done 3.0
+if [[ $z == *1 ]]; then echo -n; fi    2.9
+$longer_word                           2.8
+v=$?                                   2.8
+v=$u                                   2.7
+$u                                     2.6
+v=                                     2.6
+for x in "$@"; do echo -n; done        2.4
+function f() { echo -n; }              2.3

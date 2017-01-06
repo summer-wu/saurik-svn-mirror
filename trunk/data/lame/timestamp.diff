@@ -1,0 +1,111 @@
+diff -ru lame-3.98b8/ACM/main.cpp lame-3.98b8+iPhone/ACM/main.cpp
+--- lame-3.98b8/ACM/main.cpp	2006-12-25 21:37:34.000000000 +0000
++++ lame-3.98b8+iPhone/ACM/main.cpp	2008-06-19 04:41:12.000000000 +0000
+@@ -155,8 +155,8 @@
+ 			// nothing to do
+ 			if (debug != NULL)
+ 			{
+-//				debug->OutPut(DEBUG_LEVEL_MSG, "DRV_LOAD, version %s %s %s", ACM_VERSION, __DATE__, __TIME__);
+-				debug->OutPut(DEBUG_LEVEL_MSG, "DRV_LOAD, %s %s",  __DATE__, __TIME__);
++//				debug->OutPut(DEBUG_LEVEL_MSG, "DRV_LOAD, version %s", ACM_VERSION);
++				debug->OutPut(DEBUG_LEVEL_MSG, "DRV_LOAD");
+ 			}
+ 			return 1L;
+ 		}
+diff -ru lame-3.98b8/Dll/BladeMP3EncDLL.c lame-3.98b8+iPhone/Dll/BladeMP3EncDLL.c
+--- lame-3.98b8/Dll/BladeMP3EncDLL.c	2008-03-09 17:13:23.000000000 +0000
++++ lame-3.98b8+iPhone/Dll/BladeMP3EncDLL.c	2008-06-19 04:43:31.000000000 +0000
+@@ -621,8 +621,6 @@
+ __declspec(dllexport) VOID		beVersion(PBE_VERSION pbeVersion)
+ {
+     // DLL Release date
+-    char lpszDate[20]	= { '\0', };
+-    char lpszTemp[5]	= { '\0', };
+     lame_version_t lv   = { 0, };
+ 
+ 
+@@ -646,33 +644,14 @@
+ 
+     memset( pbeVersion->btReserved, 0, sizeof( pbeVersion->btReserved ) );
+ 
+-    // Get compilation date
+-    strcpy(lpszDate,__DATE__);
+-
+     // Get the first three character, which is the month
+-    strncpy(lpszTemp,lpszDate,3);
+-    lpszTemp[3] = '\0';
+-    pbeVersion->byMonth=1;
+-
+-    // Set month
+-    if (strcmp(lpszTemp,"Jan")==0)	pbeVersion->byMonth = 1;
+-    if (strcmp(lpszTemp,"Feb")==0)	pbeVersion->byMonth = 2;
+-    if (strcmp(lpszTemp,"Mar")==0)	pbeVersion->byMonth = 3;
+-    if (strcmp(lpszTemp,"Apr")==0)	pbeVersion->byMonth = 4;
+-    if (strcmp(lpszTemp,"May")==0)	pbeVersion->byMonth = 5;
+-    if (strcmp(lpszTemp,"Jun")==0)	pbeVersion->byMonth = 6;
+-    if (strcmp(lpszTemp,"Jul")==0)	pbeVersion->byMonth = 7;
+-    if (strcmp(lpszTemp,"Aug")==0)	pbeVersion->byMonth = 8;
+-    if (strcmp(lpszTemp,"Sep")==0)	pbeVersion->byMonth = 9;
+-    if (strcmp(lpszTemp,"Oct")==0)	pbeVersion->byMonth = 10;
+-    if (strcmp(lpszTemp,"Nov")==0)	pbeVersion->byMonth = 11;
+-    if (strcmp(lpszTemp,"Dec")==0)	pbeVersion->byMonth = 12;
++    pbeVersion->byMonth=0;
+ 
+     // Get day of month string (char [4..5])
+-    pbeVersion->byDay=atoi( lpszDate + 4 );
++    pbeVersion->byDay=0;
+ 
+     // Get year of compilation date (char [7..10])
+-    pbeVersion->wYear = atoi( lpszDate + 7 );
++    pbeVersion->wYear = 0;
+ 
+     memset( pbeVersion->zHomepage, 0x00, BE_MAX_HOMEPAGE );
+ 
+diff -ru lame-3.98b8/frontend/gtkanal.c lame-3.98b8+iPhone/frontend/gtkanal.c
+--- lame-3.98b8/frontend/gtkanal.c	2007-07-24 17:46:09.000000000 +0000
++++ lame-3.98b8+iPhone/frontend/gtkanal.c	2008-06-19 04:41:53.000000000 +0000
+@@ -1119,11 +1119,11 @@
+ #if   MP3X_ALPHA_VERSION > 0
+     static /*@observer@ */ const char *const str =
+         XSTR(MP3X_MAJOR_VERSION) "." XSTR(MP3X_MINOR_VERSION)
+-        " (alpha " XSTR(MP3X_ALPHA_VERSION) ", " __DATE__ " " __TIME__ ")";
++        " (alpha " XSTR(MP3X_ALPHA_VERSION) ")";
+ #elif MP3X_BETA_VERSION > 0
+     static /*@observer@ */ const char *const str =
+         XSTR(MP3X_MAJOR_VERSION) "." XSTR(MP3X_MINOR_VERSION)
+-        " (beta " XSTR(MP3X_BETA_VERSION) ", " __DATE__ ")";
++        " (beta " XSTR(MP3X_BETA_VERSION) ")";
+ #else
+     static /*@observer@ */ const char *const str =
+         XSTR(MP3X_MAJOR_VERSION) "." XSTR(MP3X_MINOR_VERSION);
+diff -ru lame-3.98b8/libmp3lame/version.c lame-3.98b8+iPhone/libmp3lame/version.c
+--- lame-3.98b8/libmp3lame/version.c	2008-02-22 02:38:46.000000000 +0000
++++ lame-3.98b8+iPhone/libmp3lame/version.c	2008-06-19 04:42:10.000000000 +0000
+@@ -62,11 +62,11 @@
+ #if   LAME_ALPHA_VERSION
+     static /*@observer@ */ const char *const str =
+         XSTR(LAME_MAJOR_VERSION) "." XSTR(LAME_MINOR_VERSION) " "
+-        "(alpha " XSTR(LAME_PATCH_VERSION) ", " __DATE__ " " __TIME__ ")";
++        "(alpha " XSTR(LAME_PATCH_VERSION) ")";
+ #elif LAME_BETA_VERSION
+     static /*@observer@ */ const char *const str =
+         XSTR(LAME_MAJOR_VERSION) "." XSTR(LAME_MINOR_VERSION) " "
+-        "(beta " XSTR(LAME_PATCH_VERSION) ", " __DATE__ ")";
++        "(beta " XSTR(LAME_PATCH_VERSION) ")";
+ #elif LAME_RELEASE_VERSION && (LAME_PATCH_VERSION > 0)
+     static /*@observer@ */ const char *const str =
+         XSTR(LAME_MAJOR_VERSION) "." XSTR(LAME_MINOR_VERSION) "." XSTR(LAME_PATCH_VERSION);
+@@ -150,11 +150,11 @@
+ #if   PSY_ALPHA_VERSION > 0
+     static /*@observer@ */ const char *const str =
+         XSTR(PSY_MAJOR_VERSION) "." XSTR(PSY_MINOR_VERSION)
+-        " (alpha " XSTR(PSY_ALPHA_VERSION) ", " __DATE__ " " __TIME__ ")";
++        " (alpha " XSTR(PSY_ALPHA_VERSION) ")";
+ #elif PSY_BETA_VERSION > 0
+     static /*@observer@ */ const char *const str =
+         XSTR(PSY_MAJOR_VERSION) "." XSTR(PSY_MINOR_VERSION)
+-        " (beta " XSTR(PSY_BETA_VERSION) ", " __DATE__ ")";
++        " (beta " XSTR(PSY_BETA_VERSION) ")";
+ #else
+     static /*@observer@ */ const char *const str =
+         XSTR(PSY_MAJOR_VERSION) "." XSTR(PSY_MINOR_VERSION);

@@ -1,0 +1,35 @@
+diff -ru dpkg-1.18.10/lib/dpkg/parse.c dpkg-1.18.10+iPhone/lib/dpkg/parse.c
+--- dpkg-1.18.10/lib/dpkg/parse.c	2016-07-05 01:55:13.000000000 +0000
++++ dpkg-1.18.10+iPhone/lib/dpkg/parse.c	2016-08-22 21:55:26.000000000 +0000
+@@ -187,8 +187,6 @@
+   if ((ps->flags & pdb_recordavailable) ||
+       (pkg->status != PKG_STAT_NOTINSTALLED &&
+        pkg->status != PKG_STAT_HALFINSTALLED)) {
+-    parse_ensure_have_field(ps, &pkgbin->description, "description");
+-    parse_ensure_have_field(ps, &pkgbin->maintainer, "maintainer");
+     parse_must_have_field(ps, pkgbin->version.version, "version");
+   }
+ 
+diff -ru dpkg-1.18.10/lib/dpkg/parsehelp.c dpkg-1.18.10+iPhone/lib/dpkg/parsehelp.c
+--- dpkg-1.18.10/lib/dpkg/parsehelp.c	2016-07-05 01:55:13.000000000 +0000
++++ dpkg-1.18.10+iPhone/lib/dpkg/parsehelp.c	2016-08-22 21:55:03.000000000 +0000
+@@ -233,19 +233,6 @@
+     *hyphen++ = '\0';
+   rversion->revision= hyphen ? hyphen : "";
+ 
+-  /* XXX: Would be faster to use something like cisversion and cisrevision. */
+-  ptr = rversion->version;
+-  if (*ptr && !c_isdigit(*ptr++))
+-    return dpkg_put_warn(err, _("version number does not start with digit"));
+-  for (; *ptr; ptr++) {
+-    if (!c_isdigit(*ptr) && !c_isalpha(*ptr) && strchr(".-+~:", *ptr) == NULL)
+-      return dpkg_put_warn(err, _("invalid character in version number"));
+-  }
+-  for (ptr = rversion->revision; *ptr; ptr++) {
+-    if (!c_isdigit(*ptr) && !c_isalpha(*ptr) && strchr(".+~", *ptr) == NULL)
+-      return dpkg_put_warn(err, _("invalid character in revision number"));
+-  }
+-
+   return 0;
+ }
+ 

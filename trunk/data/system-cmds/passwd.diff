@@ -1,0 +1,43 @@
+diff -ru system_cmds-431/passwd.tproj/file_passwd.c system_cmds-431+iPhone/passwd.tproj/file_passwd.c
+--- system_cmds-431/passwd.tproj/file_passwd.c	2006-02-21 03:47:32.000000000 +0000
++++ system_cmds-431+iPhone/passwd.tproj/file_passwd.c	2008-02-03 00:59:35.000000000 +0000
+@@ -211,31 +211,31 @@
+ 		{
+ 			fprintf(stderr, "warning: bad format for entry: \"%s\"\n", line);
+ 			fprintf(tfp, "%s\n", line);
+-			if (cfp != NULL) fprintf(cfp, "%s\n", line);
+ 			continue;
+ 		}
+ 
+ 		if (strcmp(newpw->pw_name, pw->pw_name))
+ 		{
+ 			fprintf(tfp, "%s\n", line);
+-			if (cfp != NULL) fprintf(cfp, "%s\n", line);
+-			continue;
+-		}
++		} else {
++                        pw = newpw;
+ 		
+ 		fprintf(tfp, "%s:%s:%d:%d:%s:%ld:%ld:%s:%s:%s\n",
+ 			newpw->pw_name, newpw->pw_passwd, newpw->pw_uid, newpw->pw_gid,
+ 			newpw->pw_class, newpw->pw_change, newpw->pw_expire,
+ 			newpw->pw_gecos, newpw->pw_dir, newpw->pw_shell);
++                }
++
+ 		if (cfp != NULL)
+ 		{
+-			fprintf(cfp, "%s:",newpw->pw_name);
+-			if ((newpw->pw_passwd == NULL) || (newpw->pw_passwd[0] == '\0'))
++			fprintf(cfp, "%s:",pw->pw_name);
++			if ((pw->pw_passwd == NULL) || (pw->pw_passwd[0] == '\0'))
+ 				fprintf(cfp, ":");
+ 			else
+ 				fprintf(cfp, "*:");
+ 			fprintf(cfp, "%d:%d:%s:%s:%s\n",
+-				newpw->pw_uid, newpw->pw_gid, newpw->pw_gecos,
+-				newpw->pw_dir, newpw->pw_shell);
++				pw->pw_uid, pw->pw_gid, pw->pw_gecos,
++				pw->pw_dir, pw->pw_shell);
+ 		}
+ 	}
+ 

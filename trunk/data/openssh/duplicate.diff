@@ -1,0 +1,24 @@
+diff -ru openssh-6.7p1/ge25519.h openssh-6.7p1+iPhone/ge25519.h
+--- openssh-6.7p1/ge25519.h	2013-12-18 06:48:11.000000000 +0000
++++ openssh-6.7p1+iPhone/ge25519.h	2014-12-03 07:58:12.000000000 +0000
+@@ -28,7 +28,7 @@
+   fe25519 t;
+ } ge25519;
+ 
+-const ge25519 ge25519_base;
++extern const ge25519 ge25519_base;
+ 
+ int ge25519_unpackneg_vartime(ge25519 *r, const unsigned char p[32]);
+ 
+diff -ru openssh-6.7p1/umac.c openssh-6.7p1+iPhone/umac.c
+--- openssh-6.7p1/umac.c	2014-07-22 23:43:42.000000000 +0000
++++ openssh-6.7p1+iPhone/umac.c	2014-12-02 23:50:38.000000000 +0000
+@@ -1175,7 +1175,7 @@
+  * time. The all-at-once is more optimaized than the sequential version and
+  * should be preferred when the sequential interface is not required. 
+  */
+-struct umac_ctx {
++typedef struct umac_ctx {
+     uhash_ctx hash;          /* Hash function for message compression    */
+     pdf_ctx pdf;             /* PDF for hashed output                    */
+     void *free_ptr;          /* Address to free this struct via          */

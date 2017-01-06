@@ -1,0 +1,63 @@
+diff -ru faad2/frontend/main.c faad2+iPhone/frontend/main.c
+--- faad2/frontend/main.c	2007-11-01 12:33:29.000000000 +0000
++++ faad2+iPhone/frontend/main.c	2008-06-19 04:37:40.000000000 +0000
+@@ -1167,7 +1167,6 @@
+ 
+ 
+     faad_fprintf(stderr, " *********** Ahead Software MPEG-4 AAC Decoder V%s ******************\n\n", FAAD2_VERSION);
+-    faad_fprintf(stderr, " Build: %s\n", __DATE__);
+     faad_fprintf(stderr, " Copyright 2002-2004: Ahead Software AG\n");
+     faad_fprintf(stderr, " http://www.audiocoding.com\n");
+     if (cap & FIXED_POINT_CAP)
+diff -ru faad2/plugins/in_mp4/in_mp4.c faad2+iPhone/plugins/in_mp4/in_mp4.c
+--- faad2/plugins/in_mp4/in_mp4.c	2004-10-19 18:02:10.000000000 +0000
++++ faad2+iPhone/plugins/in_mp4/in_mp4.c	2008-06-19 04:37:55.000000000 +0000
+@@ -1219,7 +1219,7 @@
+ void about(HWND hwndParent)
+ {
+     MessageBox(hwndParent,
+-        "AudioCoding.com MPEG-4 AAC player " FAAD2_VERSION " compiled on " __DATE__ ".\n"
++        "AudioCoding.com MPEG-4 AAC player " FAAD2_VERSION ".\n"
+         "Visit the website for more info.\n"
+         "Copyright 2002-2004 AudioCoding.com",
+         "About",
+@@ -2563,7 +2563,7 @@
+ static In_Module module =
+ {
+     IN_VER,
+-    "AudioCoding.com MPEG-4 AAC player: " FAAD2_VERSION " compiled on " __DATE__,
++    "AudioCoding.com MPEG-4 AAC player: " FAAD2_VERSION,
+     0,  // hMainWindow
+     0,  // hDllInstance
+     NULL,
+diff -ru faad2/plugins/QCD/QCDFAAD.c faad2+iPhone/plugins/QCD/QCDFAAD.c
+--- faad2/plugins/QCD/QCDFAAD.c	2003-04-28 19:04:35.000000000 +0000
++++ faad2+iPhone/plugins/QCD/QCDFAAD.c	2008-06-19 04:37:40.000000000 +0000
+@@ -349,7 +349,7 @@
+ {
+ 	static RECT rcLOGO, rcMail1, rcMail2/*, rcMail3*/;
+ 	POINT ptMouse;
+-	static char szPluginVer[] = "QCD FAAD Input Plug-in v1.0b\nCompiled on " __TIME__ ", " __DATE__;
++	static char szPluginVer[] = "QCD FAAD Input Plug-in v1.0b;
+ 	static char szFLACVer[] = "Using: FAAD2 v "FAAD2_VERSION" by";
+ 
+ 	switch (uMsg)
+@@ -1027,4 +1027,4 @@
+ 	{
+         return 0;
+     }
+-}
+\ No newline at end of file
++}
+diff -ru faad2/plugins/QCDMp4/QCDMp4.c faad2+iPhone/plugins/QCDMp4/QCDMp4.c
+--- faad2/plugins/QCDMp4/QCDMp4.c	2003-12-06 04:24:17.000000000 +0000
++++ faad2+iPhone/plugins/QCDMp4/QCDMp4.c	2008-06-19 04:37:40.000000000 +0000
+@@ -1304,7 +1304,7 @@
+ void About(int flags)
+ {
+ 	MessageBox(module.hMainWindow,
+-        "AudioCoding.com MPEG-4 General Audio player " FAAD2_VERSION " compiled on " __DATE__ ".\n"
++        "AudioCoding.com MPEG-4 General Audio player " FAAD2_VERSION ".\n"
+         "Visit the website for more info.\n"
+ 		"Ported to QCD by Shao Hao.\n"
+         "Copyright 2002-2003 AudioCoding.com",

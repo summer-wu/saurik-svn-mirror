@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<waf:logic xmlns:waf="http://www.saurik.com/menes/waf/0.9">
+
+<waf:set-status code="200"/>
+<waf:add-header name="Content-Type" value="text/html"/>
+
+cse::String hello("Hello, World!");
+
+<waf:content>
+    <html>
+        <head>
+            <title>{hello}</title>
+        </head>
+        <body>
+            <h1>{hello}</h1>
+        </body>
+    </html>
+</waf:content>
+
+</waf:logic>

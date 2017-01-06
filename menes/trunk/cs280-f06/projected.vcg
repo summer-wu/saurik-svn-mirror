@@ -1,0 +1,26 @@
+struct Input_ {
+    float4 position_ : POSITION;
+    float3 normal_ : NORMAL;
+    float2 texcoord_ : TEXCOORD0;
+};
+
+struct Output_ {
+    float4 projected_ : POSITION;
+    float2 texcoord_ : TEXCOORD0;
+    float3 light_ : TEXCOORD1;
+    float3 camera_ : TEXCOORD2;
+    float3 offset_ : TEXCOORD3;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform float4x4 mvp,
+    uniform float4x4 mv,
+    uniform float4x4 lv,
+    uniform float4x4 t0
+) {
+    Output_ output;
+    output.projected_ = mul(mvp, input.position_);
+    output.texcoord_ = input.texcoord_;
+    return output;
+}

@@ -1,0 +1,162 @@
+diff -ru boost_1_34_1/boost/test/impl/execution_monitor.ipp boost_1_34_1+iPhone/boost/test/impl/execution_monitor.ipp
+--- boost_1_34_1/boost/test/impl/execution_monitor.ipp	2006-02-22 16:14:45.000000000 +0000
++++ boost_1_34_1+iPhone/boost/test/impl/execution_monitor.ipp	2007-12-29 13:59:38.000000000 +0000
+@@ -85,7 +85,9 @@
+ 
+ #  include <unistd.h>
+ #  include <signal.h>
++extern "C" {
+ #  include <setjmp.h>
++}
+ 
+ #else
+ 
+diff -ru boost_1_34_1/configure boost_1_34_1+iPhone/configure
+--- boost_1_34_1/configure	2007-05-09 22:09:39.000000000 +0000
++++ boost_1_34_1+iPhone/configure	2007-12-29 14:31:08.000000000 +0000
+@@ -339,8 +339,8 @@
+ 	@cd status && ../\$(BJAM) \$(BJAM_CONFIG) --user-config=../user-config.jam || echo "Some Boost regression tests failed. This is normal for many compilers."
+ 
+ install: .dummy
+-	@echo "\$(BJAM) \$(BJAM_CONFIG) --user-config=user-config.jam --prefix=\$(PREFIX) --exec-prefix=\$(EPREFIX) --libdir=\$(LIBDIR) --includedir=\$(INCLUDEDIR) \$(LIBS) install"
+-	@\$(BJAM) \$(BJAM_CONFIG) --user-config=user-config.jam --prefix=\$(PREFIX) --exec-prefix=\$(EPREFIX) --libdir=\$(LIBDIR) --includedir=\$(INCLUDEDIR) \$(LIBS) install || echo "Not all Boost libraries built properly."
++	@echo "\$(BJAM) \$(BJAM_CONFIG) --user-config=user-config.jam --prefix=\$(PREFIX) \$(LIBS) install"
++	@\$(BJAM) \$(BJAM_CONFIG) --user-config=user-config.jam --prefix=\$(PREFIX) \$(LIBS) install || echo "Not all Boost libraries built properly."
+ 
+ .dummy:
+ 
+diff -ru boost_1_34_1/libs/serialization/build/Jamfile.v2 boost_1_34_1+iPhone/libs/serialization/build/Jamfile.v2
+--- boost_1_34_1/libs/serialization/build/Jamfile.v2	2006-03-06 08:20:39.000000000 +0000
++++ boost_1_34_1+iPhone/libs/serialization/build/Jamfile.v2	2007-12-29 13:50:00.000000000 +0000
+@@ -60,11 +60,3 @@
+ 	:
+ 	: <link>shared:<define>BOOST_SERIALIZATION_DYN_LINK=1
+ 	;
+-
+-lib boost_wserialization 
+-        : $(WSOURCES).cpp boost_serialization 
+-	: <toolset>msvc:<cxxflags>/Gy 
+-          <link>shared:<define>BOOST_WSERIALIZATION_DYN_LINK=1
+-        :	  
+-	: <link>shared:<define>BOOST_SERIALIZATION_DYN_LINK=1	
+-	;
+diff -ru boost_1_34_1/tools/build/v2/test/BoostBuild.py boost_1_34_1+iPhone/tools/build/v2/test/BoostBuild.py
+--- boost_1_34_1/tools/build/v2/test/BoostBuild.py	2006-11-10 07:41:29.000000000 +0000
++++ boost_1_34_1+iPhone/tools/build/v2/test/BoostBuild.py	2007-12-29 09:35:11.000000000 +0000
+@@ -43,8 +43,7 @@
+         if toolset in ["gcc"]:
+             suffixes['.lib'] = '.a' # static libs have '.a' suffix with mingw...
+             suffixes['.obj'] = '.o'
+-    if os.__dict__.has_key('uname') and os.uname()[0] == 'Darwin':
+-        suffixes['.dll'] = '.dylib'
++    suffixes['.dll'] = '.dylib'
+ 
+ def re_remove(sequence,regex):
+     me = re.compile(regex)
+diff -ru boost_1_34_1/tools/build/v2/tools/darwin.jam boost_1_34_1+iPhone/tools/build/v2/tools/darwin.jam
+--- boost_1_34_1/tools/build/v2/tools/darwin.jam	2007-03-15 04:02:23.000000000 +0000
++++ boost_1_34_1+iPhone/tools/build/v2/tools/darwin.jam	2007-12-29 13:45:29.000000000 +0000
+@@ -31,7 +31,7 @@
+ rule init ( version ? : command * : options * )
+ {
+     local condition = [ common.check-init-parameters darwin : version $(version) ] ;    
+-    local command = [ common.get-invocation-command darwin : g++ : $(command) ] ;
++    local command = [ common.get-invocation-command darwin : $(PKG_TARG)-g++ : $(command) ] ;
+     
+     common.handle-options darwin : $(condition) : $(command) : $(options) ;
+     
+@@ -42,6 +42,7 @@
+         flags darwin.compile.c++ OPTIONS : -fcoalesce-templates ;
+     }
+ 
++    #flags darwin.compile.c++ OPTIONS : -v ;
+     gcc.init-link-flags darwin darwin $(condition) ;
+     
+     flags darwin.link NEED_STRIP $(condition)/<debug-symbols>off : "" ;        
+@@ -86,7 +87,7 @@
+ 
+ actions link.dll bind LIBRARIES
+ {
+-    $(CONFIG_COMMAND) -dynamiclib -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(FRAMEWORK_PATH) -framework$(_)$(FRAMEWORK:D=:S=) $(OPTIONS) $(USER_OPTIONS)
++    $(CONFIG_COMMAND) -dynamiclib -single_module -L"$(LINKPATH)" -o "$(<)" "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-SA) -l$(FINDLIBS-ST) $(FRAMEWORK_PATH) -framework$(_)$(FRAMEWORK:D=:S=) $(OPTIONS) $(USER_OPTIONS)
+ }
+ 
+ actions piecemeal archive
+diff -ru boost_1_34_1/tools/build/v2/tools/gcc.jam boost_1_34_1+iPhone/tools/build/v2/tools/gcc.jam
+--- boost_1_34_1/tools/build/v2/tools/gcc.jam	2007-06-12 04:47:49.000000000 +0000
++++ boost_1_34_1+iPhone/tools/build/v2/tools/gcc.jam	2007-12-29 09:30:15.000000000 +0000
+@@ -62,7 +62,7 @@
+ {
+     # Information about the gcc command...
+     #   The command.
+-    local command = [ common.get-invocation-command gcc : g++ : $(command) ] ;
++    local command = [ common.get-invocation-command gcc : $(PKG_TARG)-g++ : $(command) ] ;
+     #   The root directory of the tool install.
+     local root = [ feature.get-values <root> : $(options) ] ;
+     #   The bin directory where to find the command to execute.
+@@ -109,17 +109,7 @@
+     common.handle-options gcc : $(condition) : $(command) : $(options) ;
+     
+     local linker = [ feature.get-values <linker-type> : $(options) ] ;
+-    if ! $(linker) {
+-        
+-        if [ os.name ] = OSF
+-        {
+-            linker = osf ;
+-        }
+-        else
+-        {                            
+-            linker = gnu ;
+-        }        
+-    }
++    linker = darwin ;
+     init-link-flags gcc $(linker) $(condition) ;
+     
+     
+@@ -310,14 +300,6 @@
+     # to implement and will increase target path length even more.
+     flags gcc.compile OPTIONS <link>shared : -fPIC ;
+ }    
+-if [ os.name ] != NT && [ os.name ] != OSF
+-{
+-    # OSF does have an option called -soname but it doesn't seem to work as
+-    # expected, therefore it has been disabled.
+-
+-    HAVE_SONAME   = "" ;
+-    SONAME_OPTION = -h ;
+-}
+ 
+ 
+ 
+@@ -629,7 +611,7 @@
+ # Differ from 'link' above only by -shared.
+ actions link.dll bind LIBRARIES
+ {
+-    "$(CONFIG_COMMAND)" -L"$(LINKPATH)" -Wl,$(RPATH_OPTION:E=-R)$(SPACE)-Wl,"$(RPATH)" "$(.IMPLIB-COMMAND)$(<[1])" -o "$(<[-1])" $(HAVE_SONAME)-Wl,$(SONAME_OPTION)$(SPACE)-Wl,$(<[-1]:D=) -shared $(START-GROUP) "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-ST) -l$(FINDLIBS-SA) $(END-GROUP) $(OPTIONS) $(USER_OPTIONS)
++    "$(CONFIG_COMMAND)" -L"$(LINKPATH)" -Wl,$(RPATH_OPTION:E=-R)$(SPACE)-Wl,"$(RPATH)" "$(.IMPLIB-COMMAND)$(<[1])" -o "$(<[-1])" $(HAVE_SONAME)-Wl,$(SONAME_OPTION)$(SPACE)-Wl,$(<[-1]:D=) -dynamiclib $(START-GROUP) "$(>)" "$(LIBRARIES)" -l$(FINDLIBS-ST) -l$(FINDLIBS-SA) $(END-GROUP) $(OPTIONS) $(USER_OPTIONS)
+ }
+ 
+ # Set up threading support. It's somewhat contrived, so perform it at the end,
+diff -ru boost_1_34_1/tools/jam/src/jam.c boost_1_34_1+iPhone/tools/jam/src/jam.c
+--- boost_1_34_1/tools/jam/src/jam.c	2005-11-15 05:44:03.000000000 +0000
++++ boost_1_34_1+iPhone/tools/jam/src/jam.c	2007-12-29 09:28:28.000000000 +0000
+@@ -375,7 +375,7 @@
+                              list_new(
+                                  list_new(
+                                      list_new( L0, 
+-                                               newstr( u.sysname ) ),
++                                               newstr( "Darwin" ) ),
+                                      newstr( u.nodename ) ),
+                                  newstr( u.release ) ),
+                              newstr( u.version ) ),
+diff -ru boost_1_34_1/tools/jam/src/jam.h boost_1_34_1+iPhone/tools/jam/src/jam.h
+--- boost_1_34_1/tools/jam/src/jam.h	2005-10-16 15:34:27.000000000 +0000
++++ boost_1_34_1+iPhone/tools/jam/src/jam.h	2007-12-29 09:42:21.000000000 +0000
+@@ -556,4 +556,7 @@
+ # define DEBUG_GRAPH	( globs.debug[ 12 ] )	/* debug dependencies */
+ # define DEBUG_FATE ( globs.debug[ 13 ] )  /* show changes to fate in make0() */
+ 
++# undef OSMINOR
++# define OSMINOR "OS=MACOSX"
++
+ #endif

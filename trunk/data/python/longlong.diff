@@ -1,0 +1,28 @@
+diff -ru Python-2.5.1/Modules/_ctypes/cfield.c Python-2.5.1+iPhone/Modules/_ctypes/cfield.c
+--- Python-2.5.1/Modules/_ctypes/cfield.c	2007-03-22 19:43:37.000000000 +0000
++++ Python-2.5.1+iPhone/Modules/_ctypes/cfield.c	2008-03-08 21:04:51.000000000 +0000
+@@ -1538,20 +1538,13 @@
+ 	{ 'H', H_set, H_get, &ffi_type_ushort, H_set_sw, H_get_sw},
+ 	{ 'i', i_set, i_get, &ffi_type_sint, i_set_sw, i_get_sw},
+ 	{ 'I', I_set, I_get, &ffi_type_uint, I_set_sw, I_get_sw},
+-/* XXX Hm, sizeof(int) == sizeof(long) doesn't hold on every platform */
+-/* As soon as we can get rid of the type codes, this is no longer a problem */
+-#if SIZEOF_LONG == 4
+-	{ 'l', l_set, l_get, &ffi_type_sint, l_set_sw, l_get_sw},
+-	{ 'L', L_set, L_get, &ffi_type_uint, L_set_sw, L_get_sw},
+-#elif SIZEOF_LONG == 8
+ 	{ 'l', l_set, l_get, &ffi_type_slong, l_set_sw, l_get_sw},
+ 	{ 'L', L_set, L_get, &ffi_type_ulong, L_set_sw, L_get_sw},
+-#else
+-# error
+-#endif
++/* XXX Hm, sizeof(long) == sizeof(int64_t) doesn't hold on every platform */
++/* As soon as we can get rid of the type codes, this is no longer a problem */
+ #ifdef HAVE_LONG_LONG
+-	{ 'q', q_set, q_get, &ffi_type_slong, q_set_sw, q_get_sw},
+-	{ 'Q', Q_set, Q_get, &ffi_type_ulong, Q_set_sw, Q_get_sw},
++	{ 'q', q_set, q_get, &ffi_type_sint64, q_set_sw, q_get_sw},
++	{ 'Q', Q_set, Q_get, &ffi_type_uint64, Q_set_sw, Q_get_sw},
+ #endif
+ 	{ 'P', P_set, P_get, &ffi_type_pointer},
+ 	{ 'z', z_set, z_get, &ffi_type_pointer},

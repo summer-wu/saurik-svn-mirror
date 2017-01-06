@@ -1,0 +1,76 @@
+diff -ru odcctools-277/include/foreign/objc/objc-api.h odcctools-277+iPhone/include/foreign/objc/objc-api.h
+--- odcctools-277/include/foreign/objc/objc-api.h	2008-08-29 23:05:06.000000000 +0000
++++ odcctools-277+iPhone/include/foreign/objc/objc-api.h	2008-08-30 00:26:47.000000000 +0000
+@@ -45,7 +45,7 @@
+ /* OBJC2_UNAVAILABLE: unavailable in objc 2.0, deprecated in Leopard */
+ #if !defined(OBJC2_UNAVAILABLE)
+ #   if __OBJC2__
+-#       define OBJC2_UNAVAILABLE UNAVAILABLE_ATTRIBUTE
++#       define OBJC2_UNAVAILABLE //UNAVAILABLE_ATTRIBUTE
+ #   else
+ #       define OBJC2_UNAVAILABLE DEPRECATED_IN_MAC_OS_X_VERSION_10_5_AND_LATER
+ #   endif
+diff -ru odcctools-277/include/foreign/objc/runtime.h odcctools-277+iPhone/include/foreign/objc/runtime.h
+--- odcctools-277/include/foreign/objc/runtime.h	2008-08-29 23:05:06.000000000 +0000
++++ odcctools-277+iPhone/include/foreign/objc/runtime.h	2008-08-30 00:25:34.000000000 +0000
+@@ -43,7 +43,7 @@
+ struct objc_class {
+     Class isa;
+ 
+-#if !__OBJC2__
++#if 1//!__OBJC2__
+     Class super_class                                        OBJC2_UNAVAILABLE;
+     const char *name                                         OBJC2_UNAVAILABLE;
+     long version                                             OBJC2_UNAVAILABLE;
+@@ -303,7 +303,7 @@
+ 
+ /* Obsolete types */
+ 
+-#if !__OBJC2__
++#if 1//!__OBJC2__
+ 
+ #define CLS_GETINFO(cls,infomask)        ((cls)->info & (infomask))
+ #define CLS_SETINFO(cls,infomask)        ((cls)->info |= (infomask))
+diff -ru odcctools-277/otool/Makefile.in odcctools-277+iPhone/otool/Makefile.in
+--- odcctools-277/otool/Makefile.in	2008-08-29 22:38:32.000000000 +0000
++++ odcctools-277+iPhone/otool/Makefile.in	2008-08-30 00:18:48.000000000 +0000
+@@ -24,8 +24,10 @@
+ INCPRIVEXT      = -include $(top_srcdir)/include/extern.h
+ endif
+ 
++FOREIGN         = -I$(top_srcdir)/include/foreign
++
+ ifeq ($(HAVE_FOREIGN_HEADERS),YES)
+-FORHDRS         = -I$(top_srcdir)/include/foreign
++FORHDRS         = $(FOREIGN)
+ endif
+ 
+ INSTALL		= @INSTALL@
+@@ -77,9 +79,9 @@
+ 	$(CC) -DOTOOL $(MYCOMPILEFLAGS) -DARCH64 -c -o $@ $<
+ 
+ $(MOBJS): %.o: %.c
+-	$(CC) $(OBJC) $(MYCOMPILEFLAGS) -c -o $@ $<
++	$(CC) $(OBJC) $(MYCOMPILEFLAGS) $(FOREIGN) -c -o $@ $<
+ $(MOBJS64): %.64o: %.c
+-	$(CC) $(OBJC) $(MYCOMPILEFLAGS) -DARCH64 -c -o $@ $<
++	$(CC) $(OBJC) $(MYCOMPILEFLAGS) $(FOREIGN) -DARCH64 -c -o $@ $<
+ 
+ install: otool otool64
+ 	mkdir -p $(DESTDIR)$(bindir)
+diff -ru odcctools-277/otool/print_objc.c odcctools-277+iPhone/otool/print_objc.c
+--- odcctools-277/otool/print_objc.c	2008-08-29 22:38:32.000000000 +0000
++++ odcctools-277+iPhone/otool/print_objc.c	2008-08-30 00:18:48.000000000 +0000
+@@ -39,7 +39,11 @@
+ 
+ struct objc_protocol
+ {
+-    @defs(Protocol)
++    Class isa;
++    char *protocol_name OBJC2_UNAVAILABLE;
++    struct objc_protocol_list *protocol_list OBJC2_UNAVAILABLE;
++    struct objc_method_description_list *instance_methods OBJC2_UNAVAILABLE;
++    struct objc_method_description_list *class_methods OBJC2_UNAVAILABLE;
+ };
+ 
+ /*

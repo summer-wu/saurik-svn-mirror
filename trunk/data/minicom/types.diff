@@ -1,0 +1,12 @@
+diff -ru minicom-2.2/src/minicom.h minicom-2.2+iPhone/src/minicom.h
+--- minicom-2.2/src/minicom.h	2005-10-31 11:10:57.000000000 +0000
++++ minicom-2.2+iPhone/src/minicom.h	2008-01-02 00:24:32.000000000 +0000
+@@ -34,6 +34,8 @@
+ #include <sys/un.h>
+ #endif
+ 
++#include <sys/types.h>
++
+ /*
+  * kubota@debian.or.jp 08/08/98
+  * COLS must be equal to or less than MAXCOLS.

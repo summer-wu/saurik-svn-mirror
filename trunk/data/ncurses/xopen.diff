@@ -1,0 +1,18 @@
+diff -ru ncurses-5.7/ncurses/Makefile.in ncurses-5.7+iPhone/ncurses/Makefile.in
+--- ncurses-5.7/ncurses/Makefile.in	2008-10-18 14:11:54.000000000 +0000
++++ ncurses-5.7+iPhone/ncurses/Makefile.in	2009-04-08 13:08:06.000000000 +0000
+@@ -197,12 +197,12 @@
+ make_keys$(BUILD_EXEEXT) : \
+ 		$(tinfo)/make_keys.c \
+ 		names.c
+-	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
++	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS) $(CPPFLAGS)
+ 
+ make_hash$(BUILD_EXEEXT) : \
+ 		$(tinfo)/comp_hash.c \
+ 		../include/hashsize.h
+-	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) -DMAIN_PROGRAM $(tinfo)/comp_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
++	$(BUILD_CC) -o $@ $(BUILD_CCFLAGS) -DMAIN_PROGRAM $(tinfo)/comp_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS) $(CPPFLAGS)
+ 
+ ./expanded.c : $(serial)/MKexpanded.sh
+ 	sh -e $(serial)/MKexpanded.sh "$(CPP)" $(CPPFLAGS) > $@

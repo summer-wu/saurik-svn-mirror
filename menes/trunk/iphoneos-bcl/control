@@ -1,0 +1,12 @@
+Package: iphoneos-bcl
+Priority: optional
+Section: Tweaks
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Architecture: iphoneos-arm
+Version: 0.9.2911-2
+Description: smooths iPhoneOS transitions (2.x->2.y/3.x)
+Name: Backward Compatibility
+Depends: mobilesubstrate (>= 0.9.2560-1)
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/iphoneos-bcl/
+Tag: role::enduser, purpose::extension

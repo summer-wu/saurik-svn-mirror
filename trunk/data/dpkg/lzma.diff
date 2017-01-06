@@ -1,0 +1,64 @@
+diff -ru dpkg-1.18.10/dpkg-deb/main.c dpkg-1.18.10+iPhone/dpkg-deb/main.c
+--- dpkg-1.18.10/dpkg-deb/main.c	2016-07-05 01:55:13.000000000 +0000
++++ dpkg-1.18.10+iPhone/dpkg-deb/main.c	2016-08-22 22:37:49.000000000 +0000
+@@ -212,8 +212,6 @@
+   compress_params.type = compressor_find_by_name(value);
+   if (compress_params.type == COMPRESSOR_TYPE_UNKNOWN)
+     badusage(_("unknown compression type '%s'!"), value);
+-  if (compress_params.type == COMPRESSOR_TYPE_LZMA)
+-    warning(_("deprecated compression type '%s'; use xz instead"), value);
+   if (compress_params.type == COMPRESSOR_TYPE_BZIP2)
+     warning(_("deprecated compression type '%s'; use xz or gzip instead"), value);
+ }
+diff -ru dpkg-1.18.10/lib/dpkg/compress.c dpkg-1.18.10+iPhone/lib/dpkg/compress.c
+--- dpkg-1.18.10/lib/dpkg/compress.c	2016-07-05 02:00:41.000000000 +0000
++++ dpkg-1.18.10+iPhone/lib/dpkg/compress.c	2016-08-22 22:38:01.000000000 +0000
+@@ -639,6 +639,16 @@
+  * Lzma compressor.
+  */
+ 
++#define LZMA		"lzma"
++
++static void
++fixup_lzma_params(struct compress_params *params)
++{
++	/* Normalize compression level. */
++	if (params->level == 0)
++		params->level = 1;
++}
++
+ #ifdef WITH_LIBLZMA
+ static void
+ filter_unlzma_init(struct io_lzma *io, lzma_stream *s)
+@@ -700,10 +710,12 @@
+ 	filter_lzma(&io, fd_in, fd_out);
+ }
+ #else
++static const char *env_lzma[] = { "LZMA", NULL };
++
+ static void
+ decompress_lzma(int fd_in, int fd_out, const char *desc)
+ {
+-	fd_fd_filter(fd_in, fd_out, desc, env_xz, XZ, "-dc", "--format=lzma", NULL);
++	fd_fd_filter(fd_in, fd_out, desc, env_lzma, LZMA, "-dc", NULL);
+ }
+ 
+ static void
+@@ -712,7 +724,7 @@
+ 	char combuf[6];
+ 
+ 	snprintf(combuf, sizeof(combuf), "-c%d", params->level);
+-	fd_fd_filter(fd_in, fd_out, desc, env_xz, XZ, combuf, "--format=lzma", NULL);
++	fd_fd_filter(fd_in, fd_out, desc, env_lzma, LZMA, combuf, NULL);
+ }
+ #endif
+ 
+@@ -720,7 +732,7 @@
+ 	.name = "lzma",
+ 	.extension = ".lzma",
+ 	.default_level = 6,
+-	.fixup_params = fixup_none_params,
++	.fixup_params = fixup_lzma_params,
+ 	.compress = compress_lzma,
+ 	.decompress = decompress_lzma,
+ };

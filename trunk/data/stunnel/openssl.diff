@@ -1,0 +1,12 @@
+diff -ru stunnel-4.26/tools/Makefile.in stunnel-4.26+iPhone/tools/Makefile.in
+--- stunnel-4.26/tools/Makefile.in	2008-09-20 20:32:29.000000000 +0000
++++ stunnel-4.26+iPhone/tools/Makefile.in	2008-12-03 13:26:33.000000000 +0000
+@@ -173,7 +173,7 @@
+ examples_DATA = ca.html ca.pl importCA.html importCA.sh script.sh \
+ 	stunnel.spec stunnel.init
+ 
+-openssl = $(ssldir)/bin/openssl
++openssl ?= $(ssldir)/bin/openssl
+ all: all-am
+ 
+ .SUFFIXES:

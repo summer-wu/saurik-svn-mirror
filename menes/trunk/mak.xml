@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<mak:makefile
+    xmlns:mak="http://www.saurik.com/menes/mak/0.9"
+    xmlns:xpp="http://www.saurik.com/menes/xpp/0.9"
+    xmlns:bnf="http://www.saurik.com/menes/bnf/0.9"
+>
+
+<mak:function name="bnf:compile">
+    <mak:xslt src="menes/bnf/collapse.xsl"/>
+    <mak:xslt src="menes/bnf/simplify.xsl"/>
+    <mak:xslt src="menes/bnf/combine.xsl"/>
+
+    <mak:xslt src="menes/bnf/tokenize.xsl"/>
+    <mak:xslt src="menes/bnf/combine.xsl"/>
+    <mak:xslt src="menes/bnf/degenerate.xsl"/>
+
+    <mak:xslt src="menes/bnf/leftcorner.xsl"/>
+    <mak:xslt src="menes/bnf/combine.xsl"/>
+    <mak:xslt src="menes/bnf/degenerate.xsl"/>
+
+    <xml:format/>
+</mak:function>
+
+<mak:function name="xpp:process">
+    <mak:exec cmd="utils/saxon.sh -o $out $in $in"/>
+    <!--mak:xslt src="menes/xpp/process.xsl"/-->
+</mak:function>
+
+<mak:function name="mak:xinclude">
+    <mak:exec cmd="utils/saxon.sh -o $out $src menes/xpp/identity.xsl" depends="@src"/>
+</mak:function>
+
+<mak:function name="mak:file">
+    <mak:exec cmd="cp -a $src $out" depends="@src"/>
+</mak:function>
+
+<mak:function name="mak:xslt">
+    <mak:exec cmd="utils/saxon.sh -o $out $in $src" depends="@src"/>
+</mak:function>
+
+<mak:function name="xml:format">
+    <mak:exec cmd="binary/xml-format $in > $out"/>
+</mak:function>
+
+<mak:function name="bnf:parse">
+    <mak:exec cmd="binary/anaginosko $src $in > $out" depends="'anaginosko', @src"/>
+</mak:function>
+
+<mak:match pattern="data/grammars/bnf2complex.bnf"/>
+<mak:match pattern="data/grammars/java.bnf"/>
+<mak:match pattern="data/grammars/msil.bnf"/>
+<mak:match pattern="dude.bnf"/>
+
+<!--mak:match pattern="*.hlg">
+    <mak:file src="{1}.bnf"/>
+    <bnf:parse src="data/grammars/bnf2complex.gll"/>
+    <xpp:process/>
+</mak:match-->
+
+<mak:match pattern="*.gll">
+    <mak:xinclude src="{1}.bnf"/>
+    <bnf:compile/>
+</mak:match>
+
+<mak:match pattern="1.xml">
+    <mak:xinclude src="data/grammars/bnf2complex.xml"/>
+    <bnf:compile/>
+    <!--xpp:process/-->
+</mak:match>
+
+<mak:match pattern="2.xml">
+    <mak:file src="2.txt"/>
+    <bnf:parse src="dude.gll"/>
+</mak:match>
+
+</mak:makefile>

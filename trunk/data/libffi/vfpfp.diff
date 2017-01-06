@@ -1,0 +1,61 @@
+diff -ru gcc/libffi/src/arm/sysv.S gcc+iPhone/libffi/src/arm/sysv.S
+--- gcc/libffi/src/arm/sysv.S	2007-09-04 17:52:45.000000000 +0000
++++ gcc+iPhone/libffi/src/arm/sysv.S	2008-09-07 12:59:53.000000000 +0000
+@@ -188,7 +188,7 @@
+ 
+ @ return INT
+ 	cmp	r3, #FFI_TYPE_INT
+-#ifdef __SOFTFP__
++#if defined(__SOFTFP__) || defined(__VFP_FP__)
+ 	cmpne	r3, #FFI_TYPE_FLOAT
+ #endif
+ 	streq	r0, [r2]
+@@ -196,12 +196,12 @@
+ 
+ 	@ return INT64
+ 	cmp	r3, #FFI_TYPE_SINT64
+-#ifdef __SOFTFP__
++#if defined(__SOFTFP__) || defined(__VFP_FP__)
+ 	cmpne	r3, #FFI_TYPE_DOUBLE
+ #endif
+ 	stmeqia	r2, {r0, r1}
+ 
+-#ifndef __SOFTFP__
++#if !defined(__SOFTFP__) && !defined(__VFP_FP__)
+ 	beq	LSYM(Lepilogue)
+ 
+ @ return FLOAT
+@@ -244,21 +244,21 @@
+ 	beq	.Lretint
+ 
+ 	cmp	r0, #FFI_TYPE_FLOAT
+-#ifdef __SOFTFP__
++#if defined(__SOFTFP__) || defined(__VFP_FP__)
+ 	beq	.Lretint
+ #else
+ 	beq	.Lretfloat
+ #endif
+ 
+ 	cmp	r0, #FFI_TYPE_DOUBLE
+-#ifdef __SOFTFP__
++#if defined(__SOFTFP__) || defined(__VFP_FP__)
+ 	beq	.Lretlonglong
+ #else
+ 	beq	.Lretdouble
+ #endif
+ 
+ 	cmp	r0, #FFI_TYPE_LONGDOUBLE
+-#ifdef __SOFTFP__
++#if defined(__SOFTFP__) || defined(__VFP_FP__)
+ 	beq	.Lretlonglong
+ #else
+ 	beq	.Lretlongdouble
+@@ -277,7 +277,7 @@
+ 	ldr	r1, [sp, #4]
+ 	b	.Lclosure_epilogue
+ 
+-#ifndef __SOFTFP__
++#if !defined(__SOFTFP__) && !defined(__VFP_FP__)
+ .Lretfloat:
+ 	ldfs	f0, [sp]
+ 	b	.Lclosure_epilogue

@@ -1,0 +1,117 @@
+diff -ru inetutils-1.6/libinetutils/Makefile.am inetutils-1.6+iPhone/libinetutils/Makefile.am
+--- inetutils-1.6/libinetutils/Makefile.am	2007-06-29 16:29:31.000000000 +0000
++++ inetutils-1.6+iPhone/libinetutils/Makefile.am	2009-04-10 20:58:01.000000000 +0000
+@@ -20,10 +20,8 @@
+ 
+ noinst_HEADERS = argcv.h libinetutils.h
+ 
+-EXTRA_DIST = logwtmp.c
+-
+ libinetutils_a_SOURCES = argcv.c cleansess.c daemon.c des_rw.c kcmd.c	\
+-	krcmd.c localhost.c logwtmpko.c setsig.c shishi.c tftpsubs.c \
++	krcmd.c localhost.c setsig.c shishi.c tftpsubs.c \
+         ttymsg.c utmp_init.c utmp_logout.c
+ 
+ libinetutils_a_LIBADD = daemon.o $(top_builddir)/lib/libgnu.a
+diff -ru inetutils-1.6/libinetutils/Makefile.in inetutils-1.6+iPhone/libinetutils/Makefile.in
+--- inetutils-1.6/libinetutils/Makefile.in	2008-12-27 20:52:24.000000000 +0000
++++ inetutils-1.6+iPhone/libinetutils/Makefile.in	2009-04-10 20:58:14.000000000 +0000
+@@ -132,7 +132,7 @@
+ libinetutils_a_DEPENDENCIES = daemon.o $(top_builddir)/lib/libgnu.a
+ am_libinetutils_a_OBJECTS = argcv.$(OBJEXT) cleansess.$(OBJEXT) \
+ 	daemon.$(OBJEXT) des_rw.$(OBJEXT) kcmd.$(OBJEXT) \
+-	krcmd.$(OBJEXT) localhost.$(OBJEXT) logwtmpko.$(OBJEXT) \
++	krcmd.$(OBJEXT) localhost.$(OBJEXT) \
+ 	setsig.$(OBJEXT) shishi.$(OBJEXT) tftpsubs.$(OBJEXT) \
+ 	ttymsg.$(OBJEXT) utmp_init.$(OBJEXT) utmp_logout.$(OBJEXT)
+ libinetutils_a_OBJECTS = $(am_libinetutils_a_OBJECTS)
+@@ -638,9 +638,8 @@
+ whois_INSTALL_HOOK = @whois_INSTALL_HOOK@
+ noinst_LIBRARIES = libinetutils.a
+ noinst_HEADERS = argcv.h libinetutils.h
+-EXTRA_DIST = logwtmp.c
+ libinetutils_a_SOURCES = argcv.c cleansess.c daemon.c des_rw.c kcmd.c	\
+-	krcmd.c localhost.c logwtmpko.c setsig.c shishi.c tftpsubs.c \
++	krcmd.c localhost.c setsig.c shishi.c tftpsubs.c \
+         ttymsg.c utmp_init.c utmp_logout.c
+ 
+ libinetutils_a_LIBADD = daemon.o $(top_builddir)/lib/libgnu.a
+@@ -700,7 +699,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/kcmd.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/krcmd.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localhost.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logwtmpko.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setsig.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shishi.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tftpsubs.Po@am__quote@
+diff -ru inetutils-1.6/ftpd/Makefile.am inetutils-1.6+iPhone/ftpd/Makefile.am
+--- inetutils-1.6/ftpd/Makefile.am	2008-12-27 20:04:47.000000000 +0000
++++ inetutils-1.6+iPhone/ftpd/Makefile.am	2009-04-10 21:16:12.000000000 +0000
+@@ -22,7 +22,7 @@
+ 
+ EXTRA_PROGRAMS = ftpd
+ 
+-ftpd_SOURCES = ftpcmd.y ftpd.c logwtmp.c popen.c pam.c auth.c \
++ftpd_SOURCES = ftpcmd.y ftpd.c popen.c pam.c auth.c \
+                conf.c server_mode.c
+ 
+ noinst_HEADERS = extern.h
+diff -ru inetutils-1.6/ftpd/Makefile.in inetutils-1.6+iPhone/ftpd/Makefile.in
+--- inetutils-1.6/ftpd/Makefile.in	2008-12-27 20:52:21.000000000 +0000
++++ inetutils-1.6+iPhone/ftpd/Makefile.in	2009-04-10 21:16:22.000000000 +0000
+@@ -130,7 +130,7 @@
+ am__installdirs = "$(DESTDIR)$(inetdaemondir)" "$(DESTDIR)$(man8dir)"
+ inetdaemonPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
+ PROGRAMS = $(inetdaemon_PROGRAMS)
+-am_ftpd_OBJECTS = ftpcmd.$(OBJEXT) ftpd.$(OBJEXT) logwtmp.$(OBJEXT) \
++am_ftpd_OBJECTS = ftpcmd.$(OBJEXT) ftpd.$(OBJEXT) \
+ 	popen.$(OBJEXT) pam.$(OBJEXT) auth.$(OBJEXT) conf.$(OBJEXT) \
+ 	server_mode.$(OBJEXT)
+ ftpd_OBJECTS = $(am_ftpd_OBJECTS)
+@@ -644,7 +644,7 @@
+ whois_BUILD = @whois_BUILD@
+ whois_INSTALL_HOOK = @whois_INSTALL_HOOK@
+ inetdaemon_PROGRAMS = @ftpd_BUILD@
+-ftpd_SOURCES = ftpcmd.y ftpd.c logwtmp.c popen.c pam.c auth.c \
++ftpd_SOURCES = ftpcmd.y ftpd.c popen.c pam.c auth.c \
+                conf.c server_mode.c
+ 
+ noinst_HEADERS = extern.h
+@@ -728,7 +728,6 @@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/conf.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpcmd.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftpd.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logwtmp.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pam.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/popen.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server_mode.Po@am__quote@
+diff -ru inetutils-1.6/ftpd/ftpd.c inetutils-1.6+iPhone/ftpd/ftpd.c
+--- inetutils-1.6/ftpd/ftpd.c	2008-12-27 20:05:07.000000000 +0000
++++ inetutils-1.6+iPhone/ftpd/ftpd.c	2009-04-10 21:22:09.000000000 +0000
+@@ -639,7 +639,7 @@
+ 
+   /* open wtmp before chroot */
+   snprintf (ttyline, sizeof (ttyline), "ftp%d", getpid ());
+-  logwtmp_keep_open (ttyline, pcred->name, pcred->remotehost);
++  logwtmp (ttyline, pcred->name, pcred->remotehost);
+ 
+   if (pcred->guest)
+     {
+@@ -788,7 +788,7 @@
+   int atype = pcred->auth_type;
+   seteuid ((uid_t) 0);
+   if (pcred->logged_in)
+-    logwtmp_keep_open (ttyline, "", "");
++    logwtmp (ttyline, "", "");
+ 
+   if (pcred->name)
+     free (pcred->name);
+@@ -1703,7 +1703,7 @@
+   if (cred.logged_in)
+     {
+       seteuid ((uid_t) 0);
+-      logwtmp_keep_open (ttyline, "", "");
++      logwtmp (ttyline, "", "");
+     }
+   /* beware of flushing buffers after a SIGPIPE */
+   _exit (status);

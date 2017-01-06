@@ -1,0 +1,24 @@
+virtual data members
+un-virtualization
+explicit vtable construction
+pure virtual deconstructors
+templated typedefs
+variadic templates
+sealed classes
+true private interfaces
+constructor cross-calling
+typesafe variadic functions
+function argument typedefs
+break/continue labels
+template specialization templates
+static virtual inheritance
+multi-level namespace declaration
+typeof() for static member access
+template specialize new members
+incomplete, recursive typedefs
+http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&oe=UTF-8&safe=off&selm=63nj6o%24p6r%40netlab.cs.rpi.edu&rnum=1
+http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&oe=UTF-8&safe=off&scoring=d&selm=200103281810.f2SIApr21262%40imail1.vignette.com&rnum=7
+an explanation for except clause of 14.7.3/18
+templated namespaces
+typedef friend
+http://groups-beta.google.com/group/comp.lang.c++.moderated/msg/edb514629b1e84a2?hl=en

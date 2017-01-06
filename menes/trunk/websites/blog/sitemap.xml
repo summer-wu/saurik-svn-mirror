@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<waf:sitemap xmlns:waf="http://www.saurik.com/menes-waf/0.9">
+
+<waf:match "^/keystone.css$"
+    get=<waf:read/>
+/>
+
+<waf:match "^/insert.html$"
+    get=<waf:execute "insert-get.msp"/>
+/>
+
+<waf:match "^/insert.msp$"
+    post=<waf:execute "insert-post.msp"/>
+/>
+
+</waf:sitemap>

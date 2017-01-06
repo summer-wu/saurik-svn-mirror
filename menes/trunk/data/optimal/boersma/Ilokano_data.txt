@@ -1,0 +1,98 @@
+"ooTextFile"
+"Collection" 3
+
+"OTGrammar" "ilokano"
+
+18 constraints
+"O\s{NSET}"               100  0 ! Onset
+"*C\s{OMPLEX}
+O\s{NSET}"                100  0 ! *ComplexOnset
+"*__\si_[\?gC"            100  0 ! *syll[?C
+"*C\s{ODA}"               100  0 ! *Coda
+"*\?g]__\si_"             100  0 ! *?Coda
+"M\s{AX}
+(\?g)"                    100  0 ! Max (?)
+"M\s{AX}
+(V)"                      100  0 ! Max (V)
+"L\s{INEARITY}"           100  0 ! Linearity
+"I\s{DENT}-IO
+(syllabic)"               100  0 ! Ident-IO (syllabic)
+"M\s{AX}-OO
+(\?g)"                    100  0 ! Max-OO (?)
+"D\s{EP}
+(\?g)"                    100  0 ! Dep (?)
+"I\s{DENT}-BR
+(syllabic)"               100  0 ! Ident-BR (syllabic)
+"M\s{AX}-BR"              100  0 ! Max-BR
+
+"*L\s{OW}
+G\s{LIDE}"                100  0 ! *LowGlide
+"A\s{LIGN}"               100  0 ! Align (stem, L, syll, L)
+"C\s{ONTIG}"              100  0 ! Contiguity
+"I\s{DENT}-IO
+(low)"                    100  0 ! Ident-IO (low)
+"I\s{DENT}-BR
+(long)"                   100  0 ! Ident-BR (long)
+
+0 fixed rankings
+
+7 inputs  !       ON O2 ?C CD ?]   M? MV LI IS OO   D? IB MB   LG AL GU IW IG
+"ta?o-en" 7
+   "taw.?en"      0  0  0  2  0    0  0  1  1  0    0  0  0    0  0  0  0  0
+   "ta?.wen"      0  0  0  2  1    0  0  0  1  0    0  0  0    0  0  0  0  0
+   "ta.wen"       0  0  0  1  0    1  0  0  1  1    0  0  0    0  0  0  0  0
+   "ta.?en"       0  0  0  1  0    0  1  0  0  0    0  0  0    0  0  0  0  0
+   "ta.?o.en"     1  0  0  1  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "ta.?o.?en"    0  0  0  1  0    0  0  0  0  0    1  0  0    0  0  0  0  0
+   "ta.?wen"      0  1  1  1  0    0  0  0  1  0    0  0  0    0  0  0  0  0
+"pa?lak" 3
+   "pa.lak"       0  0  0  1  0    1  0  0  0  0    0  0  0    0  0  0  0  0
+   "pa?.lak"      0  0  0  2  1    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "pa.?lak"      0  1  1  1  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+"lab?aj" 2
+   "lab.?aj"      0  0  0  2  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "la.baj"       0  0  0  1  0    1  0  0  0  0    0  0  0    0  0  0  0  0
+"trabaho" 2
+   "tra.ba.ho"    0  1  0  0  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "tar.ba.ho"    0  0  0  1  0    0  0  1  0  0    0  0  0    0  0  0  0  0
+"?ajo-en" 5
+   "?aj.wen"      0  0  0  2  0    0  0  0  1  0    0  0  0    0  0  0  0  0
+   "?a.jen"       0  0  0  1  0    0  1  0  0  0    0  0  0    0  0  0  0  0
+   "?a.jo.en"     1  0  0  1  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "?a.jo.?en"    0  0  0  1  0    0  0  0  0  0    1  0  0    0  0  0  0  0
+   "?a.jwen"      0  1  0  1  0    0  0  0  1  0    0  0  0    0  0  0  0  0
+"HRED-bwaja" 5
+   "bu:.bwa.ja"   0  1  0  0  0    0  0  0  0  0    0  1  3    0  0  0  0  1
+   "bwaj.bwa.ja"  0  2  0  1  0    0  0  0  0  0    0  0  1    0  0  0  0  0
+   "bub.wa.ja"    0  0  0  1  0    0  0  0  0  0    0  1  3    0  1  0  0  0
+   "bwa:.bwa.ja"  0  2  0  0  0    0  0  0  0  0    0  0  2    0  0  0  0  1
+   "ba:.bwa.ja"   0  1  0  0  0    0  0  0  0  0    0  0  3    0  0  1  0  1
+"basa-en" 5
+   "ba.sa.?en"    0  0  0  1  0    0  0  0  0  0    1  0  0    0  0  0  0  0
+   "ba.sen"       0  0  0  1  0    0  1  0  0  0    0  0  0    0  0  0  0  0
+   "ba.sa.en"     1  0  0  1  0    0  0  0  0  0    0  0  0    0  0  0  0  0
+   "bas.Aen"      0  0  0  2  0    0  0  0  1  0    0  0  0    1  0  0  0  0
+   "bas.wen"      0  0  0  2  0    0  0  0  1  0    0  0  0    0  0  0  1  0
+
+"PairDistribution" "ilokano"
+10
+"ta?o-en"         "taw.?en"      1/2
+"ta?o-en"         "ta?.wen"      1/2
+"pa?lak"          "pa.lak"       1
+"lab?aj"          "lab.?aj"      1
+"trabaho"         "tra.ba.ho"    1
+"?ajo-en"         "?aj.wen"      1
+"HRED-bwaja"      "bu:.bwa.ja"   1/3
+"HRED-bwaja"      "bwaj.bwa.ja"  1/3
+"HRED-bwaja"      "bub.wa.ja"    1/3
+"basa-en"         "ba.sa.?en"    1
+
+"PairDistribution" "invariable"
+7
+"ta?o-en"         "taw.?en"      1
+"pa?lak"          "pa.lak"       1
+"lab?aj"          "lab.?aj"      1
+"trabaho"         "tra.ba.ho"    1
+"?ajo-en"         "?aj.wen"      1
+"HRED-bwaja"      "bu:.bwa.ja"   1
+"basa-en"         "ba.sa.?en"    1

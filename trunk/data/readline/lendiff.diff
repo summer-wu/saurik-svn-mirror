@@ -1,0 +1,12 @@
+diff -ru readline-6.0/display.c readline-6.0+iPhone/display.c
+--- readline-6.0/display.c	2009-01-04 19:32:32.000000000 +0000
++++ readline-6.0+iPhone/display.c	2009-04-10 22:28:49.000000000 +0000
+@@ -1764,7 +1764,7 @@
+ 	  else
+ 	    col_lendiff = lendiff;
+ 
+-#if 0
++#if 1
+ 	  if (col_lendiff)
+ #else
+ 	  /* If we've already printed over the entire width of the screen,

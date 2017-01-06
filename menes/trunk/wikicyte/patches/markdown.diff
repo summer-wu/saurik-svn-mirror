@@ -1,0 +1,18 @@
+diff -r -u markdown/__init__.py markdown_/__init__.py
+--- markdown/__init__.py	2009-03-30 06:31:40.000000000 +0000
++++ markdown_/__init__.py	2009-04-21 20:30:32.000000000 +0000
+@@ -397,9 +397,11 @@
+         # Serialize _properly_.  Strip top-level tags.
+         output, length = codecs.utf_8_decode(self.serializer(root, encoding="utf8"))
+         if self.stripTopLevelTags:
+-            start = output.index('<%s>'%DOC_TAG)+len(DOC_TAG)+2
+-            end = output.rindex('</%s>'%DOC_TAG)
+-            output = output[start:end].strip()
++            start = output.find('<%s>'%DOC_TAG)
++            if start != -1:
++                start = start+len(DOC_TAG)+2
++                end = output.rindex('</%s>'%DOC_TAG)
++                output = output[start:end].strip()
+ 
+         # Run the text post-processors
+         for pp in self.postprocessors.values():

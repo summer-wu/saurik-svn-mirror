@@ -1,0 +1,44 @@
+body {
+    background-color: black;
+}
+
+div.file-input {
+    height: 30px;
+    width: 300px;
+    position: relative;
+}
+
+div.file-overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    width: 350px;
+    padding: 0;
+    margin: 0;
+    line-height: 90%
+}
+
+input {
+    background: url('/input-boxes.gif') no-repeat 0 -58px;
+    border: none;
+    width: 241px;
+    height: 20px;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+
+input:focus {
+    background-color: transparent;
+}
+
+input.file {
+    width: 300px;
+    margin: 0px;
+    position: relative;
+    text-align: right;
+    -moz-opacity: 0;
+    filter: alpha(opacity: 0);
+    opacity: 0;
+    z-index: 2;
+}

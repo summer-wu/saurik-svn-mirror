@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project name="UICaboodle" default="main" basedir=".">
+    <property environment="env"/>
+
+    <path id="toolpath">
+        <fileset dir="tools" includes="**/*.jar"/>
+    </path>
+
+    <path id="classpath">
+        <fileset file="${env.PKG_DEST_jocstrap}/usr/share/java/jocstrap.jar"/>
+        <fileset file="${env.PKG_DEST_rhino}/usr/share/java/js.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="archives"/>
+        <delete dir="classes"/>
+    </target>
+
+    <target name="create" depends="clean">
+        <mkdir dir="archives"/>
+        <mkdir dir="classes"/>
+    </target>
+
+    <target name="jar" depends="create,compile">
+        <jar destfile="archives/uicaboodle.jar">
+            <fileset dir="classes"/>
+            <fileset dir="source" includes="**/*.properties"/>
+        </jar>
+    </target>
+
+    <target name="compile" depends="create">
+        <javac
+            srcdir="source"
+            destdir="classes"
+            debug="true"
+            classpathref="classpath"
+            source="1.5"
+            target="1.5"
+        >
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+
+    <target name="native" depends="create">
+        <exec executable="${env.PKG_TARG}-gcc">
+            <arg value="-Wall"/>
+            <arg value="-Werror"/>
+            <arg value="-ObjC"/>
+            <arg value="-lobjc"/>
+            <arg value="-dynamiclib"/>
+            <arg value="-framework"/>
+            <arg value="Foundation"/>
+            <arg value="-framework"/>
+            <arg value="UIKit"/>
+            <arg value="-I.."/>
+            <arg value="-I../jocstrap/source"/>
+            <arg value="-o"/>
+            <arg value="archives/libuicaboodle.jnilib"/>
+            <arg value="source/com/saurik/uicaboodle/Main.m"/>
+            <arg value="${env.PKG_DEST_jocstrap}/usr/lib/libjocstrap.jnilib"/>
+        </exec>
+    </target>
+
+    <target name="main" depends="jar,native"/>
+</project>

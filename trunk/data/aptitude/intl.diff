@@ -1,0 +1,36 @@
+diff -ru aptitude-0.4.4.orig/src/generic/apt/Makefile.in aptitude-0.4.4.orig+iPhone/src/generic/apt/Makefile.in
+--- aptitude-0.4.4.orig/src/generic/apt/Makefile.in	2006-10-27 04:28:51.000000000 +0000
++++ aptitude-0.4.4.orig+iPhone/src/generic/apt/Makefile.in	2008-05-13 09:13:50.000000000 +0000
+@@ -305,7 +305,7 @@
+ 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+ pkg_hier_dump$(EXEEXT): $(pkg_hier_dump_OBJECTS) $(pkg_hier_dump_DEPENDENCIES) 
+ 	@rm -f pkg_hier_dump$(EXEEXT)
+-	$(CXXLINK) $(pkg_hier_dump_LDFLAGS) $(pkg_hier_dump_OBJECTS) $(pkg_hier_dump_LDADD) $(LIBS)
++	$(CXXLINK) $(pkg_hier_dump_LDFLAGS) $(pkg_hier_dump_OBJECTS) $(pkg_hier_dump_LDADD) $(LIBS) $(INTLLIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+diff -ru aptitude-0.4.4.orig/src/generic/problemresolver/Makefile.in aptitude-0.4.4.orig+iPhone/src/generic/problemresolver/Makefile.in
+--- aptitude-0.4.4.orig/src/generic/problemresolver/Makefile.in	2006-10-27 04:28:51.000000000 +0000
++++ aptitude-0.4.4.orig+iPhone/src/generic/problemresolver/Makefile.in	2008-05-13 09:10:29.000000000 +0000
+@@ -234,7 +234,7 @@
+ 	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+ test$(EXEEXT): $(test_OBJECTS) $(test_DEPENDENCIES) 
+ 	@rm -f test$(EXEEXT)
+-	$(CXXLINK) $(test_LDFLAGS) $(test_OBJECTS) $(test_LDADD) $(LIBS)
++	$(CXXLINK) $(test_LDFLAGS) $(test_OBJECTS) $(test_LDADD) $(LIBS) $(INTLLIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+diff -ru aptitude-0.4.4.orig/src/Makefile.in aptitude-0.4.4.orig+iPhone/src/Makefile.in
+--- aptitude-0.4.4.orig/src/Makefile.in	2006-10-27 04:28:50.000000000 +0000
++++ aptitude-0.4.4.orig+iPhone/src/Makefile.in	2008-05-13 09:36:20.000000000 +0000
+@@ -374,7 +374,7 @@
+ 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+ aptitude$(EXEEXT): $(aptitude_OBJECTS) $(aptitude_DEPENDENCIES) 
+ 	@rm -f aptitude$(EXEEXT)
+-	$(CXXLINK) $(aptitude_LDFLAGS) $(aptitude_OBJECTS) $(aptitude_LDADD) $(LIBS)
++	$(CXXLINK) $(aptitude_LDFLAGS) $(aptitude_OBJECTS) $(aptitude_LDADD) $(LIBS) -liconv
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)

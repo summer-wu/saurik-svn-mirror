@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+utils/saxon.sh -o mak.sh mak.xml menes/mak/mak2bash.xsl "goal=$@"
+chmod 755 mak.sh
+exec bash ./mak.sh
+exit $?
+
+while getopts j: OPTKEY; do
+    case $OPTKEY in
+        (j)
+            if [ "$OPTARG" -eq "$OPTARG" ] 2>/dev/null; then
+                flags="$flags -j$OPTARG"
+            else
+                echo "non-integral job count" 1>&2
+                exit 0
+            fi
+        ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+
+while [ $# -ne 0 ]; do
+    make $flags $1 || exit 0
+    shift
+done

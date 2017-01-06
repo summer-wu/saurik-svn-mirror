@@ -1,0 +1,16 @@
+struct Input_ {
+    float4 position_ : POSITION;
+};
+
+struct Output_ {
+    float4 projected_ : POSITION;
+};
+
+Output_ main(
+    in Input_ input,
+    uniform float4x4 mvp
+) {
+    Output_ output;
+    output.projected_ = mul(mvp, input.position_);
+    return output;
+}

@@ -1,0 +1,142 @@
+Only in rhino1_6R1+: build
+diff -ur rhino1_6R1/build.properties rhino1_6R1+/build.properties
+--- rhino1_6R1/build.properties	2004-11-30 22:11:12.000000000 -0600
++++ rhino1_6R1+/build.properties	2005-07-29 02:52:46.000000000 -0500
+@@ -48,7 +48,7 @@
+ 
+ # compilation settings
+ debug: on
+-target-jvm: 1.1
++target-jvm: 1.5
+ 
+ # jar generation settings 
+ jar-compression: true
+Only in rhino1_6R1+: lib
+diff -ur rhino1_6R1/src/org/mozilla/javascript/Decompiler.java rhino1_6R1+/src/org/mozilla/javascript/Decompiler.java
+--- rhino1_6R1/src/org/mozilla/javascript/Decompiler.java	2004-11-30 22:11:10.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/Decompiler.java	2005-07-29 02:37:42.000000000 -0500
+@@ -573,6 +573,10 @@
+                     result.append(' ');
+                 break;
+ 
++            case Token.CONST:
++                result.append("const ");
++                break;
++
+             case Token.VAR:
+                 result.append("var ");
+                 break;
+diff -ur rhino1_6R1/src/org/mozilla/javascript/IRFactory.java rhino1_6R1+/src/org/mozilla/javascript/IRFactory.java
+--- rhino1_6R1/src/org/mozilla/javascript/IRFactory.java	2004-11-30 22:11:12.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/IRFactory.java	2005-07-29 02:43:01.000000000 -0500
+@@ -174,9 +174,9 @@
+         switchBlock.addChildToBack(switchBreakTarget);
+     }
+ 
+-    Node createVariables(int lineno)
++    Node createVariables(int type, int lineno)
+     {
+-        return new Node(Token.VAR, lineno);
++        return new Node(type, lineno);
+     }
+ 
+     Node createExprStatement(Node expr, int lineno)
+diff -ur rhino1_6R1/src/org/mozilla/javascript/NodeTransformer.java rhino1_6R1+/src/org/mozilla/javascript/NodeTransformer.java
+--- rhino1_6R1/src/org/mozilla/javascript/NodeTransformer.java	2004-11-30 22:11:10.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/NodeTransformer.java	2005-07-29 02:37:08.000000000 -0500
+@@ -233,6 +233,7 @@
+                 visitNew(node, tree);
+                 break;
+ 
++              case Token.CONST:
+               case Token.VAR:
+               {
+                 Node result = new Node(Token.BLOCK);
+diff -ur rhino1_6R1/src/org/mozilla/javascript/Parser.java rhino1_6R1+/src/org/mozilla/javascript/Parser.java
+--- rhino1_6R1/src/org/mozilla/javascript/Parser.java	2004-11-30 22:11:12.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/Parser.java	2005-07-29 02:42:47.000000000 -0500
+@@ -805,10 +805,10 @@
+                 if (tt == Token.SEMI) {
+                     init = nf.createLeaf(Token.EMPTY);
+                 } else {
+-                    if (tt == Token.VAR) {
++                    if (tt == Token.CONST || tt == Token.VAR) {
+                         // set init to a var list or initial
+                         consumeToken();    // consume the 'var' token
+-                        init = variables(true);
++                        init = variables(tt, true);
+                     }
+                     else {
+                         init = expr(true);
+@@ -1010,9 +1010,10 @@
+             return pn;
+           }
+ 
++          case Token.CONST:
+           case Token.VAR: {
+             consumeToken();
+-            pn = variables(false);
++            pn = variables(tt, false);
+             break;
+           }
+ 
+@@ -1174,13 +1175,13 @@
+         return pn;
+     }
+ 
+-    private Node variables(boolean inForInit)
++    private Node variables(int type, boolean inForInit)
+         throws IOException, ParserException
+     {
+-        Node pn = nf.createVariables(ts.getLineno());
++        Node pn = nf.createVariables(type, ts.getLineno());
+         boolean first = true;
+ 
+-        decompiler.addToken(Token.VAR);
++        decompiler.addToken(type);
+ 
+         for (;;) {
+             Node name;
+diff -ur rhino1_6R1/src/org/mozilla/javascript/Token.java rhino1_6R1+/src/org/mozilla/javascript/Token.java
+--- rhino1_6R1/src/org/mozilla/javascript/Token.java	2004-11-30 22:11:10.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/Token.java	2005-07-29 02:48:40.000000000 -0500
+@@ -239,7 +239,10 @@
+         XMLATTR        = 143,  // @
+         XMLEND         = 144,
+ 
+-        LAST_TOKEN     = 144;
++        // For SpiderMonkey support:
++        CONST          = 145, // const keyword
++
++        LAST_TOKEN     = 145;
+ 
+     public static String name(int token)
+     {
+@@ -372,6 +375,7 @@
+           case FOR:             return "FOR";
+           case BREAK:           return "BREAK";
+           case CONTINUE:        return "CONTINUE";
++          case CONST:           return "CONST";
+           case VAR:             return "VAR";
+           case WITH:            return "WITH";
+           case CATCH:           return "CATCH";
+diff -ur rhino1_6R1/src/org/mozilla/javascript/TokenStream.java rhino1_6R1+/src/org/mozilla/javascript/TokenStream.java
+--- rhino1_6R1/src/org/mozilla/javascript/TokenStream.java	2004-11-30 22:11:10.000000000 -0600
++++ rhino1_6R1+/src/org/mozilla/javascript/TokenStream.java	2005-07-29 02:35:14.000000000 -0500
+@@ -118,6 +118,7 @@
+         final int
+             Id_break         = Token.BREAK,
+             Id_case          = Token.CASE,
++            Id_const         = Token.CONST,
+             Id_continue      = Token.CONTINUE,
+             Id_default       = Token.DEFAULT,
+             Id_delete        = Token.DELPROP,
+@@ -148,7 +149,6 @@
+             Id_catch         = Token.CATCH,
+             Id_char          = Token.RESERVED,
+             Id_class         = Token.RESERVED,
+-            Id_const         = Token.RESERVED,
+             Id_debugger      = Token.RESERVED,
+             Id_double        = Token.RESERVED,
+             Id_enum          = Token.RESERVED,
+Only in rhino1_6R1+/toolsrc/org/mozilla/javascript/tools/debugger: downloaded

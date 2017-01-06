@@ -1,0 +1,383 @@
+var line_height = 1.3;
+var text_indent = 1.5;
+var sidebar_width = 15.5;
+var li_margin = 0.15;
+var measure = 39.5;
+
+var black = '#000000';
+var blue = '#f0f0ff';
+var brown = '#d0b078';
+var gray = '#e8e8e8';
+var green = '#e8e8e8';
+var red = '#ff0000';
+var yellow = '#ffffd0';
+var white = '#ffffff';
+
+var link = '#28a848';
+var visited = '#707070';
+
+#$css{
+/* Reset {{{ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+    vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+    outline: 0;
+}
+body {
+    line-height: 1;
+    color: black;
+    background: white;
+}
+ol, ul {
+    list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+caption, th, td {
+    text-align: left;
+    font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: "";
+}
+blockquote, q {
+    quotes: "" "";
+}
+/* }}} */
+/* .clearfix {{{ */
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+/* }}} */
+/* Center {{{ */
+body {
+    text-align: center;
+}
+
+#page {
+    margin: 0 auto;
+    text-align: left;
+}
+/* }}} */
+
+body {
+    background-color: #(white);
+    color: #(black);
+    font-family: "Georgia", "Verdana", "Times New Roman", "Times";
+    font-size: 1em;
+    line-height: #(line_height)em;
+}
+
+#page {
+    width: #(measure + sidebar_width + 7.8)em;
+}
+
+#header {
+    margin: 0 #(text_indent * 2)em;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    width: #(measure)em;
+}
+
+#publication {
+    float: left;
+}
+
+#copy {
+    margin: 1em #(text_indent * 2)em;
+    text-align: justify;
+}
+
+#image {
+    /*border: 1px solid #aaaaaa;*/
+    margin: 1.5em auto;
+    text-align: center;
+}
+
+#content {
+    float: left;
+    width: #(measure + 6)em;
+}
+
+#copyright {
+    border-top: 1px solid #(black);
+    text-align: center;
+    width: 100%;
+}
+
+.amazon {
+    font-size: .8em;
+    height: 240px;
+    margin: 6em auto;
+    text-align: center;
+    width: 120px;
+}
+
+#sidead {
+    height: 600px;
+    margin: 2em auto;
+    width: 160px;
+}
+
+#upperad {
+    height: 60px;
+    margin: 1.5em auto;
+    text-align: center;
+    width: 234px;
+}
+
+#lowerad {
+    height: 90px;
+    margin-top: 2em;
+    width: 728px;
+}
+
+#sidebar {
+    float: left;
+    font-size: 1.1em;
+    width: #(sidebar_width)em;
+}
+
+#twitter,
+#college {
+    font-size: 0.8em;
+    margin: 0.8em 0;
+    text-align: center;
+}
+
+#contact {
+    margin: 1.5em;
+    text-align: center;
+}
+
+#donate {
+    float: right;
+    height: 23px;
+    text-align: center;
+}
+
+.social,
+.numeral {
+    float: right;
+}
+
+#menu {
+    font-size: .8em;
+    margin: 1.5em;
+    text-align: center;
+}
+
+#name {
+    font-weight: bold;
+}
+
+#contact a:link,
+#contact a:visited {
+    border-bottom-color: #(black);
+    color: #(black);
+}
+
+.drop {
+    float: left;
+    font-size: #(line_height * 3.5)em;
+    line-height: .8em;
+}
+
+.highlight {
+    font-weight: bold;
+}
+
+/* Typogrify {{{ */
+.amp {
+    font-family: "Baskerville", "Warnock Pro", "Goudy Old Style", "Palatino", "Book Antiqua";
+    font-style: italic;
+}
+
+.squo {
+    margin-left: -0.18em;
+}
+
+.dquo {
+    margin-left: -0.38em;
+}
+/* }}} */
+/* Links {{{ */
+a {
+    border-bottom-style: dotted;
+    border-bottom-width: 1px;
+    text-decoration: none;
+}
+
+a:link {
+    border-bottom-color: #(link);
+    color: #(link);
+    /*color: #4444ff;*/
+}
+
+a:visited {
+    border-bottom-color: #(visited); 
+    color: #(visited);
+}
+
+a:hover {
+    border-bottom-color: #(red);
+    color: #(red);
+}
+/* }}} */
+/* Headings {{{ */
+h1, h2, h3 {
+    font-family: "Verdana", "Helvetica", "Arial";
+}
+
+h1 {
+    font-size: #(line_height * .75)em;
+    line-height: 1.0em;
+    text-align: center;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: #(line_height)em;
+    line-height: 1.0em;
+}
+
+.h2 {
+    border-bottom: 2px solid #(black);
+    margin-bottom: #(line_height)em;
+}
+
+h3 {
+    font-weight: bold;
+    font-size: 1.15em;
+    line-height: 1.0em;
+    padding: 1em 0 1em 0;
+}
+
+h4 {
+    font-weight: bold;
+}
+/*h2 {
+    margin-left: #(text_indent)em;
+}*/
+
+h3 {
+    margin-bottom: -5px;
+}
+/* }}} */
+/* Text {{{ */
+p {
+    text-indent: #(text_indent)em;
+}
+
+p.first,
+blockquote + p {
+    text-indent: 0;
+}
+
+em {
+    font-style: italic;
+}
+/* }}} */
+/* Syntax {{{ */
+.syntax {
+    background-color: #(blue);
+    font-family: "Courier", "Courier New", "Lucida Console";
+    letter-spacing: -.7px;
+}
+
+blockquote .syntax {
+    white-space: pre;
+}
+/* }}} */
+/* Blocks {{{ */
+blockquote,
+.inset {
+    margin-bottom: #(line_height)em;
+    margin-top: #(line_height)em;
+}
+
+blockquote {
+    margin-left: #(text_indent)em;
+    margin-right: #(text_indent)em;
+}
+
+.blockquote_,
+.inset_ {
+    border-style: dashed;
+    margin: -0.4em -0.5em;
+    overflow: auto;
+    padding: 0.4em 0.5em;
+}
+
+.blockquote_ {
+    background-color: #(blue);
+    border-color: #(black);
+    border-width: 1px;
+    width: #(measure - line_height * 2 - 1)em;
+}
+
+.inset_ {
+    background-color: #(yellow);
+    border-color: #(brown);
+    border-width: 1px;
+    width: #(measure)em;
+}
+/* }}} */
+/* Lists {{{ */
+ul {
+    margin-left: #(text_indent)em;
+    margin-right: #(text_indent)em;
+    list-style-type: square;
+    list-style-position: outside;
+}
+
+ul.notfirst {
+    margin-top: #(line_height)em;
+    margin-bottom: #(line_height)em;
+}
+
+li {
+    margin-bottom: #(li_margin)em;
+    margin-top: #(li_margin)em;
+}
+/* }}} */
+
+}

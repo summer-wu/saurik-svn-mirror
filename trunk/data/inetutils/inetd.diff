@@ -1,0 +1,12 @@
+diff -ru inetutils-1.6/inetd/inetd.c inetutils-1.6+iPhone/inetd/inetd.c
+--- inetutils-1.6/inetd/inetd.c	2008-12-27 18:50:35.000000000 +0000
++++ inetutils-1.6+iPhone/inetd/inetd.c	2009-04-10 21:10:19.000000000 +0000
+@@ -163,6 +163,8 @@
+ #endif
+ #define SIGBLOCK	(sigmask(SIGCHLD)|sigmask(SIGHUP)|sigmask(SIGALRM))
+ 
++ARGP_PROGRAM_DATA_SIMPLE ("inetd", "2008");
++
+ bool debug = false;
+ int nsock, maxsock;
+ fd_set allsock;

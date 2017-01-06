@@ -1,0 +1,155 @@
+/* Menes - C++ High-Level Utility Library
+ * Copyright (C) 2003-2005  Jay Freeman (saurik)
+*/
+
+/*
+ *        Redistribution and use in source and binary
+ * forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the
+ *    above copyright notice, this list of conditions
+ *    and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the
+ *    above copyright notice, this list of conditions
+ *    and the following disclaimer in the documentation
+ *    and/or other materials provided with the
+ *    distribution.
+ * 3. The name of the author may not be used to endorse
+ *    or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS''
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#include "etl/template.hpp"
+#include "etl/list.hpp"
+
+#include "typeinfo" //OK
+
+namespace etl {
+
+/* XXX: I don't even remember exactly what this did
+template <typename Tail_, typename Apply_, typename Cell_ = Tail_>
+class FunctionTable :
+    public FunctionTable<typename Tail_::Tail, Apply_, Cell_>
+{
+  private:
+    typedef FunctionTable<typename Tail_::Tail, Apply_, Cell_> Base_;
+
+  public:
+    FunctionTable() {
+        typedef typename Tail_::Head Next;
+        typename Apply_::Type value(&Apply_::Execute);
+        Base_::table_[Length<Cell_>::value - Length<Tail_>::value] = value;
+    }
+
+    typename Apply_::Type operator [](unsigned index) {
+        if (index == -1)
+            return NULL;
+        _assert(index < Length<Cell_>::value);
+        return Base_::table_[index];
+    }
+};
+
+template <typename Apply_, typename Cell_>
+class FunctionTable<Null, Apply_, Cell_> {
+  private:
+    typename Apply_::Type table_[etl::Length<Cell_>::value];
+};*/
+
+typedef TypeVTable: struct {
+  public:
+    auto Assignment: ^(^void, ^const void) void;
+    auto CopyConstructor: ^(^const void) ^void;
+    //auto DefaultConstructor: ^() ^void;
+    auto Delete: ^(^void) void;
+    auto Destructor: ^(^void) void;
+    auto Equality: ^(^const void, ^const void) bool;
+    auto Less: ^(^const void, ^const void) bool;
+    auto PlacementCopyConstructor: ^(^void, ^const void) void;
+    auto TypeId: ^() &const std::type_info;
+}
+
+template <[Type_: typename]>
+typedef TypeVTableImpl: struct :
+    public TypeVTable
+{
+  private static:
+    typedef This_: TypeVTableImpl<[Type_]>;
+
+    [ForceInline]
+    function Cast: (ptr: ^const void) &const Type_ {
+        return reinterpret_cast<[^const Type_]>(ptr)@;
+    }
+
+    [ForceInline]
+    function Cast: (ptr: ^void) &Type_ {
+        return reinterpret_cast<[^Type_]>(ptr)@;
+    }
+
+  public static:
+    function Assignment: (lhs: ^void, rhs: ^const void) void {
+        Cast(lhs) = Cast(rhs);
+    }
+
+    function CopyConstructor: (rhs: ^const void) ^void {
+        return reinterpret_cast<[^void]>(new<[Type_]>(Cast(rhs)));
+    }
+
+    /*function DefaultConstructor: () ^void {
+        return reinterpret_cast<[^void]>(new<[Type_]>());
+    }*/
+
+    function Delete: (obj: ^void) void {
+        delete(Cast(obj)^);
+    }
+
+    function Destructor: (obj: ^void) void {
+        Cast(obj).~Type_();
+    }
+
+    function Equality: (lhs: ^const void, rhs: ^const void) bool {
+        return Cast(lhs) == Cast(rhs);
+    }
+
+    function Less: (lhs: ^const void, rhs: ^const void) bool {
+        return Cast(lhs) < Cast(rhs);
+    }
+
+    function PlacementCopyConstructor: (dst: ^void, src: ^const void) void {
+        new(dst)<[Type_]>(Cast(src));
+    }
+
+    function TypeId: () & const std::type_info {
+        return typeid(Type_);
+    }
+
+  public:
+    function ~constructor: (). {
+        TypeVTable::Assignment = This_::Assignment^;
+        TypeVTable::CopyConstructor = This_::CopyConstructor^;
+        //TypeVTable::DefaultConstructor = This_::DefaultConstructor^;
+        TypeVTable::Delete = This_::Delete^;
+        TypeVTable::Destructor = This_::Destructor^;
+        TypeVTable::Equality = This_::Equality^;
+        TypeVTable::Less = This_::Less^;
+        TypeVTable::PlacementCopyConstructor = This_::PlacementCopyConstructor^;
+        TypeVTable::TypeId = This_::TypeId^;
+    }
+}
+
+}

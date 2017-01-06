@@ -1,0 +1,177 @@
+diff -ru pyobjc-1946/pyobjc-core/Modules/objc/closure_pool.m pyobjc-1946+iPhone/pyobjc-core/Modules/objc/closure_pool.m
+--- pyobjc-1946/pyobjc-core/Modules/objc/closure_pool.m	2007-11-25 10:33:57.000000000 +0000
++++ pyobjc-1946+iPhone/pyobjc-core/Modules/objc/closure_pool.m	2008-07-24 00:32:15.000000000 +0000
+@@ -1,62 +1,22 @@
+-/*
+- * A simple allocator for closure. This assumes that most closures are kept
+- * alive forever and we therefore don't have to return storage to the OS.
+- */
+ #include "pyobjc.h"
+-
+ #include <sys/mman.h>
++#include <mach/vm_param.h>
+ 
+-typedef struct freelist {
+-	struct freelist* next;
+-} freelist;
+-
+-static freelist* closure_freelist = NULL;
+-
+-
+-static freelist* allocate_block(void)
+-{
+-
+-	/* Allocate ffi_closure in groups of 10 VM pages */
+-#define BLOCKSIZE ((PAGE_SIZE*10)/sizeof(ffi_closure*))
+-
+-	freelist* newblock = mmap(NULL, BLOCKSIZE * sizeof(ffi_closure),
+-		PROT_READ|PROT_WRITE|PROT_EXEC,
+-		MAP_PRIVATE|MAP_ANON, -1, 0);
+-	size_t i;
+-
+-	if (newblock == (void*)-1) {
+-		PyErr_NoMemory();
+-		return NULL;
+-	}
+-	for (i = 0; i < BLOCKSIZE-1; i++) {
+-		((freelist*)(((ffi_closure*)newblock)+i))->next = 
+-			(freelist*)(((ffi_closure*)newblock)+(i+1));
+-	}
+-
+-	((freelist*)(((ffi_closure*)newblock)+(BLOCKSIZE-1)))->next = NULL;
+-	return newblock;
+-}
+-
+-
++ffi_closure *PyObjC_malloc_closure(void) {
++    ffi_closure *closure = (ffi_closure *) mmap(
++        NULL, sizeof(ffi_closure),
++        PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE,
++        -1, 0
++    );
++
++    if (closure == MAP_FAILED) {
++        PyErr_NoMemory();
++        return NULL;
++    }
+ 
+-ffi_closure* 
+-PyObjC_malloc_closure(void)
+-{
+-	if (closure_freelist == NULL) {
+-		closure_freelist = allocate_block();
+-		if (closure_freelist == NULL) {
+-			return NULL;
+-		}
+-	}
+-	ffi_closure* result = (ffi_closure*)closure_freelist;
+-	closure_freelist = closure_freelist->next;
+-	return result;
++    return closure;
+ }
+ 
+-int
+-PyObjC_free_closure(ffi_closure* cl)
+-{
+-	((freelist*)cl)->next = closure_freelist;
+-	closure_freelist = (freelist*)cl;
+-	return 0;
++int PyObjC_free_closure(ffi_closure *closure) {
++    return munmap(closure, sizeof(ffi_closure));
+ }
+diff -ru pyobjc-1946/pyobjc-core/Modules/objc/libffi_support.m pyobjc-1946+iPhone/pyobjc-core/Modules/objc/libffi_support.m
+--- pyobjc-1946/pyobjc-core/Modules/objc/libffi_support.m	2008-07-24 00:37:30.000000000 +0000
++++ pyobjc-1946+iPhone/pyobjc-core/Modules/objc/libffi_support.m	2008-07-24 00:37:09.000000000 +0000
+@@ -17,6 +17,7 @@
+ 
+ #import <Foundation/NSHost.h>
+ #import <CoreFoundation/CoreFoundation.h>
++#include <sys/mman.h>
+ 
+ #ifdef __ppc64__
+ extern bool ffi64_stret_needs_ptr(const ffi_type* inType,
+@@ -3724,11 +3725,20 @@
+ 	rv = ffi_prep_closure(cl, cif, func, userdata);
+ 	if (rv != FFI_OK) {
+ 		PyObjCFFI_FreeCIF(cif);
++		PyObjC_free_closure(cl);
+ 		PyErr_Format(PyExc_RuntimeError,
+ 			"Cannot create FFI closure: %d", rv);
+ 		return NULL;
+ 	}
+ 
++	if (mprotect(cl, sizeof(*cl), PROT_READ | PROT_EXEC) == -1) {
++		PyObjCFFI_FreeCIF(cif);
++		PyObjC_free_closure(cl);
++		PyErr_Format(PyExc_RuntimeError,
++			"Cannot create FFI closure: %d", errno);
++		return NULL;
++	}
++
+ 	return (IMP)cl;
+ }
+ 
+diff -ru pyobjc-1946/pyobjc-core/Modules/objc/opaque-pointer.m pyobjc-1946+iPhone/pyobjc-core/Modules/objc/opaque-pointer.m
+--- pyobjc-1946/pyobjc-core/Modules/objc/opaque-pointer.m	2007-11-23 13:29:54.000000000 +0000
++++ pyobjc-1946+iPhone/pyobjc-core/Modules/objc/opaque-pointer.m	2008-07-24 00:35:43.000000000 +0000
+@@ -2,6 +2,7 @@
+  * Generic support for opaque pointer types, such as NSZone*
+  */
+ #include "pyobjc.h"
++#include <sys/mman.h>
+ 
+ typedef struct {
+ 	PyObject_HEAD
+@@ -247,6 +248,13 @@
+ 			"Cannot create FFI closure: %d", rv);
+ 		goto error_cleanup;
+ 	}
++
++	if (mprotect(cl, sizeof(*cl), PROT_READ | PROT_EXEC) == -1) {
++		PyErr_Format(PyExc_RuntimeError,
++			"Cannot create FFI closure: %d", errno);
++		goto error_cleanup;
++	}
++
+ 	to_c = (PyObjCPointerWrapper_FromPythonFunc)cl;
+ 	cl = NULL;
+ 
+@@ -261,6 +271,13 @@
+ 			"Cannot create FFI closure: %d", rv);
+ 		goto error_cleanup;
+ 	}
++
++	if (mprotect(cl, sizeof(*cl), PROT_READ | PROT_EXEC) == -1) {
++		PyErr_Format(PyExc_RuntimeError,
++			"Cannot create FFI closure: %d", errno);
++		goto error_cleanup;
++	}
++
+ 	from_c = (PyObjCPointerWrapper_ToPythonFunc)cl;
+ 	cl = NULL;
+ 
+diff -ru pyobjc-1946/pyobjc-core/Modules/objc/struct-wrapper.m pyobjc-1946+iPhone/pyobjc-core/Modules/objc/struct-wrapper.m
+--- pyobjc-1946/pyobjc-core/Modules/objc/struct-wrapper.m	2007-11-23 13:29:54.000000000 +0000
++++ pyobjc-1946+iPhone/pyobjc-core/Modules/objc/struct-wrapper.m	2008-07-24 00:35:46.000000000 +0000
+@@ -12,6 +12,7 @@
+  * is only usefull for PyObjC.
+  */
+ #include "pyobjc.h"
++#include <sys/mman.h>
+ 
+ /*
+  * First some helpers: easy access to the actual fields
+@@ -603,6 +604,13 @@
+ 		return NULL;
+ 	}
+ 
++	if (mprotect(cl, sizeof(*cl), PROT_READ | PROT_EXEC) == -1) {
++		PyObjC_free_closure(cl);
++		PyErr_Format(PyExc_RuntimeError,
++			"Cannot create FFI closure: %d", errno);
++		return NULL;
++	}
++
+ 	return (initproc)cl;
+ }
+ 

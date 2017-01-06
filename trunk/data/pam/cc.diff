@@ -1,0 +1,14 @@
+diff -ru pam-32.1/pam/configure.in pam-32.1+iPhone/pam/configure.in
+--- pam-32.1/pam/configure.in	2006-07-11 03:24:07.000000000 +0000
++++ pam-32.1+iPhone/pam/configure.in	2009-04-08 08:23:07.000000000 +0000
+@@ -356,8 +356,8 @@
+ 		OS_CFLAGS="-no-cpp-precomp"
+ 		DYNTYPE=dylib
+ 		LD=ld
+-		LD_D='cc -bundle $(CFLAGS)'
+-		LD_L='cc -dynamiclib -compatibility_version $(MAJOR_REL).$(MINOR_REL) -current_version $(MAJOR_REL).$(MINOR_REL) $(CFLAGS) -all_load'
++		LD_D='$(CC) -bundle $(CFLAGS)'
++		LD_L='$(CC) -dynamiclib -compatibility_version $(MAJOR_REL).$(MINOR_REL) -current_version $(MAJOR_REL).$(MINOR_REL) $(CFLAGS) -all_load'
+ 		RANLIB=ranlib
+ 		STRIP=strip
+ 		CC_STATIC="-Xlinker -export-dynamic"

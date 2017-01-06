@@ -1,0 +1,66 @@
+#!3sh
+
+if false; then
+    echo failed
+elif false; then echo failed; elif true; then
+    echo worked
+else
+    echo failed
+fi
+
+#[[ '' ]] && echo b
+
+echo $PATH
+
+function functown
+{ echo awesome; }
+
+function x2() {
+    echo awesome;
+}
+
+x2
+
+#word
+
+while false; do
+    echo looping
+done
+
+{ echo wordup; }
+
+#if true; then done
+
+#tigger=wow
+echo 'word' $'yes\' '
+   #echo ${tigger}
+   echo "wordy $tigger arch?"
+   'echo' word
+   "e"'ch'o hello\ there$'\q\x64'
+   echo "\"/bin/\"'ech'o hello\ there" | #comment
+   grep bin
+   /bin/failure
+   #failure
+
+echo $'ri\
+ght'
+
+echo "D"
+
+echo "ri\
+ght"
+
+echo 'ri\
+ght'
+
+case ark in
+    (bark)
+        echo a
+    ;;
+
+    (cark)
+        echo b
+    ;;
+esac
+
+echo tree

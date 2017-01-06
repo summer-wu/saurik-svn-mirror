@@ -1,0 +1,1157 @@
+diff -ru minicom-2.2/src/config.c minicom-2.2+iPhone/src/config.c
+--- minicom-2.2/src/config.c	2006-04-02 09:52:30.000000000 +0000
++++ minicom-2.2+iPhone/src/config.c	2008-01-02 00:20:52.000000000 +0000
+@@ -253,9 +253,9 @@
+   w = wopen(5, 4, 75, 8, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+ 
+   wtitle(w, TMID, _("Logging options"));
+-  wprintf(w, "%s %s\n", logfnstr, P_LOGFNAME);
+-  wprintf(w, "%s %s\n", logconn, _(P_LOGCONN));
+-  wprintf(w, "%s %s\n", logxfer, _(P_LOGXFER));
++  wprintf_(w, "%s %s\n", logfnstr, P_LOGFNAME);
++  wprintf_(w, "%s %s\n", logconn, _(P_LOGCONN));
++  wprintf_(w, "%s %s\n", logxfer, _(P_LOGXFER));
+   wlocate(w, 4, 4);
+   wputs(w, question);
+   wredraw(w, 1);
+@@ -274,13 +274,13 @@
+       case 'B':
+         strcpy(P_LOGCONN, yesno(P_LOGCONN[0] == 'N'));
+         wlocate(w, mbslen(logconn) + 1, 1);
+-        wprintf(w, "%s  ", _(P_LOGCONN));
++        wprintf_(w, "%s  ", _(P_LOGCONN));
+         markch(P_LOGCONN);
+         break;
+       case 'C':
+         strcpy(P_LOGXFER, yesno(P_LOGXFER[0] == 'N'));
+         wlocate(w, mbslen(logxfer) + 1, 2);
+-        wprintf(w, "%s  ", _(P_LOGXFER));
++        wprintf_(w, "%s  ", _(P_LOGXFER));
+         markch(P_LOGXFER);
+         break;
+       default:
+@@ -305,13 +305,13 @@
+   char *question           = _("Change which setting?");
+ 
+   w = wopen(5, 5, 75, 12, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+-  wprintf(w, "%s %.44s\n", download_directory, P_DOWNDIR);
+-  wprintf(w, "%s %.44s\n", upload_directory, P_UPDIR);
+-  wprintf(w, "%s %.44s\n", script_directory, P_SCRIPTDIR);
+-  wprintf(w, "%s %.44s\n", script_program, P_SCRIPTPROG);
+-  wprintf(w, "%s %.44s\n", kermit_program, P_KERMIT);
++  wprintf_(w, "%s %.44s\n", download_directory, P_DOWNDIR);
++  wprintf_(w, "%s %.44s\n", upload_directory, P_UPDIR);
++  wprintf_(w, "%s %.44s\n", script_directory, P_SCRIPTDIR);
++  wprintf_(w, "%s %.44s\n", script_program, P_SCRIPTPROG);
++  wprintf_(w, "%s %.44s\n", kermit_program, P_KERMIT);
+ #ifdef LOGFILE
+-  wprintf(w, "%s\n", log_settings);
++  wprintf_(w, "%s\n", log_settings);
+ #endif
+   wlocate(w, 4, 8);
+   wputs(w, question);
+@@ -381,7 +381,7 @@
+   pgets(w, 15, n+1, P_PPROG(n), 31, 64);
+   do {
+     wlocate(w, 47, n + 1);
+-    wprintf(w, "%c", P_PNN(n));
++    wprintf_(w, "%c", P_PNN(n));
+     c = rwxgetch();
+     if (c == 'Y')
+       P_PNN(n) = 'Y';
+@@ -390,7 +390,7 @@
+   } while (c != '\r' && c != '\n');
+   do {
+     wlocate(w, 52, n + 1);
+-    wprintf(w, "%c", P_PUD(n));
++    wprintf_(w, "%c", P_PUD(n));
+     c = rwxgetch();
+     if (c == 'U')
+       P_PUD(n) = 'U';
+@@ -399,7 +399,7 @@
+   } while (c != '\r' && c != '\n');
+   do {
+     wlocate(w, 57, n + 1);
+-    wprintf(w, "%c", P_PFULL(n));
++    wprintf_(w, "%c", P_PFULL(n));
+     c = rwxgetch();
+     if (c == 'Y')
+       P_PFULL(n) = 'Y';
+@@ -408,7 +408,7 @@
+   } while (c != '\r' && c != '\n');
+   do {
+     wlocate(w, 65, n + 1);
+-    wprintf(w, "%c", P_PIORED(n));
++    wprintf_(w, "%c", P_PIORED(n));
+     c = rwxgetch();
+     if (c == 'Y')
+       P_PIORED(n) = 'Y';
+@@ -417,7 +417,7 @@
+   } while (c != '\r' && c != '\n');
+   do {
+     wlocate(w, 73, n + 1);
+-    wprintf(w, "%c", P_MUL(n));
++    wprintf_(w, "%c", P_MUL(n));
+     c = rwxgetch();
+     if (c == 'Y')
+       P_MUL(n) = 'Y';
+@@ -449,21 +449,21 @@
+   for (f = 0; f < 12; f++) {
+     wlocate(w, 1, f + 1);
+     if (P_PNAME(f)[0])
+-      wprintf(w, "%c  %-10.10s %-31.31s %c    %c    %c       %c       %c",
++      wprintf_(w, "%c  %-10.10s %-31.31s %c    %c    %c       %c       %c",
+               'A' + f,
+               P_PNAME(f), P_PPROG(f),
+               P_PNN(f), P_PUD(f),
+               P_PFULL(f), P_PIORED(f),
+               P_MUL(f));
+     else
+-      wprintf(w, "%c    -", 'A' + f);
++      wprintf_(w, "%c    -", 'A' + f);
+   }
+   wlocate(w, 1, 13);
+-  wprintf(w, "%s %c", zmodem_download, P_PAUTO[0]);
++  wprintf_(w, "%s %c", zmodem_download, P_PAUTO[0]);
+   wlocate(w, 1, 14);
+-  wprintf(w, "%s %s", use_filename_selection, _(P_FSELW));
++  wprintf_(w, "%s %s", use_filename_selection, _(P_FSELW));
+   wlocate(w, 1, 15);
+-  wprintf(w, "%s %s", prompt_downdir, _(P_ASKDNDIR));
++  wprintf_(w, "%s %s", prompt_downdir, _(P_ASKDNDIR));
+ 
+   wlocate(w, 3, 17);
+   wputs(w, question);
+@@ -492,17 +492,17 @@
+     }
+     else if (c == 'M') {
+       wlocate(w, mbslen (zmodem_download) + 2, 13);
+-      wprintf(w, " \b");
++      wprintf_(w, " \b");
+       c = rwxgetch();
+       if (c >= 'A' && c <= 'L') {
+         P_PAUTO[0] = c;
+         markch(P_PAUTO);
+-        wprintf(w, "%c", c);
++        wprintf_(w, "%c", c);
+       } else if (c == '\n' || c == ' ') {
+         P_PAUTO[0] = ' ';
+         markch(P_PAUTO);
+       } else {
+-        wprintf(w, "%c", P_PAUTO[0]);
++        wprintf_(w, "%c", P_PAUTO[0]);
+       }
+       c = 0;
+     }
+@@ -511,11 +511,11 @@
+       if (P_FSELW[0] == 'N') {
+         strcpy(P_ASKDNDIR, "No ");
+         wlocate(w, mbslen (prompt_downdir) + 2, 15);
+-        wprintf(w, "%s ", _(P_ASKDNDIR));
++        wprintf_(w, "%s ", _(P_ASKDNDIR));
+         markch(P_ASKDNDIR);
+       }
+       wlocate(w, mbslen (use_filename_selection) + 2, 14);
+-      wprintf(w, "%s ", _(P_FSELW));
++      wprintf_(w, "%s ", _(P_FSELW));
+       markch(P_FSELW);
+     }
+     else if (c == 'O') {
+@@ -523,11 +523,11 @@
+       if (P_ASKDNDIR[0] == 'Y') {
+         strcpy(P_FSELW, "Yes");
+         wlocate(w, mbslen (use_filename_selection) + 2, 14);
+-        wprintf(w, "%s ", _(P_FSELW));
++        wprintf_(w, "%s ", _(P_FSELW));
+         markch(P_FSELW);
+       }
+       wlocate(w, mbslen (prompt_downdir) + 2, 15);
+-      wprintf(w, "%s ", _(P_ASKDNDIR));
++      wprintf_(w, "%s ", _(P_ASKDNDIR));
+       markch(P_ASKDNDIR);
+     }
+   } while (c != '\n');
+@@ -547,14 +547,14 @@
+   char *question              = _("Change which setting?");
+ 
+   w = wopen(5, 4, 75, 12, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+-  wprintf(w, "%s %.41s\n", serial_device, P_PORT);
+-  wprintf(w, "%s %.41s\n", lockfile_location, P_LOCK);
+-  wprintf(w, "%s %.41s\n", callin_program, P_CALLIN);
+-  wprintf(w, "%s %.41s\n", callout_program, P_CALLOUT);
+-  wprintf(w, "%s %s %s%s%s\n",
++  wprintf_(w, "%s %.41s\n", serial_device, P_PORT);
++  wprintf_(w, "%s %.41s\n", lockfile_location, P_LOCK);
++  wprintf_(w, "%s %.41s\n", callin_program, P_CALLIN);
++  wprintf_(w, "%s %.41s\n", callout_program, P_CALLOUT);
++  wprintf_(w, "%s %s %s%s%s\n",
+           bps_par_bits, P_BAUDRATE, P_BITS, P_PARITY, P_STOPB);
+-  wprintf(w, "%s %s\n", hardware_flow_control, _(P_HASRTS));
+-  wprintf(w, "%s %s\n", software_flow_control, _(P_HASXON));
++  wprintf_(w, "%s %s\n", hardware_flow_control, _(P_HASRTS));
++  wprintf_(w, "%s %s\n", software_flow_control, _(P_HASXON));
+   wlocate(w, 4, 8);
+   wputs(w, question);
+   wredraw(w, 1);
+@@ -582,7 +582,7 @@
+         if (portfd >= 0)
+           port_init();
+         wlocate(w, mbslen (bps_par_bits) + 1, 4);
+-        wprintf(w, "%s %s%s%s  \n",
++        wprintf_(w, "%s %s%s%s  \n",
+                 P_BAUDRATE, P_BITS, P_PARITY, P_STOPB);
+         if (st)
+           mode_status();
+@@ -594,7 +594,7 @@
+       case 'F':
+         strcpy(P_HASRTS, yesno(P_HASRTS[0] == 'N'));
+         wlocate(w, mbslen (hardware_flow_control) + 1, 5);
+-        wprintf(w, "%s ", _(P_HASRTS));
++        wprintf_(w, "%s ", _(P_HASRTS));
+         if (portfd >= 0)
+           port_init();
+         markch(P_HASRTS);
+@@ -602,7 +602,7 @@
+       case 'G':
+         strcpy(P_HASXON, yesno(P_HASXON[0] == 'N'));
+         wlocate(w, mbslen (software_flow_control) + 1, 6);
+-        wprintf(w, "%s ", _(P_HASXON));
++        wprintf_(w, "%s ", _(P_HASXON));
+         if (portfd >= 0)
+           port_init();
+         markch(P_HASXON);
+@@ -652,39 +652,39 @@
+ 
+   dirflush = 0;
+   wtitle(w, TMID, _("Modem and dialing parameter setup"));
+-  wprintf(w, "\n");
+-  wprintf(w, "%s %.48s\n", init_string, P_MINIT);
+-  wprintf(w, "%s %.48s\n", reset_string, P_MRESET);
+-  wprintf(w, "%s %.48s\n", dialing_prefix_1, P_MDIALPRE);
+-  wprintf(w, "%s %.48s\n", dialing_suffix_1, P_MDIALSUF);
+-  wprintf(w, "%s %.48s\n", dialing_prefix_2, P_MDIALPRE2);
+-  wprintf(w, "%s %.48s\n", dialing_suffix_2, P_MDIALSUF2);
+-  wprintf(w, "%s %.48s\n", dialing_prefix_3, P_MDIALPRE3);
+-  wprintf(w, "%s %.48s\n", dialing_suffix_3, P_MDIALSUF3);
+-  wprintf(w, "%s %.48s\n", connect_string, P_MCONNECT);
+-  wprintf(w, "%s %-20.20s  %.20s\n", no_connect_strings, P_MNOCON1, P_MNOCON2);
++  wprintf_(w, "\n");
++  wprintf_(w, "%s %.48s\n", init_string, P_MINIT);
++  wprintf_(w, "%s %.48s\n", reset_string, P_MRESET);
++  wprintf_(w, "%s %.48s\n", dialing_prefix_1, P_MDIALPRE);
++  wprintf_(w, "%s %.48s\n", dialing_suffix_1, P_MDIALSUF);
++  wprintf_(w, "%s %.48s\n", dialing_prefix_2, P_MDIALPRE2);
++  wprintf_(w, "%s %.48s\n", dialing_suffix_2, P_MDIALSUF2);
++  wprintf_(w, "%s %.48s\n", dialing_prefix_3, P_MDIALPRE3);
++  wprintf_(w, "%s %.48s\n", dialing_suffix_3, P_MDIALSUF3);
++  wprintf_(w, "%s %.48s\n", connect_string, P_MCONNECT);
++  wprintf_(w, "%s %-20.20s  %.20s\n", no_connect_strings, P_MNOCON1, P_MNOCON2);
+   wlocate(w, mbslen (no_connect_strings) + 1, 11);
+-  wprintf(w, "%-20.20s  %.20s\n", P_MNOCON3, P_MNOCON4);
+-  wprintf(w, "%s %.48s\n", hangup_string, P_MHANGUP);
+-  wprintf(w, "%s %.48s\n", dial_cancel_string, P_MDIALCAN);
+-  wprintf(w, "\n");
+-  wprintf(w, "%s %.3s\n", dial_time, P_MDIALTIME);
+-  wprintf(w, "%s %.3s\n", delay_before_redial, P_MRDELAY);
+-  wprintf(w, "%s %.3s\n", number_of_tries, P_MRETRIES);
+-  wprintf(w, "%s %.3s\n", dtr_drop_time, P_MDROPDTR);
++  wprintf_(w, "%-20.20s  %.20s\n", P_MNOCON3, P_MNOCON4);
++  wprintf_(w, "%s %.48s\n", hangup_string, P_MHANGUP);
++  wprintf_(w, "%s %.48s\n", dial_cancel_string, P_MDIALCAN);
++  wprintf_(w, "\n");
++  wprintf_(w, "%s %.3s\n", dial_time, P_MDIALTIME);
++  wprintf_(w, "%s %.3s\n", delay_before_redial, P_MRDELAY);
++  wprintf_(w, "%s %.3s\n", number_of_tries, P_MRETRIES);
++  wprintf_(w, "%s %.3s\n", dtr_drop_time, P_MDROPDTR);
+   wlocate(w, 34, 15);
+-  wprintf(w, "%s %s\n", auto_bps_detect, _(P_MAUTOBAUD));
++  wprintf_(w, "%s %s\n", auto_bps_detect, _(P_MAUTOBAUD));
+   wlocate(w, 34, 16);
+-  wprintf(w, "%s %s\n", modem_has_dcd_line, _(P_HASDCD));
++  wprintf_(w, "%s %s\n", modem_has_dcd_line, _(P_HASDCD));
+   wlocate(w, 34, 17);
+-  wprintf(w, "%s %s\n", shown_speed, sspd(P_SHOWSPD));
++  wprintf_(w, "%s %s\n", shown_speed, sspd(P_SHOWSPD));
+   wlocate(w, 34, 18); /* Option for multi-node untag */
+-  wprintf(w, "%s %s\n", multi_node, _(P_MULTILINE));	/* er 18-Apr-99 */
++  wprintf_(w, "%s %s\n", multi_node, _(P_MULTILINE));	/* er 18-Apr-99 */
+ 
+   wlocate(w, 1, 20);
+-  wprintf(w, "%s ", question);
++  wprintf_(w, "%s ", question);
+   x = w->curx; y = w->cury;
+-  wprintf(w, _("      (Return or Esc to exit)"));
++  wprintf_(w, _("      (Return or Esc to exit)"));
+   wredraw(w, 1);
+ 
+   while (1) {
+@@ -826,36 +826,36 @@
+ 
+   wtitle(w, TMID, _("Screen and keyboard"));
+ 
+-  wprintf(w, "\n%s %s\n", command_key, P_ESCAPE);
+-  wprintf(w, "%s %s\n", backspace_key, P_BACKSPACE);
+-  wprintf(w, "%s %s\n", status_line, _(P_STATLINE));
+-  wprintf(w, "%s %s\n", alarm_sound, _(P_SOUND));
++  wprintf_(w, "\n%s %s\n", command_key, P_ESCAPE);
++  wprintf_(w, "%s %s\n", backspace_key, P_BACKSPACE);
++  wprintf_(w, "%s %s\n", status_line, _(P_STATLINE));
++  wprintf_(w, "%s %s\n", alarm_sound, _(P_SOUND));
+   /* fmg - colors support */
+-  wprintf(w, "%s %s\n", foreground_color_menu, _(J_col[mfcolor]));
+-  wprintf(w, "%s %s\n", background_color_menu, _(J_col[mbcolor]));
+-  wprintf(w, "%s %s\n", foreground_color_term, _(J_col[tfcolor]));
+-  wprintf(w, "%s %s\n", background_color_term, _(J_col[tbcolor]));
+-  wprintf(w, "%s %s\n", foreground_color_stat, _(J_col[sfcolor]));
+-  wprintf(w, "%s %s\n", background_color_stat, _(J_col[sbcolor]));
++  wprintf_(w, "%s %s\n", foreground_color_menu, _(J_col[mfcolor]));
++  wprintf_(w, "%s %s\n", background_color_menu, _(J_col[mbcolor]));
++  wprintf_(w, "%s %s\n", foreground_color_term, _(J_col[tfcolor]));
++  wprintf_(w, "%s %s\n", background_color_term, _(J_col[tbcolor]));
++  wprintf_(w, "%s %s\n", foreground_color_stat, _(J_col[sfcolor]));
++  wprintf_(w, "%s %s\n", background_color_stat, _(J_col[sbcolor]));
+ 
+   /* MARK updated 02/17/95 - Configurable history buffer size */
+-  wprintf(w, "%s %s\n", history_buffer_size, P_HISTSIZE);
++  wprintf_(w, "%s %s\n", history_buffer_size, P_HISTSIZE);
+ 
+   /* fmg - macros support */
+-  wprintf(w, "%s %s\n", macros_file, P_MACROS);
+-  wprintf(w, _(" M - Edit Macros\n"));
+-  wprintf(w, "%s %s\n", macros_enabled, _(P_MACENAB));
+-  wprintf(w, "%s %s\n", character_conversion, P_CONVF);
++  wprintf_(w, "%s %s\n", macros_file, P_MACROS);
++  wprintf_(w, _(" M - Edit Macros\n"));
++  wprintf_(w, "%s %s\n", macros_enabled, _(P_MACENAB));
++  wprintf_(w, "%s %s\n", character_conversion, P_CONVF);
+ 
+-  wprintf(w, "%s %s\n", add_linefeed, P_ADDLINEFEED);
+-  wprintf(w, "%s %s\n", local_echo, P_LOCALECHO);
++  wprintf_(w, "%s %s\n", add_linefeed, P_ADDLINEFEED);
++  wprintf_(w, "%s %s\n", local_echo, P_LOCALECHO);
+ 
+   wredraw(w, 1);
+ 
+   while (1) {
+     if (clr) {
+       wlocate(w, 2, maxy - miny);
+-      wprintf(w, "%s ", question);
++      wprintf_(w, "%s ", question);
+       wclreol(w);
+       clr = 0;
+     } else
+@@ -961,7 +961,7 @@
+         else
+           psets(P_BACKSPACE, "DEL");
+         wlocate(w, mbslen (backspace_key) + 1, 2);
+-        wprintf(w, "%s ", P_BACKSPACE);
++        wprintf_(w, "%s ", P_BACKSPACE);
+         keyboard(KSETBS, P_BACKSPACE[0] == 'B' ? 8 : 127);
+         break;
+       case 'C':
+@@ -975,12 +975,12 @@
+             tempst = 0;
+         }
+         wlocate(w, mbslen (status_line) + 1, 3);
+-        wprintf(w, "%s ", _(P_STATLINE));
++        wprintf_(w, "%s ", _(P_STATLINE));
+         break;
+       case 'D':
+         psets(P_SOUND, yesno(P_SOUND[0] == 'N'));
+         wlocate(w, mbslen (alarm_sound) + 1, 4);
+-        wprintf(w, "%s", _(P_SOUND));
++        wprintf_(w, "%s", _(P_SOUND));
+         break;
+       case 'E': /* fmg - letters cycle colors */
+         if (mfcolor == WHITE)
+@@ -989,7 +989,7 @@
+           mfcolor++;
+         psets(P_MFG, J_col[mfcolor]);
+         wlocate(w, mbslen (foreground_color_menu) + 1, 5);
+-        wprintf(w, "%s   ", _(J_col[mfcolor]));
++        wprintf_(w, "%s   ", _(J_col[mfcolor]));
+         break;
+       case 'F': /* fmg - letters cycle colors */
+         if (mbcolor == WHITE)
+@@ -998,7 +998,7 @@
+           mbcolor++;
+         psets(P_MBG, J_col[mbcolor]);
+         wlocate(w, mbslen (background_color_menu) + 1, 6);
+-        wprintf(w, "%s   ", _(J_col[mbcolor]));
++        wprintf_(w, "%s   ", _(J_col[mbcolor]));
+         break;
+       case 'G': /* fmg - letters cycle colors */
+         if (tfcolor == WHITE)
+@@ -1007,7 +1007,7 @@
+           tfcolor++;
+         psets(P_TFG, J_col[tfcolor]);
+         wlocate(w, mbslen (foreground_color_term) + 1, 7);
+-        wprintf(w, "%s   ", _(J_col[tfcolor]));
++        wprintf_(w, "%s   ", _(J_col[tfcolor]));
+         if (us)
+           vt_pinit(us, tfcolor, tbcolor);
+         break;
+@@ -1018,7 +1018,7 @@
+           tbcolor++;
+         psets(P_TBG, J_col[tbcolor]);
+         wlocate(w, mbslen (background_color_term) + 1, 8);
+-        wprintf(w, "%s   ", _(J_col[tbcolor]));
++        wprintf_(w, "%s   ", _(J_col[tbcolor]));
+         if (us)
+           vt_pinit(us, tfcolor, tbcolor);
+         break;
+@@ -1039,7 +1039,7 @@
+         }
+         psets(P_SFG, J_col[sfcolor]);
+         wlocate(w, mbslen (foreground_color_stat) + 1, 9);
+-        wprintf(w, "%s   ", _(J_col[sfcolor]));
++        wprintf_(w, "%s   ", _(J_col[sfcolor]));
+         break;
+       case 'J': /* fmg - letters cycle colors & redraw stat line */
+         if (sbcolor == WHITE)
+@@ -1058,7 +1058,7 @@
+         }
+         psets(P_SBG, J_col[sbcolor]);
+         wlocate(w, mbslen (background_color_stat) + 1, 10);
+-        wprintf(w, "%s   ", _(J_col[sbcolor]));
++        wprintf_(w, "%s   ", _(J_col[sbcolor]));
+         break;
+       case 'K': /* MARK updated 02/17/95 - Config history size */
+         pgets(w, mbslen (history_buffer_size) + 1, 11,
+@@ -1074,7 +1074,7 @@
+           strcpy(P_HISTSIZE,"5000");
+ 
+         wlocate(w, mbslen (history_buffer_size) + 1, 11);
+-        wprintf(w, "%s     ", P_HISTSIZE);
++        wprintf_(w, "%s     ", P_HISTSIZE);
+         break;
+       case 'L': /* fmg - get local macros storage file */
+         pgets(w, mbslen (macros_file) + 1, 12, P_MACROS, 64, 64);
+@@ -1106,22 +1106,22 @@
+       case 'N':
+         psets(P_MACENAB, yesno(P_MACENAB[0] == 'N'));
+         wlocate(w, mbslen (macros_enabled) + 1, 14);
+-        wprintf(w, "%s", _(P_MACENAB));
++        wprintf_(w, "%s", _(P_MACENAB));
+         break;
+       case 'O': /* Character conversions - jl / 04.09.97 */
+         doconv();
+         wlocate(w, mbslen (character_conversion) + 1, 15);
+-        wprintf(w, "%-16.16s", _(P_CONVF));
++        wprintf_(w, "%-16.16s", _(P_CONVF));
+         break;
+       case 'P':
+         psets(P_ADDLINEFEED, yesno(P_ADDLINEFEED[0] == 'N'));
+         wlocate(w, strlen (add_linefeed) + 1, 15);
+-        wprintf(w, "%s", _(P_ADDLINEFEED));
++        wprintf_(w, "%s", _(P_ADDLINEFEED));
+         break;
+       case 'Q':
+         psets(P_LOCALECHO, yesno(P_LOCALECHO[0] == 'N'));
+         wlocate(w, strlen (local_echo) + 1, 16);
+-        wprintf(w, "%s", _(P_LOCALECHO));
++        wprintf_(w, "%s", _(P_LOCALECHO));
+         break;
+      }
+   }
+@@ -1148,12 +1148,12 @@
+ 
+   w = wopen(15, 7, 64, 15, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+   wtitle(w, TMID, _("Terminal settings"));
+-  wprintf(w, "\n");
+-  wprintf(w, "%s %s\n", terminal_emulation, terminal == VT100 ? "VT102" : "ANSI");
+-  wprintf(w, "%s %s\n", backspace_key_sends, P_BACKSPACE);
+-  wprintf(w, "%s %s\n", status_line, _(P_STATLINE));
+-  wprintf(w, "%s %d\n", msg_nl_delay, vt_nl_delay);
+-  wprintf(w, "%s %s\n", msg_answerback, P_ANSWERBACK);
++  wprintf_(w, "\n");
++  wprintf_(w, "%s %s\n", terminal_emulation, terminal == VT100 ? "VT102" : "ANSI");
++  wprintf_(w, "%s %s\n", backspace_key_sends, P_BACKSPACE);
++  wprintf_(w, "%s %s\n", status_line, _(P_STATLINE));
++  wprintf_(w, "%s %d\n", msg_nl_delay, vt_nl_delay);
++  wprintf_(w, "%s %s\n", msg_answerback, P_ANSWERBACK);
+   wlocate(w, 4, 7);
+   wputs(w, question);
+ 
+@@ -1180,9 +1180,9 @@
+           psets(P_BACKSPACE, "DEL");
+         }
+         wlocate(w, mbslen (terminal_emulation) + 1, 1);
+-        wprintf(w, "%s ", new_term == VT100 ? "VT102" : "ANSI");
++        wprintf_(w, "%s ", new_term == VT100 ? "VT102" : "ANSI");
+         wlocate(w, mbslen (backspace_key_sends) + 1, 2);
+-        wprintf(w, "%s ", P_BACKSPACE);
++        wprintf_(w, "%s ", P_BACKSPACE);
+         keyboard(KSETBS, P_BACKSPACE[0] == 'B' ? 8 : 127);
+         break;
+       case 'B':
+@@ -1191,7 +1191,7 @@
+         else
+           psets(P_BACKSPACE, "DEL");
+         wlocate(w, mbslen (backspace_key_sends) + 1, 2);
+-        wprintf(w, "%s ", P_BACKSPACE);
++        wprintf_(w, "%s ", P_BACKSPACE);
+         keyboard(KSETBS, P_BACKSPACE[0] == 'B' ? 8 : 127);
+         break;
+       case 'C':
+@@ -1205,7 +1205,7 @@
+             tempst = 0;
+         }
+         wlocate(w, mbslen (status_line) + 1, 3);
+-        wprintf(w, "%s ", _(P_STATLINE));
++        wprintf_(w, "%s ", _(P_STATLINE));
+         break;
+       case 'D':
+         sprintf(buf, "%d", vt_nl_delay);
+@@ -1213,7 +1213,7 @@
+         wgets(w, buf, 4, 4);
+         vt_nl_delay = atoi(buf);
+         wlocate(w, mbslen(msg_nl_delay) +1, 4);
+-        wprintf(w, "%-3d", vt_nl_delay);
++        wprintf_(w, "%-3d", vt_nl_delay);
+         break;
+       case 'E':
+         pgets(w, strlen(msg_answerback) + 1, 5, P_ANSWERBACK, 50, 50);
+@@ -1423,7 +1423,7 @@
+ 
+   while (1) {
+     wlocate(w, 1, 1);
+-    wprintf(w, _("Current: %5s %s%s%s  "), ba, bi, pa, stopb);
++    wprintf_(w, _("Current: %5s %s%s%s  "), ba, bi, pa, stopb);
+     wlocate(w, x, y);
+     wflush();
+     c = wxgetch();
+@@ -1537,7 +1537,7 @@
+  */
+ static void out_mac(WIN *w, char *s, char n)
+ {
+-  wprintf(w, " %c : %.67s\n", n, s ? s : "[none]");
++  wprintf_(w, " %c : %.67s\n", n, s ? s : "[none]");
+ }
+ 
+ /*
+@@ -1553,7 +1553,7 @@
+   w = wopen(3, 6, 75, 24, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+   wtitle(w, TMID, _("F1 to F10 Macros"));
+ 
+-  wprintf(w, "\n");
++  wprintf_(w, "\n");
+   out_mac(w,mmacs[Jm++].value, Jch++);
+   out_mac(w,mmacs[Jm++].value, Jch++);
+   out_mac(w,mmacs[Jm++].value, Jch++);
+@@ -1579,7 +1579,7 @@
+     wputs(w, _("  = 19200 8N1. (See the \"Comm Parameters\" menu for valid values of X.))"));
+     if (clr) {
+       wlocate(w, 1, 12);
+-      wprintf(w, "%s ", question);
++      wprintf_(w, "%s ", question);
+       wclreol(w);
+       clr = 0;
+     } else
+@@ -1682,34 +1682,34 @@
+   while (1) {
+     if (redraw) {
+       winclr(w);
+-      wprintf(w,
++      wprintf_(w,
+               _(" char    in out    char    in out    char    in out    char    in out\n"));
+       for (i = offs, j = i+h, k = j+h, l = k+h;
+            i < offs+h && i < 256;
+            i++, j++, k++, l++) {
+-        wprintf(w, "%3d (%c) %3d %3d   ",
++        wprintf_(w, "%3d (%c) %3d %3d   ",
+                 i, prch(i), (int) vt_inmap[i], (int) vt_outmap[i]);
+         if (j < 256)
+-          wprintf(w, "%3d (%c) %3d %3d   ",
++          wprintf_(w, "%3d (%c) %3d %3d   ",
+                   j, prch(j), (int) vt_inmap[j], (int) vt_outmap[j]);
+         else
+-          wprintf(w, "                  ");
++          wprintf_(w, "                  ");
+         if (k < 256)
+-          wprintf(w, "%3d (%c) %3d %3d   ",
++          wprintf_(w, "%3d (%c) %3d %3d   ",
+                   k, prch(k), (int) vt_inmap[k], (int) vt_outmap[k]);
+         else
+-          wprintf(w, "                  ");
++          wprintf_(w, "                  ");
+         if (l < 256)
+-          wprintf(w, "%3d (%c) %3d %3d\n",
++          wprintf_(w, "%3d (%c) %3d %3d\n",
+                   l, prch(l), (int) vt_inmap[l], (int) vt_outmap[l]);
+         else
+-          wprintf(w, "               \n");
++          wprintf_(w, "               \n");
+       }
+-      wprintf(w, _("\n A - load table\tB - save table"));
++      wprintf_(w, _("\n A - load table\tB - save table"));
+       if (P_CONVF[0])
+-        wprintf(w, _("\tfile:%s"),P_CONVF);
+-      wprintf(w, _("\n C - edit char\tD - next screen\tE - prev screen\n"));
+-      wprintf(w, _(" F - convert capture: %s\n"), _(P_CONVCAP));
++        wprintf_(w, _("\tfile:%s"),P_CONVF);
++      wprintf_(w, _("\n C - edit char\tD - next screen\tE - prev screen\n"));
++      wprintf_(w, _(" F - convert capture: %s\n"), _(P_CONVCAP));
+ 
+       wredraw(w, 1);
+       redraw = 0;
+@@ -1725,7 +1725,7 @@
+       case 'A':
+         strcpy(buf,P_CONVF);
+         prompt=_("Load file: %s");
+-        wprintf(w, prompt, buf);
++        wprintf_(w, prompt, buf);
+         pgets(w, mbslen(prompt) - 1, ymax - 1, P_CONVF, 64, 64);
+         if (loadconv(P_CONVF) == 0) {
+           if (strcmp(P_CONVF,buf))
+@@ -1737,7 +1737,7 @@
+       case 'B':
+         strcpy(buf,P_CONVF);
+         prompt=_("Save as file: %s");
+-        wprintf(w, prompt, buf);
++        wprintf_(w, prompt, buf);
+         pgets(w, mbslen(prompt) - 1, ymax - 1, P_CONVF, 64, 64);
+         if (saveconv(P_CONVF) == 0) {
+           if (strcmp(P_CONVF,buf))
+@@ -1748,7 +1748,7 @@
+         break;
+       case 'C':
+         prompt = _("Character to be edited: ");
+-        wprintf(w, prompt);
++        wprintf_(w, prompt);
+         buf[0] = 0;
+         i = -1;
+         wlocate(w, mbslen(prompt), ymax - 1);
+@@ -1762,7 +1762,7 @@
+         sprintf(buf, "%u",(unsigned int) vt_inmap[i]);
+         wlocate(w, 30, ymax - 1);
+         prompt=_("Change input to: %s");
+-        wprintf(w, prompt,buf);
++        wprintf_(w, prompt,buf);
+         wlocate(w, mbslen(prompt) + 28, ymax - 1);
+         wgets(w, buf, 4, 4);
+         sscanf(buf, "%d", &j);
+@@ -1774,7 +1774,7 @@
+         sprintf(buf, "%u",(unsigned int) vt_outmap[i]);
+         wlocate(w, 54, ymax - 1);
+         prompt = _("Change output to: %s");
+-        wprintf(w, prompt, buf);
++        wprintf_(w, prompt, buf);
+         wlocate(w, mbslen(prompt) + 52, ymax - 1);
+         wgets(w, buf, 4, 4);
+         sscanf(buf, "%d", &j);
+diff -ru minicom-2.2/src/dial.c minicom-2.2+iPhone/src/dial.c
+--- minicom-2.2/src/dial.c	2005-10-31 12:13:51.000000000 +0000
++++ minicom-2.2+iPhone/src/dial.c	2008-01-02 00:20:52.000000000 +0000
+@@ -353,14 +353,14 @@
+   int ret = 0;
+ 
+   wlocate(dialwin, 1, 5);
+-  wprintf(dialwin, _("    No connection: %s.      \n"), s);
++  wprintf_(dialwin, _("    No connection: %s.      \n"), s);
+   if (rtime < 0) {
+-    wprintf(dialwin, _("   Press any key to continue..    "));
++    wprintf_(dialwin, _("   Press any key to continue..    "));
+     if (check_io(-1, 0, 10000, NULL, NULL) & 2) 
+       keyboard(KGETKEY, 0);
+     return 0;
+   }
+-  wprintf(dialwin, _("     Retry in %2d seconds             "), rtime);
++  wprintf_(dialwin, _("     Retry in %2d seconds             "), rtime);
+   
+   for (f = rtime - 1; f >= 0; f--) {
+     x = check_io(-1, 0, 1000, NULL, NULL);
+@@ -372,7 +372,7 @@
+       break;
+     }
+     wlocate(dialwin, 0, 6);
+-    wprintf(dialwin, _("     Retry in %2d seconds             "), f);
++    wprintf_(dialwin, _("     Retry in %2d seconds             "), f);
+   }
+ #ifdef HAVE_USLEEP
+   /* MARK updated 02/17/94 - Min dial delay set to 0.35 sec instead of 1 sec */
+@@ -383,8 +383,8 @@
+     sleep(1);
+ #endif
+   wlocate(dialwin, 1, 5);
+-  wprintf(dialwin, "                                       \n");
+-  wprintf(dialwin, "                                             ");
++  wprintf_(dialwin, "                                       \n");
++  wprintf_(dialwin, "                                             ");
+   return ret;
+ }
+ 
+@@ -417,12 +417,12 @@
+   wcursor(dialwin, CNONE);
+ 
+   wputs(dialwin, "\n");
+-  wprintf(dialwin, " %s : %s\n", _("Dialing"), d->name);
+-  wprintf(dialwin, _("      At : %s"), d->number);
+-  wprintf(dialwin, "\n"); /* help translators */
++  wprintf_(dialwin, " %s : %s\n", _("Dialing"), d->name);
++  wprintf_(dialwin, _("      At : %s"), d->number);
++  wprintf_(dialwin, "\n"); /* help translators */
+   if (d->lastdate[0] && d->lasttime[0])		/* jl 26.01.98 */
+-    wprintf(dialwin, _(" Last on : %s at %s"), d->lastdate, d->lasttime);
+-  wprintf(dialwin, "\n");
++    wprintf_(dialwin, _(" Last on : %s at %s"), d->lastdate, d->lasttime);
++  wprintf_(dialwin, "\n");
+   wredraw(dialwin, 1);
+ 
+   /* Tell keyboard routines we need them. */
+@@ -447,14 +447,14 @@
+           d = dialents;
+       } while (!(d->flags & FL_TAG));
+       wlocate(dialwin, 0, 1);
+-      wprintf(dialwin, " %s : %s", _("Dialing"), d->name);
++      wprintf_(dialwin, " %s : %s", _("Dialing"), d->name);
+       wclreol(dialwin);
+-      wprintf(dialwin, "\n"); /* helps translators */
+-      wprintf(dialwin, _("      At : %s"), d->number);
++      wprintf_(dialwin, "\n"); /* helps translators */
++      wprintf_(dialwin, _("      At : %s"), d->number);
+       wclreol(dialwin);
+       if (d->lastdate[0] && d->lasttime[0]) {
+-	wprintf(dialwin, "\n"); /* don't merge with next printf, helps translators */
+-        wprintf(dialwin, _(" Last on : %s at %s"),
++	wprintf_(dialwin, "\n"); /* don't merge with next printf, helps translators */
++        wprintf_(dialwin, _(" Last on : %s at %s"),
+                 d->lastdate, d->lasttime);
+         wclreol(dialwin);
+       }
+@@ -469,9 +469,9 @@
+ 
+     /* Show used time */
+     wlocate(dialwin, 0, 4);
+-    wprintf(dialwin, _("    Time : %-3d"), dialtime);
++    wprintf_(dialwin, _("    Time : %-3d"), dialtime);
+     if (maxretries > 1)
+-      wprintf(dialwin, _("     Attempt #%d"), retries);
++      wprintf_(dialwin, _("     Attempt #%d"), retries);
+     wputs(dialwin, _("\n\n\n Escape to cancel, space to retry."));
+ 
+     /* Start the dial */
+@@ -591,7 +591,7 @@
+           keyboard(KSTOP, 0);
+           wclose(dialwin, 1);
+           /* Print out the connect strings. */
+-          wprintf(us, "\r\n%s\r\n", modbuf);
++          wprintf_(us, "\r\n%s\r\n", modbuf);
+           dialwin = NULL;
+ 
+           /* Un-tag this entry. */
+@@ -646,7 +646,7 @@
+         if (dialtime < 0)
+           dialtime = 0;
+         wlocate(dialwin, 11, 4);
+-        wprintf(dialwin, "%-3d  ", dialtime);
++        wprintf_(dialwin, "%-3d  ", dialtime);
+         if (dialtime <= 0) {
+           mputs(P_MDIALCAN, 0);
+           reason = _("Timeout");
+@@ -1073,23 +1073,23 @@
+        *question            = _("Change which setting?");
+   
+   w = wopen(5, 4, 75, 19, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+-  wprintf(w, "%s %s\n", name, d->name);
+-  wprintf(w, "%s %s\n", number, d->number);
+-  wprintf(w, "%s %d\n", dial_string, d->dialtype + 1);
+-  wprintf(w, "%s %s\n", local_echo, _(yesno(d->flags & FL_ECHO)));
+-  wprintf(w, "%s %s\n", script, d->script);
+-  wprintf(w, "%s %s\n", username, d->username);
+-  wprintf(w, "%s %s\n", password, d->password);
+-  wprintf(w, "%s %s\n", terminal_emulation, te[d->term - 1]);
+-  wprintf(w, "%s %s\n", backspace_key_sends,
++  wprintf_(w, "%s %s\n", name, d->name);
++  wprintf_(w, "%s %s\n", number, d->number);
++  wprintf_(w, "%s %d\n", dial_string, d->dialtype + 1);
++  wprintf_(w, "%s %s\n", local_echo, _(yesno(d->flags & FL_ECHO)));
++  wprintf_(w, "%s %s\n", script, d->script);
++  wprintf_(w, "%s %s\n", username, d->username);
++  wprintf_(w, "%s %s\n", password, d->password);
++  wprintf_(w, "%s %s\n", terminal_emulation, te[d->term - 1]);
++  wprintf_(w, "%s %s\n", backspace_key_sends,
+           d->flags & FL_DEL ? _("Delete") : _("Backspace"));
+-  wprintf(w, "%s %s\n", linewrap,
++  wprintf_(w, "%s %s\n", linewrap,
+           d->flags & FL_WRAP ? _("On") : _("Off"));
+-  wprintf(w, "%s %s %s%s%s\n", line_settings,
++  wprintf_(w, "%s %s %s%s%s\n", line_settings,
+           d->baud, d->bits, d->parity, d->stopb);
+-  wprintf(w, "%s %s\n", conversion_table, d->convfile);
+-  wprintf(w, _("      Last dialed         : %s %s\n"),d->lastdate,d->lasttime);
+-  wprintf(w, _("      Times on            : %d"),d->count);
++  wprintf_(w, "%s %s\n", conversion_table, d->convfile);
++  wprintf_(w, _("      Last dialed         : %s %s\n"),d->lastdate,d->lasttime);
++  wprintf_(w, _("      Times on            : %d"),d->count);
+   wlocate(w, 4, 15);
+   wputs(w, question);
+   wredraw(w, 1);
+@@ -1116,13 +1116,13 @@
+       case 'C':
+         d->dialtype = (d->dialtype + 1) % 3;
+         wlocate(w, mbslen (dial_string) + 1, 2);
+-        wprintf(w, "%d", d->dialtype + 1);
++        wprintf_(w, "%d", d->dialtype + 1);
+         wflush();
+         break;
+       case 'D':
+         d->flags ^= FL_ECHO;
+         wlocate(w, mbslen (local_echo) + 1, 3);
+-        wprintf(w, "%s", _(yesno(d->flags & FL_ECHO)));
++        wprintf_(w, "%s", _(yesno(d->flags & FL_ECHO)));
+         wflush();
+         break;
+       case 'E':
+@@ -1171,7 +1171,7 @@
+       case 'K':
+         get_bbp(d->baud, d->bits, d->parity, d->stopb, 1);
+         wlocate(w, mbslen (line_settings) + 1, 10);
+-        wprintf(w, "%s %s%s%s  ",
++        wprintf_(w, "%s %s%s%s  ",
+                 d->baud, d->bits, d->parity, d->stopb);
+         break;
+       case 'L':	/* jl 21.09.97 */
+@@ -1207,9 +1207,9 @@
+ {
+   static const char spaces[] = "        ";
+ 
+-  wprintf(dsub, "%.*s", what_padding[k][0], spaces);
+-  wprintf(dsub, "%.*s", what_lens[k], _(what[k]));
+-  wprintf(dsub, "%.*s", what_padding[k][1], spaces);
++  wprintf_(dsub, "%.*s", what_padding[k][0], spaces);
++  wprintf_(dsub, "%.*s", what_lens[k], _(what[k]));
++  wprintf_(dsub, "%.*s", what_padding[k][1], spaces);
+ }
+ 
+ /*
+@@ -1256,7 +1256,7 @@
+     d = getno(f + top);
+     if (d == (struct dialent *)0)
+       break;
+-    wprintf(dialw, fmt, f+1+top, (d->flags & FL_TAG) ? '>' : ' ',
++    wprintf_(dialw, fmt, f+1+top, (d->flags & FL_TAG) ? '>' : ' ',
+             d->name, d->number, d->lastdate, d->lasttime, 
+             d->count, d->script);
+   }
+@@ -1508,7 +1508,7 @@
+ 
+   prdir(w, top, top);
+   wlocate(w, position_dialing_directory, w->ys - 1);
+-  wprintf(w, "%*.*s", tagmvlen,tagmvlen, tag_exit);
++  wprintf_(w, "%*.*s", tagmvlen,tagmvlen, tag_exit);
+   dhili(position_dialing_directory, subm);
+   dirflush = 1;
+   wredraw(dsub, 1);
+@@ -1554,7 +1554,7 @@
+         wlocate(w, 4, cur + 1 - top);
+         d->flags ^= FL_TAG;
+         wsetattr(w, XA_REVERSE | stdattr);
+-        wprintf(w, "%c", d->flags & FL_TAG ? '>' : ' ');
++        wprintf_(w, "%c", d->flags & FL_TAG ? '>' : ' ');
+         wsetattr(w, XA_NORMAL | stdattr);
+         cur += (cur < nrents - 1);
+         break;
+@@ -1713,7 +1713,7 @@
+     dedit(d);
+     changed++;
+     wlocate(w, 0, cur + 1 - top);
+-    wprintf(w, fmt, cur+1, (d->flags & FL_TAG) ? 16 : ' ', d->name,
++    wprintf_(w, fmt, cur+1, (d->flags & FL_TAG) ? 16 : ' ', d->name,
+             d->number, d->lastdate, d->lasttime, d->count, d->script);
+   }
+ 
+@@ -1751,13 +1751,13 @@
+   /* Move the entry up/down in directory. */
+   if (subm == 5) {
+     wlocate(w, position_dialing_directory, w->ys - 1);
+-    wprintf(w, "%*.*s", tagmvlen,tagmvlen, move_exit);
++    wprintf_(w, "%*.*s", tagmvlen,tagmvlen, move_exit);
+     cur = move_entry (w, d, cur, &top);
+     if (cur != ocur)
+       changed++;
+     ocur = cur;
+     wlocate(w, position_dialing_directory, w->ys - 1);
+-    wprintf(w, "%*.*s", tagmvlen,tagmvlen, tag_exit);
++    wprintf_(w, "%*.*s", tagmvlen,tagmvlen, tag_exit);
+   }
+ 
+   /* Dial a number manually. */
+diff -ru minicom-2.2/src/file.c minicom-2.2+iPhone/src/file.c
+--- minicom-2.2/src/file.c	2005-08-14 20:39:30.000000000 +0000
++++ minicom-2.2+iPhone/src/file.c	2008-01-02 00:20:52.000000000 +0000
+@@ -89,11 +89,11 @@
+ {
+   static const char spaces[] = "        ";
+ 
+-  wprintf(dsub, "%.*s", what_padding[k][0], spaces);
++  wprintf_(dsub, "%.*s", what_padding[k][0], spaces);
+   wsetattr(dsub, start_attr);
+-  wprintf(dsub, "%.*s", what_lens[k], _(what[k]));
++  wprintf_(dsub, "%.*s", what_lens[k], _(what[k]));
+   wsetattr(dsub, end_attr);
+-  wprintf(dsub, "%.*s", what_padding[k][1], spaces);
++  wprintf_(dsub, "%.*s", what_padding[k][1], spaces);
+ }
+ 
+ /*
+@@ -163,9 +163,9 @@
+       wsetattr(dirw, XA_REVERSE | stdattr);
+     if (S_ISDIR(d->mode)) {
+       snprintf(t_str, sizeof(t_str), "[%s]", d->fname);
+-      wprintf(dirw, f_str, t_str);
++      wprintf_(dirw, f_str, t_str);
+     } else
+-      wprintf(dirw, f_str, d->fname);
++      wprintf_(dirw, f_str, d->fname);
+     wsetattr(dirw, XA_NORMAL | stdattr);
+     wputc(dirw, '\n');
+   }
+@@ -191,9 +191,9 @@
+     wsetattr(dirw, XA_REVERSE | stdattr);
+   if (S_ISDIR(dirdat->mode)) {
+     snprintf(t_str, sizeof(t_str),  "[%s]", dirdat->fname);
+-    wprintf(dirw, f_str, t_str);
++    wprintf_(dirw, f_str, t_str);
+   } else
+-    wprintf(dirw, f_str, dirdat->fname);
++    wprintf_(dirw, f_str, dirdat->fname);
+   wsetattr(dirw, XA_NORMAL | stdattr);
+   dirflush = 1;
+   wflush();
+diff -ru minicom-2.2/src/help.c minicom-2.2+iPhone/src/help.c
+--- minicom-2.2/src/help.c	2005-10-31 10:31:38.000000000 +0000
++++ minicom-2.2+iPhone/src/help.c	2008-01-02 00:20:52.000000000 +0000
+@@ -38,7 +38,7 @@
+   wputs(w, _("Minicom Command Summary"));
+   wlocate(w, 10, 2);
+ 
+-  wprintf(w, _("Commands can be called by %s<key>"), esc_key());
++  wprintf_(w, _("Commands can be called by %s<key>"), esc_key());
+ 
+   wlocate(w, 15, 4);
+   wputs(w, _("Main Functions"));
+diff -ru minicom-2.2/src/main.c minicom-2.2+iPhone/src/main.c
+--- minicom-2.2/src/main.c	2005-10-31 12:13:51.000000000 +0000
++++ minicom-2.2+iPhone/src/main.c	2008-01-02 00:20:52.000000000 +0000
+@@ -452,12 +452,12 @@
+   if (st) { /* if swich off status line - NOT print !!! (vlk@st.simbirsk.su) */
+     wlocate(st, 20, 0);
+     if (portfd_is_socket) {
+-      wprintf(st, "unix-socket");
++      wprintf_(st, "unix-socket");
+     } else {
+       if (P_SHOWSPD[0] == 'l')
+-        wprintf(st, "%6ld %s%s%s", linespd, P_BITS, P_PARITY, P_STOPB);
++        wprintf_(st, "%6ld %s%s%s", linespd, P_BITS, P_PARITY, P_STOPB);
+       else
+-        wprintf(st, "%6.6s %s%s%s", P_BAUDRATE, P_BITS, P_PARITY, P_STOPB);
++        wprintf_(st, "%6.6s %s%s%s", P_BAUDRATE, P_BITS, P_PARITY, P_STOPB);
+     }
+     ret_csr();
+   }
+@@ -474,9 +474,9 @@
+     return;
+   wlocate(st, 63, 0);
+   if (online < 0)
+-    wprintf(st, " %12.12s ", P_HASDCD[0] == 'Y' ? _("Offline") : _("OFFLINE"));
++    wprintf_(st, " %12.12s ", P_HASDCD[0] == 'Y' ? _("Offline") : _("OFFLINE"));
+   else
+-    wprintf(st, " %s %02ld:%02ld", P_HASDCD[0] == 'Y' ? _("Online") : _("ONLINE"),
++    wprintf_(st, " %s %02ld:%02ld", P_HASDCD[0] == 'Y' ? _("Online") : _("ONLINE"),
+             online / 3600, (online / 60) % 60);
+ 
+   ret_csr();
+@@ -488,7 +488,7 @@
+ void curs_status(void)
+ {
+   wlocate(st, 33, 0);
+-  wprintf(st, cursormode == NORMAL ? "NOR" : "APP");
++  wprintf_(st, cursormode == NORMAL ? "NOR" : "APP");
+   ret_csr();
+ }
+ 
+@@ -570,7 +570,7 @@
+ {
+   st->direct = 0;
+   wlocate(st, 0, 0);
+-  wprintf(st,
++  wprintf_(st,
+           _(" %7.7sZ for help |           |     | Minicom %-6.6s |       | "),
+           esc_key(), VERSION);
+   mode_status();
+@@ -598,9 +598,9 @@
+     return;
+   wlocate(st, 39, 0);
+   if (*s == 0)
+-    wprintf(st, "Minicom %-6.6s", VERSION);
++    wprintf_(st, "Minicom %-6.6s", VERSION);
+   else
+-    wprintf(st, "script %-7.7s", s);
++    wprintf_(st, "script %-7.7s", s);
+   ret_csr();
+ }
+ 
+diff -ru minicom-2.2/src/minicom.c minicom-2.2+iPhone/src/minicom.c
+--- minicom-2.2/src/minicom.c	2005-10-31 12:13:51.000000000 +0000
++++ minicom-2.2+iPhone/src/minicom.c	2008-01-02 00:20:52.000000000 +0000
+@@ -261,7 +261,7 @@
+   w_new->wrap = 0;
+ 
+   hline = _("SEARCH FOR (ESC=Exit)");
+-  wprintf(w_new, "%s(%d):",hline,MAX_SEARCH);
++  wprintf_(w_new, "%s(%d):",hline,MAX_SEARCH);
+   wredraw(w_new, 1);
+   wflush();
+ 
+@@ -461,7 +461,7 @@
+   if (b_st->xs < 127)
+     hline0[b_st->xs] = 0;
+   hline = hline0;
+-  wprintf(b_st, hline);
++  wprintf_(b_st, hline);
+   wredraw(b_st, 1);
+   wflush();
+ 
+@@ -514,7 +514,7 @@
+         searchhist(b_us, look_for);
+         /* must redraw status line... */
+         wlocate(b_st, 0, 0); /* move back to column 0! */
+-        wprintf(b_st, hline); /* and show the above-defined hline */
++        wprintf_(b_st, hline); /* and show the above-defined hline */
+         wredraw(b_st, 1); /* again... */
+         /* highlight any matches */
+         if (wcslen(look_for) > 1) {
+@@ -723,7 +723,7 @@
+           hline = hline0;
+         }
+         wlocate(b_st, 0, 0);
+-        wprintf(b_st, hline);
++        wprintf_(b_st, hline);
+         wredraw(b_st, 1);
+         if (citemode)
+           wlocate(b_us, 0, cite_y);
+@@ -743,7 +743,7 @@
+           break;
+         }
+         wlocate(b_st, 0, 0);
+-        wprintf(b_st, hline);
++        wprintf_(b_st, hline);
+         wredraw(b_st, 1);
+         wdrawelm_inverse(b_us, cite_y, getline(b_us, cite_ystart));
+         wlocate(b_us, 0, cite_y);
+@@ -762,7 +762,7 @@
+         }
+         drawcite_whole(b_us, y, cite_ystart, cite_yend);
+         wlocate(b_st, 0, 0);
+-        wprintf(b_st, hline);
++        wprintf_(b_st, hline);
+         wredraw(b_st, 1);
+         if (citemode)
+           wlocate(b_us, 0, cite_y);
+@@ -1335,6 +1335,6 @@
+   if (doinit)
+     modeminit();
+ 
+-  wprintf(us, "\n%s %s\r\n", _("Welcome to minicom"), VERSION);
+-  wprintf(us, "\n%s: %s\r\n", _("OPTIONS"), option_string);
++  wprintf_(us, "\n%s %s\r\n", _("Welcome to minicom"), VERSION);
++  wprintf_(us, "\n%s: %s\r\n", _("OPTIONS"), option_string);
+
+@@ -1340,6 +1340,6 @@
+
+-  wprintf(us, "Port %s\n", P_PORT);
+-  wprintf(us, _("\nPress %sZ for help on special keys%c\n\n"),esc_key(),'\r');
++  wprintf_(us, "Port %s\n", P_PORT);
++  wprintf_(us, _("\nPress %sZ for help on special keys%c\n\n"),esc_key(),'\r');
+ 
+   /* Now that all initialization is done, drop our priviliges. */
+   drop_privs();
+diff -ru minicom-2.2/src/updown.c minicom-2.2+iPhone/src/updown.c
+--- minicom-2.2/src/updown.c	2005-08-14 20:39:30.000000000 +0000
++++ minicom-2.2+iPhone/src/updown.c	2008-01-02 00:20:52.000000000 +0000
+@@ -355,7 +355,7 @@
+   if (win && (status & 0xFF00) == 0) {
+ #if VC_MUSIC
+     if (P_SOUND[0] == 'Y') {
+-      wprintf(win, _("\n READY: press any key to continue..."));
++      wprintf_(win, _("\n READY: press any key to continue..."));
+       music();
+     } else
+       sleep(1);
+@@ -363,7 +363,7 @@
+     /* MARK updated 02/17/94 - If there was no VC_MUSIC capability, */
+     /* then at least make some beeps! */
+     if (P_SOUND[0] == 'Y')
+-      wprintf(win, "\007\007\007");
++      wprintf_(win, "\007\007\007");
+     sleep(1);
+ #endif
+   }
+@@ -526,9 +526,9 @@
+     w = wopen(10, 5, 70, 10, BDOUBLE, stdattr, mfcolor, mbcolor, 0, 0, 1);
+     wtitle(w, TMID, _("Run a script"));
+     wputs(w, "\n");
+-    wprintf(w, "%s %s\n", username, scr_user[0] ? msg : "");
+-    wprintf(w, "%s %s\n", password, scr_passwd[0] ? msg : "");
+-    wprintf(w, "%s %s\n", name_of_script, scr_name);
++    wprintf_(w, "%s %s\n", username, scr_user[0] ? msg : "");
++    wprintf_(w, "%s %s\n", password, scr_passwd[0] ? msg : "");
++    wprintf_(w, "%s %s\n", name_of_script, scr_name);
+     wlocate(w, 4, 5);
+     wputs(w, question);
+     wredraw(w, 1);
+diff -ru minicom-2.2/src/windiv.c minicom-2.2+iPhone/src/windiv.c
+--- minicom-2.2/src/windiv.c	2006-10-11 20:46:21.000000000 +0000
++++ minicom-2.2+iPhone/src/windiv.c	2008-01-02 00:20:52.000000000 +0000
+@@ -120,7 +120,7 @@
+   while (1) {
+     wlocate(w, 2 + offs + 10 * cur, 1);
+     if (!useattr)
+-      wprintf(w, ">%s", _(s[cur]) + 1);
++      wprintf_(w, ">%s", _(s[cur]) + 1);
+     else {
+       wsetattr(w, XA_REVERSE | stdattr);
+       wputs(w, _(s[cur]));
+@@ -169,7 +169,7 @@
+              BDOUBLE, stdattr, mfcolor, mbcolor, 1, 0, 1);
+   wputs(w, s);
+   wlocate(w, 0, 1);
+-  wprintf(w, "> %-38.38s", buf);
++  wprintf_(w, "> %-38.38s", buf);
+   wlocate(w, 2, 1);
+   if (wgets(w, buf, 38, 128) < 0)
+     buf = NULL;
+diff -ru minicom-2.2/src/window.c minicom-2.2+iPhone/src/window.c
+--- minicom-2.2/src/window.c	2005-11-06 19:20:57.000000000 +0000
++++ minicom-2.2+iPhone/src/window.c	2008-01-02 00:20:52.000000000 +0000
+@@ -1146,7 +1146,7 @@
+  * Print a formatted string in a window.
+  * Should return stringlength - but who cares.
+  */
+-int wprintf(WIN *win, const char *fmt, ...)
++int wprintf_(WIN *win, const char *fmt, ...)
+ {
+   char buf[160];
+   va_list va;
+@@ -1304,7 +1304,7 @@
+     wtitle(w, TMID, title);
+ 
+   for (c = 0; c < count; c++)
+-    wprintf(w, " %s%s", _(choices[c]), c == count - 1 ? "" : "\n");
++    wprintf_(w, " %s%s", _(choices[c]), c == count - 1 ? "" : "\n");
+ 
+   wcurbar(w, cur, high_on);
+   wredraw(w, 1);
+diff -ru minicom-2.2/src/window.h minicom-2.2+iPhone/src/window.h
+--- minicom-2.2/src/window.h	2006-04-02 09:58:52.000000000 +0000
++++ minicom-2.2+iPhone/src/window.h	2008-01-02 00:20:50.000000000 +0000
+@@ -151,7 +151,7 @@
+ void wputc(WIN *win, wchar_t c);
+ void wdrawelm(WIN *win, int y, ELM *e);
+ void wputs(WIN *win, const char *s);
+-int wprintf(WIN *, const char *, ...)
++int wprintf_(WIN *, const char *, ...)
+         __attribute__((format(printf, 2, 3)));
+ void wbell(void);
+ void wcursor(WIN *win, int type);

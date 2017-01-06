@@ -1,0 +1,8 @@
+an error page with options to reload or check various archive sources
+automatic bypassing of sourceforge links to random mirror
+buttons to run document through jayfreeman.com/syntax
+easy to load/save all running sessions?
+bug: ctrl-backspace deletes entire address bar
+add bookmark to current bookmark location shortcut
+stupid: I cannot do a find in a textbox
+middle click history to generate new tab

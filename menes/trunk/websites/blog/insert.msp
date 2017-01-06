@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<waf:logic xmlns:waf="http://www.saurik.com/menes/waf/0.9">
+
+<waf:include file="menes/ext/uuid.hpp"/>
+<waf:include file="menes/net/mime/application/x-www-form-urlencoded.hpp"/>
+<waf:include file="menes/vfs/system.hpp"/>
+
+<waf:set-status code="200"/>
+<waf:add-header name="Content-Type" value="text/html"/>
+
+<html><head><title>The Realm of The Avatar -- Insert</title>
+    <link rel="stylesheet" type="text/css" href="/keystone.css"/>
+</head><body>
+    <waf:logic>
+        _R< net::Mime::Document > document(_request.GetDocument());
+        if (!document.IsEmpty()) {
+            _R< net::Mime::Application::XWwwFormUrlencoded > form(dynamic_cast< net::Mime::Application::XWwwFormUrlencoded * >(document.GetValue()));
+            _S< ios::Buffer > entry((*form)["entry"]);
+            _R< dbi::Driver > driver(dbi::GetDriver("dbi::PgSql::Driver"));
+            _R< dbi::Connection > connection(driver->Connect("", "saurik", "", "thoth"));
+            vfs::System fs(connection);
+            dbi::Transaction lock(*connection);
+            ext::Uuid id(fs.WriteFileFrom(entry));
+            <waf:content>{id}</waf:content>
+        }
+    </waf:logic>
+
+    <form method="POST" action="insert.msp">
+        <table align="center">
+            <tr>
+                <td class="input-label">Username:</td>
+                <td><input type="text" name="username"/></td>
+            </tr>
+
+            <tr>
+                <td class="input-label">Password:</td>
+                <td><input type="password" name="password"/></td>
+            </tr>
+
+            <tr>
+                <td class="input-label">Entry:</td>
+                <td><textarea type="text" name="entry" rows="15" cols="100"></textarea></td>
+            </tr>
+
+            <tr>
+                <td class="input-label"></td>
+                <td><input type="submit" value="Insert Entry"/></td>
+            </tr>
+        </table>
+    </form>
+</body></html>
+
+</waf:logic>

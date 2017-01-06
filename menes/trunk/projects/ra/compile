@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+BASE=0x100000
+SIZE=0x20
+DATA=0x1000
+
+CFLAGS="-fno-exceptions -I../../menes -O0"
+
+files=$(find . -name "*.cpp" | sed -e "s/\.cpp\$//")
+for file in $files; do
+    gcc ${CFLAGS} -o $file.o -c $file.cpp || exit
+done
+
+ld -e main $(for file in $files; do echo $file.o; done) -o test -T linker.ld || exit
+
+objcopy -R .note -R .comment -S -O binary test test.bin || exit
+ndisasm -s ${SIZE} -b 32 test.bin | grep -v "add \[eax],al"
+mbchk test.bin
+
+echo "let's go Voltron Force!"
+
+if [[ $(uname) == 'FreeBSD' ]]; then
+	GRUB='/usr/local/share/grub/i386-freebsd'
+else
+	GRUB='/home/saurik/opt/grub/lib/grub/i386-pc'
+fi
+
+dd if=$GRUB/stage1 of=image bs=512 count=1
+dd if=$GRUB/stage2 of=image bs=512 seek=1
+dd if=test.bin of=image bs=1024 seek=1024
+dd if=/dev/zero of=image bs=1024 seek=6144 count=1
+
+qemu -enable-audio image

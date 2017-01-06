@@ -1,0 +1,20 @@
+0 (.) remove api::ThreadMutex, make api::CriticalSection ext::ReferenceCounted, and rename api::ProcessMutex to api::Mutex
+2 (?) ios::Reader::Read() should return ~size_t() on EOS, not 0 (for future support of non-blocking streams)
+3 (.) make api::Path support useful features, like GetDrive()
+6 (-) refactor api::*::Socket into two ios::HandleHolders for handling shutdown() and OOB
+1 (+) every system call in api::Posix needs to be wrapped in a loop to handle EINTR
+0 (-) msp.vim should have all ConciseXML functionality moved into cxs.vim
+9 (.) add Java Servlet support to waf::Server
+9 (!) every final _assert() in menes needs to be checked for double-fault possibilities
+8 (+) rewrite etl::Bind() to use etl::Composite; numerous layers of abstraction should fall
+3 (.) api::Process needs to have some kind of workable support for standard error
+6 (!) ext::IteratorSize<>'s ext::BoundedIterator defeats ext/traits' MemCopyable checks
+3 (+) api::Win32::ThreadLocal needs to be overhauled to support Delete_ and Allocator_ correctly
+2 (+) fix jni::String by templating cse::Utf16Encoding over it's CodeUnit typedef
+1 (+) api::Winsock::Socket::SetLocalAddress() should support the force argument
+1 (.) move mta::ReadWriteLock to api and support ::pthread_rwlock_init()
+3 (+) implement api::Carbon::Fiber using Thread Manager API (threadman_ref.pdf)
+4 (+) makIignore_ is the wrong model and should be handled implicitely
+2 (+) api::ExecInfo::StackTrace prints out a full path for the primary module
+3 (+) using ::dladdr() on _start to determine primary module in api::ExecInfo::StackTrace is stupid and wrong
+3 (+) rethink api::Socket::Keep() into some more automatic ~Socket()/std::uncaught_exception() setup

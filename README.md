@@ -6,8 +6,8 @@ He put his source code on on two svn server: `http://svn.saurik.com/repos/menes/
 The two url access are slow in china. I upload to github so that others can get a faster connection.
 
 #reference
-http://www.saurik.com/id/1
-http://www.saurik.com/
++ http://www.saurik.com/id/1
++ http://www.saurik.com/
 
 #中文
 saurik大神写了很多开源项目，但都放在他自己的svn服务器上。
